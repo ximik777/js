@@ -28,4 +28,6 @@
     ob_end_clean();
 
     echo $content;
+
+
 ?>
