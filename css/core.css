@@ -1,0 +1,9 @@
+* {padding:0px;margin:0px;border:0px;outline:none;}
+
+html, body {height:100%;width:100%;}
+html {overflow-y:scroll;}
+body {min-width:1000px; min-height: 100%;height: auto !important; height: 100%;position: relative; padding: 10px}
+
+#wrap {min-height: 100%; width:100%;background:#FFF; position:relative;}
+
+body, input, textarea, select, button {font-family:Tahoma, Geneva, sans-serif;font-size:11px;}

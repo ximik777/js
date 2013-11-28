@@ -299,68 +299,6 @@ function onCtrlEnter(event, handler) {
     }
 }
 
-(function () {
-    var isReady = false,
-        readyBind = false,
-        readyList = [];
 
-    window.onDomReady = function (handle) {
-        bindReady();
-        if(isReady) {
-            handle.call(document);
-        } else {
-            readyList.push(function () {
-                handle.call(document);
-            });
-        }
-    };
-
-    var ready = function () {
-        if(!isReady) {
-            isReady = true;
-            if(readyList) {
-                var l = readyList;
-                l.reverse();
-                while(handle = l.pop()) {
-                    handle.apply(document);
-                }
-                readyList = null;
-            }
-        }
-    };
-
-    var bindReady = function () {
-        if(readyBind) return;
-        readyBind = true;
-
-        if(document.addEventListener && !browser.opera) document.addEventListener("DOMContentLoaded", ready, false);
-        if(browser.msie && window == top)(function () {
-            if(isReady) return;
-            try {
-                document.documentElement.doScroll("left");
-            } catch(e) {
-                setTimeout(arguments.callee, 0);
-                return;
-            }
-            ready();
-        })();
-        if(browser.opera) document.addEventListener("DOMContentLoaded", function () {
-            if(isReady) return;
-            ready();
-        }, false);
-        if(browser.safari) {
-            (function () {
-                if(isReady) return;
-                if(document.readyState != "loaded" && document.readyState != "complete") {
-                    setTimeout(arguments.callee, 0);
-                    return;
-                }
-                ready();
-            })();
-        }
-        if(window.addEventListener) window.addEventListener('load', ready, false);
-        else if(window.attachEvent) window.attachEvent('onload', ready);
-    }
-})();
 
 /* EVENTS FUNCTIONS END */

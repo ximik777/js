@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Buttons</title>
+    <link type="text/css" rel="stylesheet" href="/css/buttons.css" />
+    <script type="text/javascript" src="/js/core.js"></script>
+    <script type="text/javascript" src="/js/events.js"></script>
+    <script type="text/javascript" src="/js/dom.js"></script>
+    <script type="text/javascript" src="/js/buttons.js"></script>
+</head>
+<body>
+<div class="button_blue"><button>Button Blue</button></div> <div class="button_gray"><button>Button Gray</button></div><br /><br />
+<div class="button_gray"><button>Button Gray</button></div> <div class="button_blue"><button>Button Blue</button></div><br /><br />
+<div class="button_blue button_wide"><button>Button Wide</button></div><br />
+<div class="button_gray"><button id="look_button">Look Button</button></div><br /><br />
+<div class="button_blue"><button id="disable_button">Disable Button</button></div><br /><br />
+<div class="button_big button_gray"><button>Button Big</button></div> <div class="button_gray"><button>Button</button></div><br /><br />
+<script type="text/javascript">
+
+    function buildButton(item)
+    {
+        createButton(item, function(){alert('Button');});
+        return false;
+    }
+
+    onDomReady(function(){
+
+        lockButton(ge('look_button'));
+        disableButton(ge('disable_button'), true);
+
+    });
+
+</script>
+</body>
+</html>

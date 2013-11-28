@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MessageBox</title>
+
+    <link type="text/css" rel="stylesheet" href="/css/core.css" />
+    <link type="text/css" rel="stylesheet" href="/css/buttons.css" />
+    <link type="text/css" rel="stylesheet" href="/css/boxes.css" />
+    <script type="text/javascript" src="/js/core.js"></script>
+    <script type="text/javascript" src="/js/langs.js"></script>
+    <script type="text/javascript" src="/js/events.js"></script>
+    <script type="text/javascript" src="/js/dom.js"></script>
+    <script type="text/javascript" src="/js/buttons.js"></script>
+    <script type="text/javascript" src="/js/boxes.js"></script>
+</head>
+<body>
+<div class="button_blue"><button id="mb1">MessageBox</button></div><br /><br />
+<div class="button_gray"><button id="alertBox">Alert Box</button></div><br /><br />
+<div class="button_blue"><button id="confirmBox">Confirm Box</button></div><br /><br />
+<div class="button_gray"><button onclick="showDoneBox('test')">Show Done Box</button></div><br /><br />
+<script type="text/javascript">
+
+
+
+
+    var mb1 = null;
+    function ExampleMessageBox(options)
+    {
+        if(!mb1) mb1 = new MessageBox({title: 'MessageBox', width: 420, fullPageLink:'http://mail.ru/', closeButton:true});
+        var box = mb1;
+        box.removeButtons();
+
+        var onClickHandler = function()
+        {
+            alert('save');
+        };
+
+        box.addButton({label: 'Close', style: 'button_no', onClick: function(){ box.hide();}});
+        box.addButton({label: 'Save', onClick: function(){onClickHandler();}});
+        box.addControlsText('test');
+        var html = 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+            html += 'Hello World<br />';
+
+        setTimeout(function(){box.content(html);}, 500);
+        box.show();
+
+        return false;
+    }
+
+
+    onDomReady(function(){
+
+        createButton('mb1', ExampleMessageBox);
+        createButton('alertBox', function(){
+
+            AlertBox('test', 'test', function(){alert('close')});
+
+        });
+
+        createButton('confirmBox', function(){
+
+            ConfirmBox('test', 'test', function(){alert('yes')});
+
+        });
+        
+    });
+
+</script>
+</body>
+</html>

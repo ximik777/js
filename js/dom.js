@@ -741,41 +741,28 @@ function placeholderSetup(id) {
     }
 }
 
-function boxRefreshCoords(cont) {
 
-    //  TODO replace in to windowHeight()
-
-    var height = window.innerHeight ? window.innerHeight : (document.documentElement.clientHeight ? document.documentElement.clientHeight : boxLayerBG.offsetHeight);
-    var top = browser.mobile ? intval(window.pageYOffset) : scrollGetY();
-    containerSize = getSize(cont);
-    cont.style.top = Math.max(0, top + (height - containerSize[1]) / 3) + 'px';
+function boxRefreshCoords(cont, center) {
+    var wsize = windowSize(), top = scrollGetY(), containerSize = getSize(cont);
+    cont.style.top = Math.max(0, top + (wsize[1] - containerSize[1]) / 3) + 'px';
+    if(center) cont.style.left = Math.max(0, (wsize[0] - containerSize[0]) / 2) + 'px';
 }
 
-function showDoneBox(msg, opts) {
-    opts = opts || {};
-    var l = (opts.w || 200) + 20;
-    var style = opts.w ? opts.w : l;
-    var pageW = bodyNode.offsetWidth,
-        resEl = ce('div', {
-            className: 'top_result_baloon_wrap',
-            innerHTML: '<div class="top_result_baloon" style="width:'+style+'px">' + msg + '</div>'
-        }, {left: (pageW - l) / 2});
-    bodyNode.insertBefore(resEl, ge('wrap'));
-    boxRefreshCoords(resEl);
-    var out = opts.out || 2000;
-    var _fadeOut = function() {
-        setTimeout(function() {
-            if (opts.permit && !opts.permit()) {
-                _fadeOut();
-                return;
-            }
-            fadeOut(resEl.firstChild, 500, function() {
-                re(resEl);
-                if (opts.callback) {
-                    opts.callback();
-                }
-            });
-        }, out);
-    };
-    _fadeOut();
+function BGLayer()
+{
+    if (!ge('popupTransparentBG')) {
+        window.transparentBG = ce('div', {
+            id: 'popupTransparentBG',
+            className: 'popup_transparent_bg'
+        }, {
+            display: 'none',
+            height: getSize(document)[1]
+        });
+        addEvent(window, 'resize', function () {
+            transparentBG.style.height = getSize(document)[1] + 'px';
+        });
+        onDomReady(function () {
+            bodyNode.appendChild(transparentBG);
+        });
+    }
 }
