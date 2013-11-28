@@ -7,3 +7,36 @@ body {min-width:1000px; min-height: 100%;height: auto !important; height: 100%;p
 #wrap {min-height: 100%; width:100%;background:#FFF; position:relative;}
 
 body, input, textarea, select, button {font-family:Tahoma, Geneva, sans-serif;font-size:11px;}
+
+
+.label, .labeled, .labeleds {float:left;margin-top:4px;}
+.label {width:130px; color:#6c6c6c; padding:4px 10px 0px 0px;text-align:right;}
+.labeled {min-width:170px; display: inline-block; }
+.labeleds {mix-width:170px; display: inline-block;padding:4px 10px 0px 0px; margin-left: 10px;}
+.labeleds.ml0 {margin-left: 0;}
+.labeleds.pt0 {padding-top: 0;}
+br.cl {clear: left;}
+
+input, textarea {-webkit-border-radius:0px; -moz-border-radius:0px; -khtml-border-radius:0px; border-radius:0px;}
+input, textarea {-w-ebkit-appearance: none;}
+input {width: 133px;}
+input, textarea {
+    background: #FFF;
+    color: #000;
+    border: 1px solid #C0CAD5;
+    padding: 3px;
+    margin: 0px;
+}
+::-webkit-input-placeholder {
+    color: #777;
+}
+input:-moz-placeholder,
+textarea:-moz-placeholder {
+    color: #777;
+}
+
+input[type="checkbox"],
+input[type~="checkbox"]
+{
+    width: auto !important;
+}

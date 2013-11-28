@@ -5,6 +5,12 @@ onDomReady(function () {
         bodyNode: geByTag1('body'),
         htmlNode: geByTag1('html')
     });
+
+    if('devicePixelRatio' in window && window.devicePixelRatio == 2 ){
+
+        addClass(bodyNode, 'is_2x');
+    }
+
 });
 
 function ge(el) {
@@ -765,4 +771,8 @@ function BGLayer()
             bodyNode.appendChild(transparentBG);
         });
     }
+}
+
+function sbWidth(){
+    return 16;
 }

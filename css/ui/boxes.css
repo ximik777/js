@@ -8,7 +8,7 @@
 
 
 .box_progress {background: url(/images/upload.gif) 50% 50% no-repeat;}
-.popup_transparent_bg {top:0;left:0;width: 100%;height: 100%;position: absolute;b-ackground-color: #FFF;fi-lter:alpha(opacity=0);opaci-ty:0.0;z-index: 1000; background: transparent url('/images/layer_bg_lite.png') repeat scroll 0 0;}
+.popup_transparent_bg {top:0;left:0;width: 100%;height: 100%;position: absolute;z-index: 1000; background: transparent url('/images/layer_bg_lite.png') repeat scroll 0 0;background: rgba(0, 0, 0, 0.30);}
 .box_frame{left: 50%;position: absolute;}
 .popup_box_container {position: absolute;left: 50%;z-index: 1002;padding: 0; /*10*/}
 .message_box, .box_no_controls {background: #FFFFFF;-webkit-box-shadow: 0 0 8px rgba(50, 50, 50, 0.75);-moz-box-shadow:0 0 8px rgba(50, 50, 50, 0.75);box-shadow:0 0 8px rgba(50, 50, 50, 0.75);}
@@ -46,7 +46,5 @@
 div.top_result_header {font-weight: bold;font-size: 1.09em;padding-bottom: 5px;}
 div.top_result_baloon a {color: #B1DAFF;font-weight: bold;}
 
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi){
-    .box_progress {background: url(/images/upload_2x.gif) 50% 50% no-repeat;background-size: 32px 8px;}
-    .box_x_button, .box_full_page_link {background-image: url(/images/boxicon_vk_2x.png);background-size: 84px 21px;}
-}
+.is_2x .box_progress {background: url(/images/upload_2x.gif) 50% 50% no-repeat;background-size: 32px 8px;}
+.is_2x .box_x_button, .is_2x .box_full_page_link {background-image: url(/images/boxicon_vk_2x.png);background-size: 84px 21px;}
