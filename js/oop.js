@@ -8,6 +8,7 @@
 //   Cache
 //   Indexer
 //   InlineEdit
+//   Slider
 
 if (!window.vk) vk = {};
 var UI_CONTROLS_DEBUG = false;
@@ -2725,7 +2726,7 @@ if (!window.inlineOnEvent) {
                 if (!curInlineEdit.options.onConfirm || curInlineEdit.options.onConfirm.apply(curInlineEdit) !== false) curInlineEdit.hide();
             }
         }
-    }
+    };
     addEvent(document, 'mousedown keydown', inlineOnEvent);
 }
 
