@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>InlineEdit</title>
+    <meta charset="utf-8">
+    <link type="text/css" rel="stylesheet" href="/css/core.css" />
+    <link type="text/css" rel="stylesheet" href="/css/ui/buttons.css" />
+    <link type="text/css" rel="stylesheet" href="/css/ui/InlineEdit.css" />
+    <script type="text/javascript" src="/js/core.js"></script>
+    <script type="text/javascript" src="/js/langs.js"></script>
+    <script type="text/javascript" src="/js/events.js"></script>
+    <script type="text/javascript" src="/js/dom.js"></script>
+    <script type="text/javascript" src="/js/ui/buttons.js"></script>
+    <script type="text/javascript" src="/js/oop.js"></script>
+</head>
+<body>
+
+<a id="ie_test" href="#">Тест1</a>
+
+
+<script type="text/javascript">
+
+    var s;
+    onDomReady(function(){
+
+        s = new InlineEdit(ge('ie_test'), {onConfirm: function(){
+
+            this.target.innerHTML = this.input.value;
+
+        }, onShow:function(){
+            this.input.value = this.target.innerHTML;
+        }});
+
+    });
+
+</script>
+</body>
+</html>

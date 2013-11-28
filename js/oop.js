@@ -2708,7 +2708,8 @@ if (!window.inlineOnEvent) {
     window.inlineOnEvent = function(e) {
         if (!curInlineEdit) return;
         if (e.type == 'mousedown') {
-            var outside = true, t = e.target;
+            var outside = true;
+            var t = e.target;
             while (t && t != t.parentNode) {
                 if (t == curInlineEdit.container) {
                     outside = false;
@@ -2726,14 +2727,13 @@ if (!window.inlineOnEvent) {
                 if (!curInlineEdit.options.onConfirm || curInlineEdit.options.onConfirm.apply(curInlineEdit) !== false) curInlineEdit.hide();
             }
         }
-    };
+    }
     addEvent(document, 'mousedown keydown', inlineOnEvent);
 }
 
 //
 // InlineEdit class
 //
-
 global_save = 'Save';
 global_cancel = 'Cancel';
 createChildClass('InlineEdit', UiControl, {
@@ -2757,10 +2757,10 @@ createChildClass('InlineEdit', UiControl, {
         contentTableHTML:
             '<tbody>{content}\
              <tr>\
-              <td class="inlButtonOk"><div class="button_yes"><div>{yeslabel}</div></div></td>\
-              <td class="inlButtonCancel"><div class="button_no"><div>{nolabel}</div></div></td>\
+              <td class="inlButtonOk"><div class="button_blue button_wide"><button>{yeslabel}</button></div></td>\
+              <td class="inlButtonCancel"><div class="button_gray button_wide"><button>{nolabel}</button></div></td>\
              </tr></tbody>',
-        contentHTML: '<tr><td><input class="inlInput text" value="" type="text" /></td></tr>',
+        contentHTML: '<tr><td><input class="inlInput text" type="text" /></td></tr>',
 
         confirmLabel: getLang('global_save'),
         cancelLabel: getLang('global_cancel'),
@@ -2842,7 +2842,7 @@ createChildClass('InlineEdit', UiControl, {
         setStyle(this.container, {top: intval(top)+'px', left: intval(left) + 'px'});
     },
     moveToTarget: function() {
-        var tc = getPosition(this.target);//getXY(this.target);
+        var tc = getXY(this.target);
         this.moveTo(tc[0] + this.options.offsetLeft + this.options.left, tc[1] + this.options.offsetTop + this.options.top);
     },
     setOptions: function(options) {
@@ -2860,7 +2860,6 @@ createChildClass('InlineEdit', UiControl, {
         if (this.options.onBeforeShow) {
             this.options.onBeforeShow.apply(this);
         }
-
         show(this.container);
         if (curInlineEdit) curInlineEdit.hide();
         curInlineEdit = this;
@@ -2871,7 +2870,6 @@ createChildClass('InlineEdit', UiControl, {
         }
     }
 });
-
 
 createChildClass('Slider', UiControl, {
     'defaultOptions':{

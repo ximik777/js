@@ -1,6 +1,7 @@
 var base_domain = location.protocol + '//' + location.host,
     _ua = navigator.userAgent.toLowerCase(),
-    lang = lang || {};
+    lang = lang || {},
+    vk = {};
 
 var browser = {
     version: (_ua.match(/.+(?:me|ox|on|rv|it|era|ie)[\/: ]([\d.]+)/) || [0, '0'])[1],

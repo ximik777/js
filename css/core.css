@@ -9,6 +9,8 @@ body {min-width:1000px; min-height: 100%;height: auto !important; height: 100%;p
 body, input, textarea, select, button {font-family:Tahoma, Geneva, sans-serif;font-size:11px;}
 
 
+.ib, .ins_ib li, .ins_ib div {display:-moz-inline-stack;display:inline-block;_overflow:hidden;*zoom:1;*display:inline;}
+
 .label, .labeled, .labeleds {float:left;margin-top:4px;}
 .label {width:130px; color:#6c6c6c; padding:4px 10px 0px 0px;text-align:right;}
 .labeled {min-width:170px; display: inline-block; }

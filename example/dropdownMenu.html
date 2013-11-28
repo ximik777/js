@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DropDown Menu</title>
+    <meta charset="utf-8">
+    <link type="text/css" rel="stylesheet" href="/css/core.css" />
+    <link type="text/css" rel="stylesheet" href="/css/ui/dropdownMenu.css" />
+    <script type="text/javascript" src="/js/core.js"></script>
+    <script type="text/javascript" src="/js/langs.js"></script>
+    <script type="text/javascript" src="/js/events.js"></script>
+    <script type="text/javascript" src="/js/dom.js"></script>
+    <script type="text/javascript" src="/js/oop.js"></script>
+</head>
+<body>
+
+<div class="label"></div><div class="labeled"><a id="dmenu" href="#">Тест</a></div><br class="cl" />
+
+<script type="text/javascript">
+
+
+    onDomReady(function(){
+
+        var menuParams = {};
+        menuParams.target = ge('dmenu');
+        menuParams.onSelect = function(s){console.log(s);};
+        menuParams.showHover = false;
+        if (0) {
+            menuParams.updateTarget = false;
+        }
+        new DropdownMenu([{"l":"Остановлена","i":"off"},{"l":"Архивная","i":"archived"}], menuParams);
+
+    });
+
+</script>
+</body>
+</html>

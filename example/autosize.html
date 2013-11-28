@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AutoSize</title>
+    <meta charset="utf-8">
+    <link type="text/css" rel="stylesheet" href="/css/core.css" />
+    <link type="text/css" rel="stylesheet" href="/css/ui/autosize.css" />
+    <script type="text/javascript" src="/js/core.js"></script>
+    <script type="text/javascript" src="/js/langs.js"></script>
+    <script type="text/javascript" src="/js/events.js"></script>
+    <script type="text/javascript" src="/js/dom.js"></script>
+    <script type="text/javascript" src="/js/oop.js"></script>
+</head>
+<body>
+
+<div class="label"></div><div class="labeled"><textarea class="autosize" style="height: 50px; width: 200px;" id="text"></textarea></div><br class="cl" />
+
+<script type="text/javascript">
+
+
+    onDomReady(function(){
+
+        new Autosize(ge('text'), {height:100, minHeight:50});
+
+
+    });
+
+</script>
+</body>
+</html>
