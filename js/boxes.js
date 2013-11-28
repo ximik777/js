@@ -242,6 +242,7 @@ function MessageBox(options) {
             label: getLang('box_close'),
             onClick: hideBox
         });
+        removeClass(boxBody, 'box_progress');
         boxRefreshCoords(boxContainer, true);
         if (isFunction(options.onLoadError)) options.onLoadError(text);
     }
@@ -283,9 +284,11 @@ function MessageBox(options) {
                         boxBody.innerHTML = responseText;
                     }
                     boxRefreshCoords(boxContainer, true);
+                    removeClass(boxBody, 'box_progress');
                     if (isFunction(options.onLoad)) options.onLoad(responseText);
                 },
                 onFail: function (ajaxObj, responseText) {
+
                     onLoadError('Request error occured.');
                 }
             });
