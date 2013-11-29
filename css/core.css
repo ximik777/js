@@ -2,7 +2,7 @@
 
 html, body {height:100%;width:100%;}
 html {overflow-y:scroll;}
-body {min-width:1000px; min-height: 100%;height: auto !important; height: 100%;position: relative; padding: 10px}
+body {min-width:1000px; min-height: 100%;height: auto !important; height: 100%;position: relative;}
 
 #wrap {min-height: 100%; width:100%;background:#FFF; position:relative;}
 
