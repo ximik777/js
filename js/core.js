@@ -2,7 +2,6 @@ var base_domain = location.protocol + '//' + location.host,
     _ua = navigator.userAgent.toLowerCase(),
     lang = lang || {},
     vk = {};
-
 var browser = {
     version: (_ua.match(/.+(?:me|ox|on|rv|it|era|ie)[\/: ]([\d.]+)/) || [0, '0'])[1],
     opera: /opera/i.test(_ua),
@@ -53,9 +52,8 @@ function isObject(obj) {
 function vkImage() {
     return window.Image ? (new Image()) : ce('img');
 } // IE8 workaround
-
 function trim(text) {
-    return(text || '').replace(/^\s+|\s+$/g, '');
+    return (text || '').replace(/^\s+|\s+$/g, '');
 }
 
 function stripHTML(text) {
@@ -66,17 +64,17 @@ function escapeRE(s) {
     return s ? s.replace(/([.*+?^${}()|[\]\/\\])/g, '\\$1') : '';
 }
 
-function addslashes( str ) {
+function addslashes(str) {
     return (str + '').replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0');
 }
 
 function intval(value) {
-    if(value === true) return 1;
+    if (value === true) return 1;
     return parseInt(value) || 0;
 }
 
 function floatval(value) {
-    if(value === true) return 1;
+    if (value === true) return 1;
     return parseFloat(value) || 0;
 }
 
@@ -86,11 +84,11 @@ function positive(value) {
 }
 
 function isEmpty(o) {
-    if(Object.prototype.toString.call(o) !== '[object Object]') {
+    if (Object.prototype.toString.call(o) !== '[object Object]') {
         return false;
     }
-    for(var i in o) {
-        if(o.hasOwnProperty(i)) {
+    for (var i in o) {
+        if (o.hasOwnProperty(i)) {
             return false;
         }
     }
@@ -100,7 +98,6 @@ function isEmpty(o) {
 function Now() {
     return +new Date;
 }
-
 Function.prototype.pbind = function () {
     var args = Array.prototype.slice.call(arguments);
     args.unshift(window);
@@ -117,8 +114,8 @@ Function.prototype.bind = function () {
 }
 
 function indexOf(arr, value, from) {
-    for(var i = from || 0, l = (arr || []).length; i < l; i++) {
-        if(arr[i] == value) return i;
+    for (var i = from || 0, l = (arr || []).length; i < l; i++) {
+        if (arr[i] == value) return i;
     }
     return -1;
 }
@@ -130,14 +127,12 @@ function inArray(value, arr) {
 function each(object, callback) {
     var name, i = 0,
         length = object.length;
-
-    if(length === undefined) {
-        for(name in object)
-            if(callback.call(object[name], name, object[name]) === false) break;
+    if (length === undefined) {
+        for (name in object)
+            if (callback.call(object[name], name, object[name]) === false) break;
     } else {
-        for(var value = object[0]; i < length && callback.call(value, i, value) !== false; value = object[++i]) {}
+        for (var value = object[0]; i < length && callback.call(value, i, value) !== false; value = object[++i]) {}
     }
-
     return object;
 }
 
@@ -147,43 +142,36 @@ function extend() {
         l = a.length,
         deep = false,
         options;
-
-    if(typeof target === 'boolean') {
+    if (typeof target === 'boolean') {
         deep = target;
         target = a[1] || {};
         i = 2;
     }
-
-    if(typeof target !== 'object' && !isFunction(target)) target = {};
-
-    for(; i < l; ++i) {
-        if((options = a[i]) != null) {
-            for(var name in options) {
+    if (typeof target !== 'object' && !isFunction(target)) target = {};
+    for (; i < l; ++i) {
+        if ((options = a[i]) != null) {
+            for (var name in options) {
                 var src = target[name],
                     copy = options[name];
-
-                if(target === copy) continue;
-
-                if(deep && copy && typeof copy === 'object' && !copy.nodeType) {
+                if (target === copy) continue;
+                if (deep && copy && typeof copy === 'object' && !copy.nodeType) {
                     target[name] = extend(deep, src || (copy.length != null ? [] : {}), copy);
-                } else if(copy !== undefined) {
+                } else if (copy !== undefined) {
                     target[name] = copy;
                 }
             }
         }
     }
-
     return target;
 }
-
 
 function winToUtf(text) {
     var m, i, j, code;
     m = text.match(/&#[0-9]{2}[0-9]*;/gi);
-    for(j in m) {
+    for (j in m) {
         var v = '' + m[j]; // buggy IE6
         code = intval(v.substr(2, v.length - 3));
-        if(code >= 32 && ('&#' + code + ';' == v)) { // buggy IE6
+        if (code >= 32 && ('&#' + code + ';' == v)) { // buggy IE6
             text = text.replace(v, String.fromCharCode(code));
         }
     }
@@ -192,9 +180,9 @@ function winToUtf(text) {
 
 function clone(obj, req) {
     var newObj = isArray(obj) ? [] : {};
-    for(var i in obj) {
-        if(browser.webkit && (i == 'layerX' || i == 'layerY')) continue;
-        if(req && typeof (obj[i]) === 'object' && i !== 'prototype') {
+    for (var i in obj) {
+        if (browser.webkit && (i == 'layerX' || i == 'layerY')) continue;
+        if (req && typeof (obj[i]) === 'object' && i !== 'prototype') {
             newObj[i] = clone(obj[i]);
         } else {
             newObj[i] = obj[i];
@@ -202,14 +190,13 @@ function clone(obj, req) {
     }
     return newObj;
 }
-
 reqs = [];
 res = [];
-(function(){
+(function () {
     var lastLength = 0;
-    window.checkTextLength = function(max_len, val, warn, nobr, display) {
-        if (lastLength==val.length) return;
-        lastLength=val.length;
+    window.checkTextLength = function (max_len, val, warn, nobr, display) {
+        if (lastLength == val.length) return;
+        lastLength = val.length;
         var n_len = replaceChars(val, nobr).length;
         if (n_len > max_len - 100) {
             show(warn);
@@ -224,36 +211,52 @@ res = [];
             warn.innerHTML = '';
         }
     };
-
-    window.replaceChars = function(text, nobr) {
+    window.replaceChars = function (text, nobr) {
         var res = "";
-        for (var i = 0; i<text.length; i++) {
+        for (var i = 0; i < text.length; i++) {
             var c = text.charCodeAt(i);
-            switch(c) {
-                case 0x26: res += "&amp;"; break;
-                case 0x3C: res += "&lt;"; break;
-                case 0x3E: res += "&gt;"; break;
-                case 0x22: res += "&quot;"; break;
-                case 0x0D: res += ""; break;
-                case 0x0A: res += nobr?"\t":"<br>"; break;
-                case 0x21: res += "&#33;"; break;
-                case 0x27: res += "&#39;"; break;
-                default:   res += ((c > 0x80 && c < 0xC0) || c > 0x500) ? "&#"+c+";" : text.charAt(i); break;
+            switch (c) {
+                case 0x26:
+                    res += "&amp;";
+                    break;
+                case 0x3C:
+                    res += "&lt;";
+                    break;
+                case 0x3E:
+                    res += "&gt;";
+                    break;
+                case 0x22:
+                    res += "&quot;";
+                    break;
+                case 0x0D:
+                    res += "";
+                    break;
+                case 0x0A:
+                    res += nobr ? "\t" : "<br>";
+                    break;
+                case 0x21:
+                    res += "&#33;";
+                    break;
+                case 0x27:
+                    res += "&#39;";
+                    break;
+                default:
+                    res += ((c > 0x80 && c < 0xC0) || c > 0x500) ? "&#" + c + ";" : text.charAt(i);
+                    break;
             }
         }
         return res;
     };
 })();
-
-
 var reqs = {};
+
 function attachScript(id, c, callback) {
     var i, new_id = c.substr(c.indexOf('/') + 1, c.indexOf('.') - c.indexOf('/') + 2).replace(/[\/\.]/g, '_');
     var newreqs = [];
-    for(var reqnum in reqs) {
+    for (var reqnum in reqs) {
         req = reqs[reqnum];
-        if(req) {
-            if(req.running == 0) {
+        if (req) {
+            if (req.running == 0) {
                 ge('req' + req.num).parentNode.removeChild(ge('req' + req.num));
                 reqs[reqnum] = null;
             } else {
@@ -267,26 +270,22 @@ function attachScript(id, c, callback) {
         type: 'text/javascript',
         src: ((!/^http:\/\//i.test(c) && !/^\//i.test(c)) ? base_domain : '') + c
     });
-
-    if(callback) {
+    if (callback) {
         ob.onreadystatechange = callback;
         ob.onload = callback;
     }
-
     headNode.appendChild(ob);
 }
 
-
 function destroy() {
-    if(reqs[this.num]) {
+    if (reqs[this.num]) {
         reqs[this.num].running = 0;
     }
 }
 
-
 function addCss(c) {
     var new_id = c.substr(c.indexOf('/') + 1, c.indexOf('.') - c.indexOf('/') - 1) + '_css';
-    if(!ge(new_id)) {
+    if (!ge(new_id)) {
         headNode.appendChild(
             ce('link', {
                 type: 'text/css',
@@ -297,15 +296,13 @@ function addCss(c) {
             }));
     }
 }
-
 (function () {
     var isReady = false,
         readyBind = false,
         readyList = [];
-
     window.onDomReady = function (handle) {
         bindReady();
-        if(isReady) {
+        if (isReady) {
             handle.call(document);
         } else {
             readyList.push(function () {
@@ -313,51 +310,48 @@ function addCss(c) {
             });
         }
     };
-
     var ready = function () {
-        if(!isReady) {
+        if (!isReady) {
             isReady = true;
-            if(readyList) {
+            if (readyList) {
                 var l = readyList;
                 l.reverse();
-                while(handle = l.pop()) {
+                while (handle = l.pop()) {
                     handle.apply(document);
                 }
                 readyList = null;
             }
         }
     };
-
     var bindReady = function () {
-        if(readyBind) return;
+        if (readyBind) return;
         readyBind = true;
-
-        if(document.addEventListener && !browser.opera) document.addEventListener("DOMContentLoaded", ready, false);
-        if(browser.msie && window == top)(function () {
-            if(isReady) return;
+        if (document.addEventListener && !browser.opera) document.addEventListener("DOMContentLoaded", ready, false);
+        if (browser.msie && window == top)(function () {
+            if (isReady) return;
             try {
                 document.documentElement.doScroll("left");
-            } catch(e) {
+            } catch (e) {
                 setTimeout(arguments.callee, 0);
                 return;
             }
             ready();
         })();
-        if(browser.opera) document.addEventListener("DOMContentLoaded", function () {
-            if(isReady) return;
+        if (browser.opera) document.addEventListener("DOMContentLoaded", function () {
+            if (isReady) return;
             ready();
         }, false);
-        if(browser.safari) {
+        if (browser.safari) {
             (function () {
-                if(isReady) return;
-                if(document.readyState != "loaded" && document.readyState != "complete") {
+                if (isReady) return;
+                if (document.readyState != "loaded" && document.readyState != "complete") {
                     setTimeout(arguments.callee, 0);
                     return;
                 }
                 ready();
             })();
         }
-        if(window.addEventListener) window.addEventListener('load', ready, false);
-        else if(window.attachEvent) window.attachEvent('onload', ready);
+        if (window.addEventListener) window.addEventListener('load', ready, false);
+        else if (window.attachEvent) window.attachEvent('onload', ready);
     }
 })();

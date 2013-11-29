@@ -3,8 +3,7 @@ createChildClass('Autosize', UiControl, {
     common: {
         _autosize_helpers: null
     },
-    CSS: {
-    },
+    CSS: {},
     defaultOptions: {
         height: 0,
         minHeight: 0,
@@ -12,13 +11,14 @@ createChildClass('Autosize', UiControl, {
         helperTA: false // new type of autosize, untested
     },
     controlName: 'Autosize',
-
     // Standart object methods
-    beforeInit: function() {
+    beforeInit: function () {
         this.guid = _ui.reg(this);
         if (!this.common._autosize_helpers || !ge('autosize_helpers')) {
             document.body.appendChild(
-                (this.common._autosize_helpers = ce('div', {'id': 'autosize_helpers'}, {
+                (this.common._autosize_helpers = ce('div', {
+                    'id': 'autosize_helpers'
+                }, {
                     'position': 'absolute',
                     'left': '-10000px',
                     'top': '-10000px'
@@ -26,18 +26,18 @@ createChildClass('Autosize', UiControl, {
             );
         }
     },
-    initOptions: function(textarea, options) {
+    initOptions: function (textarea, options) {
         this.options = extend({}, this.defaultOptions, options);
         this.options.checked = intval(this.options.checked) ? true : false;
         this.options.width = intval(this.options.width) > 0 ? intval(this.options.width) : this.defaultOptions.width;
     },
-    init: function(input) {
+    init: function (input) {
         this.input = input;
         this.oldValue = '';
         this.oldHeight = 0;
         this.overflowAuto = false;
     },
-    initDOM: function(input) {
+    initDOM: function (input) {
         this.minHeight = intval(this.options.minHeight) || intval(getStyle(input, 'height'));
         this.maxHeight = intval(this.options.height);
         this.fontSize = intval(getStyle(input, 'fontSize'));
@@ -47,7 +47,6 @@ createChildClass('Autosize', UiControl, {
             w = intval(getStyle(input, 'width', false));
         }
         if (this.defaultOptions.padding) w -= this.defaultOptions.padding * 2;
-
         this.common._autosize_helpers.appendChild(
             this.helper = ce(this.options.helperTA ? 'textarea' : 'div', false, {
                 wordWrap: 'break-word',
@@ -60,16 +59,19 @@ createChildClass('Autosize', UiControl, {
         this.input.helper = this.helper;
         setStyle(this.input, 'overflow', 'hidden');
     },
-    initEvents: function() {
-        addEvent(this.input, 'keydown keypress keyup', this.updateSize, false, {'self': this});
+    initEvents: function () {
+        addEvent(this.input, 'keydown keypress keyup', this.updateSize, false, {
+            'self': this
+        });
     },
-    afterInit: function() {
+    afterInit: function () {
         this.update();
     },
-
     // Extended methods
-    updateSize: function(event) {
-        var self = event.data.self, value = self.input.value, newHeight;
+    updateSize: function (event) {
+        var self = event.data.self,
+            value = self.input.value,
+            newHeight;
         if (event.type != 'keyup') {
             if (event.keyCode == 13 && !event.ctrlKey && !event.altKey) {
                 value += '\n';
@@ -87,7 +89,6 @@ createChildClass('Autosize', UiControl, {
             newHeight = getSize(self.helper, true)[1] + self.fontSize + 4;
         }
         newHeight = Math.max(newHeight, self.minHeight);
-
         if (self.maxHeight > 0 && newHeight > self.maxHeight) {
             newHeight = self.maxHeight;
             if (!self.overflowAuto) {
@@ -117,7 +118,11 @@ createChildClass('Autosize', UiControl, {
         }
     },
     // Shortcuts
-    update: function() {
-        this.updateSize({data: {self: this}});
+    update: function () {
+        this.updateSize({
+            data: {
+                self: this
+            }
+        });
     }
 });

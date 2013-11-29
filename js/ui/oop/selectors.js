@@ -3,23 +3,20 @@ function Dropdown(input, data, options) {
     return new Selector(
         input,
         options.autocomplete ? data : [], extend({
-                introText: '',
-                multiselect: false,
-                autocomplete: false,
-                selectedItems: options.selectedItem
-            }, options, {
-                defaultItems: data
-            }
-        ));
+            introText: '',
+            multiselect: false,
+            autocomplete: false,
+            selectedItems: options.selectedItem
+        }, options, {
+            defaultItems: data
+        }));
 }
 
 function Autocomplete(input, data, options) {
     return new Selector(input, data, options);
 }
-
 createChildClass('Selector', UiControl, {
-    CSS: {
-    },
+    CSS: {},
     defaultOptions: {
         selectedItems: [],
         defaultItems: [],
@@ -29,7 +26,7 @@ createChildClass('Selector', UiControl, {
         cacheLength: 100,
         showMax: 10,
         maxItems: 50,
-        maxItemsShown: function(query_length) {
+        maxItemsShown: function (query_length) {
             if (query_length > 6) {
                 return 500;
             } else if (query_length > 4) {
@@ -47,16 +44,13 @@ createChildClass('Selector', UiControl, {
         width: 300,
         height: 250,
         progressBar: false,
-        highlight: function(label, term) {
-
+        highlight: function (label, term) {
             label = term.indexOf(' ') == -1 ? label.split(' ') : [label];
             var tmp = '';
             var termRus = parseLatin(term);
-
             if (termRus != null) {
                 term = term + '|' + termRus;
             }
-
             var re = new RegExp("(?![^&;]+;)(?!<[^<>]*)((\\(*)(" + term.replace('+', '\\+') + "))(?![^<>]*>)(?![^&;]+;)", "gi");
             for (var i in label) {
                 tmp += (i > 0 ? ' ' : '') + label[i].replace(re, "$2<em>$3</em>");
@@ -68,30 +62,31 @@ createChildClass('Selector', UiControl, {
         introText: 'Начните вводить',
         noResult: 'Ничего не найденно',
         noImageSrc: '/template/images/q.png',
-        formatResult: function(data) {
-            return data[1] + (typeof(data[2]) == 'string' ? ' <span>' + data[2] + '</span>' : '');
+        formatResult: function (data) {
+            return data[1] + (typeof (data[2]) == 'string' ? ' <span>' + data[2] + '</span>' : '');
         },
         hrefPrefix: 'id'
     },
     controlName: 'Selector',
-
     // Standart object methods
-    beforeInit: function(input) {
+    beforeInit: function (input) {
         if (input == null || input['autocomplete']) {
-            try { console.error("Can't init ", input); } catch (e) {}
+            try {
+                console.error("Can't init ", input);
+            } catch (e) {}
             return false;
         }
         this.guid = _ui.reg(this);
     },
-    initOptions: function(input, data, options) {
+    initOptions: function (input, data, options) {
         var opts = this.options = extend({}, this.defaultOptions, {
             resultField: input['name'] || 'selectedItems',
             customField: input['name'] ? (input['name'] + '_custom') : 'selectedItems_custom'
         }, this.prepareOptionsText(options || {}));
-
         // if highlight is set to false, replace it with a do-nothing function
-        opts.highlight = opts.highlight || function(label) { return label; };
-
+        opts.highlight = opts.highlight || function (label) {
+            return label;
+        };
         // Get selected value
         if (!isArray(opts.selectedItems) && isEmpty(opts.selectedItems)) {
             opts.selectedItems = [];
@@ -99,7 +94,6 @@ createChildClass('Selector', UiControl, {
         if (input['value'] && !opts.selectedItems.length) {
             opts.selectedItems = input['value'];
         }
-
         opts.width = parseInt(opts.width) > 0 ? parseInt(opts.width) : this.defaultOptions.width;
         opts.height = parseInt(opts.height) > 0 ? parseInt(opts.height) : this.defaultOptions.height;
         opts.resultListWidth = parseInt(opts.resultListWidth) > 0 ? parseInt(opts.resultListWidth) : opts.width;
@@ -107,17 +101,17 @@ createChildClass('Selector', UiControl, {
             opts.imageId = ge(opts.imageId);
         }
     },
-    init: function(input, data) {
-        this.dataURL = typeof(data) == 'string' ? data : null;
+    init: function (input, data) {
+        this.dataURL = typeof (data) == 'string' ? data : null;
         this.dataItems = isArray(data) ? data : [];
         this.currentList = this.dataItems;
-
         if (this.dataURL) {
             this.cache = new Cache(this.options);
         } else {
-            this.indexer = new Indexer(this.dataItems, {indexkeys: this.options.indexkeys});
+            this.indexer = new Indexer(this.dataItems, {
+                indexkeys: this.options.indexkeys
+            });
         }
-
         this._selectedItems = [];
         this.input = input;
         this.disabled = false;
@@ -130,14 +124,13 @@ createChildClass('Selector', UiControl, {
         this.selectedTokenId = 0;
         this.selectorWidth = this.options.width;
     },
-    initDOM: function(input, data, options) {
-        var opts = this.options, self = this;
-
+    initDOM: function (input, data, options) {
+        var opts = this.options,
+            self = this;
         this.container = ce('div', {
             id: 'container' + this.guid,
             className: 'selector_container' + (!opts.autocomplete ? ' dropdown_container' : '') + (browser.mobile ? ' mobile_selector_container' : ''),
-            innerHTML:
-                '<table cellspacing="0" cellpadding="0" class="selector_table">\
+            innerHTML: '<table cellspacing="0" cellpadding="0" class="selector_table">\
                   <tr>\
                     <td class="selector">\
                       <span class="selected_items"></span>\
@@ -157,7 +150,7 @@ createChildClass('Selector', UiControl, {
             width: opts.width + 'px'
         });
         input.parentNode.replaceChild(this.container, input);
-        each ({
+        each({
             selector: 'selector',
             resultList: 'result_list',
             resultListShadow: 'result_list_shadow',
@@ -166,44 +159,38 @@ createChildClass('Selector', UiControl, {
             resultField: 'resultField',
             customField: 'customField',
             dropdownButton: 'selector_dropdown'
-        }, function(k, v) {
+        }, function (k, v) {
             self[k] = geByClass(v, self.container)[0];
         });
-
         if (browser.chrome) {
             this.resultList.style.opacity = 1;
         }
-
         //if (!this.disabled) // always enabled at init
         input.style.color = opts.placeholderColor;
         input.autocomplete = '1';
-
         if (opts.dividingLine) {
             addClass(this.resultList, 'dividing_line')
         }
-
         this.resultList.style.width = this.resultListShadow.style.width = opts.resultListWidth + 'px';
-
         if (this.options.dropdown) {
             this.initDropdown();
         }
-
         this.select = new Select(this.resultList, this.resultListShadow, {
             selectFirst: opts.selectFirst,
             height: opts.height,
-            onItemActive: function(value) {
+            onItemActive: function (value) {
                 self.showImage(value);
                 self.activeItemValue = value;
             },
             onItemSelect: self._selectItem.bind(self),
-            onShow: function() {
+            onShow: function () {
                 _ui.sel(self.guid);
                 self.highlightInput(true);
                 if (options.onShow) {
                     options.onShow();
                 }
             },
-            onHide: function() {
+            onHide: function () {
                 _ui.sel(false);
                 self.highlightInput(false);
                 if (options.onHide) {
@@ -212,16 +199,17 @@ createChildClass('Selector', UiControl, {
             }
         });
     },
-    initEvents: function() {
+    initEvents: function () {
         var self = this;
         if (this.options.dropdown) {
             this.initDropdownEvents();
         }
         var keyev1 = browser.opera || browser.mozilla ? 'keypress' : 'keydown';
         var keyev2 = browser.opera ? 'keypress' : 'keydown';
-        this.onEvent = function(e) {
+        this.onEvent = function (e) {
             if (e.type == 'mousedown') {
-                var outside = true, t = e.target;
+                var outside = true,
+                    t = e.target;
                 while (t && t != t.parentNode) {
                     if (t == self.container) {
                         outside = false;
@@ -241,9 +229,10 @@ createChildClass('Selector', UiControl, {
                 self.select.handleKeyEvent(e);
             }
         }
-
-        addEvent(this.input, 'paste keypress keydown keyup focus blur', this.handleKeyboardEvent, false, {self: this});
-        addEvent(this.selector, 'mousedown', function(e) {
+        addEvent(this.input, 'paste keypress keydown keyup focus blur', this.handleKeyboardEvent, false, {
+            self: this
+        });
+        addEvent(this.selector, 'mousedown', function (e) {
             var click_over_token = false;
             var el = e.target;
             while (el != null) {
@@ -257,42 +246,50 @@ createChildClass('Selector', UiControl, {
                 return self.onInputClick(e);
             }
             return true;
-        }, false, {self: this});
+        }, false, {
+            self: this
+        });
     },
-    afterInit: function() {
+    afterInit: function () {
         this.updateInput();
-        var opt = this.options, self = this;
+        var opt = this.options,
+            self = this;
         if (opt.selectedItems !== undefined) {
             if (isArray(opt.selectedItems)) {
                 for (var i in opt.selectedItems) {
                     this._selectItem(opt.selectedItems[i], false);
                 }
             } else {
-                each((opt.selectedItems + '').split(','), function(i, x) {
+                each((opt.selectedItems + '').split(','), function (i, x) {
                     self._selectItem(x, false);
                 });
             }
         }
-
         // Select first item if it is dropdown
         if (!this._selectedItems.length && !this.options.autocomplete && !this.options.multiselect && this.options.defaultItems.length) {
             this._selectItem(this.options.defaultItems[0], false);
         }
     },
     // Extended methods
-    prepareOptionsText: function(options) {
-        each(['disabledText', 'placeholder'], function() {
+    prepareOptionsText: function (options) {
+        each(['disabledText', 'placeholder'], function () {
             if (this in options) {
                 options[this] = winToUtf(stripHTML(options[this]));
             }
         });
         return options;
     },
-    fadeButtonToColor: function() {
+    fadeButtonToColor: function () {
         if (this.options.customArrow) return;
-        var state = window.is_rtl ? {backgroundColor: '#E1E8ED', borderRightColor: '#D2DBE0'} : {backgroundColor: '#E1E8ED', borderLeftColor: '#D2DBE0'};
+        var state = window.is_rtl ? {
+            backgroundColor: '#E1E8ED',
+            borderRightColor: '#D2DBE0'
+        } : {
+            backgroundColor: '#E1E8ED',
+            borderLeftColor: '#D2DBE0'
+        };
         var self = this;
-        animate(this.dropdownButton, state, 200, function() {
+        animate(this.dropdownButton, state, 200, function () {
             if (!self.mouseIsOver) {
                 if (!self.select.isVisible()) {
                     self.fadeButtonToWhite();
@@ -302,17 +299,20 @@ createChildClass('Selector', UiControl, {
             }
         });
     },
-    fadeButtonToWhite: function() {
+    fadeButtonToWhite: function () {
         if (this.options.customArrow) return;
         var self = this;
-        animate(this.dropdownButton, {backgroundColor: '#FFFFFF', borderLeftColor: '#FFFFFF'}, 200, function() {
+        animate(this.dropdownButton, {
+            backgroundColor: '#FFFFFF',
+            borderLeftColor: '#FFFFFF'
+        }, 200, function () {
             self.dropdownButton.style.backgroundColor = self.dropdownButton.style[window.is_rtl ? 'borderRightColor' : 'borderLeftColor'] = '';
             if (self.mouseIsOver) {
                 self.fadeButtonToColor();
             }
         });
     },
-    initDropdown: function() {
+    initDropdown: function () {
         this.scrollbarWidth = this.options.customArrowWidth || window.sbWidth();
         if (this.scrollbarWidth <= 3) {
             this.scrollbarWidth = browser.mobile ? 20 : 14;
@@ -322,23 +322,23 @@ createChildClass('Selector', UiControl, {
         }
         this.selectorWidth -= this.scrollbarWidth;
     },
-    initDropdownEvents: function() {
+    initDropdownEvents: function () {
         var self = this;
-        addEvent(this.dropdownButton, 'mouseover', function() {
+        addEvent(this.dropdownButton, 'mouseover', function () {
             addClass(this, 'selector_dropdown_hover');
         });
-        addEvent(this.dropdownButton, 'mouseout', function() {
+        addEvent(this.dropdownButton, 'mouseout', function () {
             removeClass(this, 'selector_dropdown_hover');
         });
-        addEvent(this.container, 'mouseover', function(e) {
+        addEvent(this.container, 'mouseover', function (e) {
             self.mouseIsOver = true;
             if (self.disabled) return;
             self.fadeButtonToColor();
         });
-        addEvent(this.container, 'mouseout', function() {
+        addEvent(this.container, 'mouseout', function () {
             self.mouseIsOver = false;
             if (self.disabled) return;
-            setTimeout(function() {
+            setTimeout(function () {
                 if (self.mouseIsOver) return;
                 if (!self.select.isVisible()) {
                     self.fadeButtonToWhite();
@@ -347,7 +347,7 @@ createChildClass('Selector', UiControl, {
                 }
             }, 0);
         });
-        addEvent(this.dropdownButton, 'mousedown', function() {
+        addEvent(this.dropdownButton, 'mousedown', function () {
             if (!self.select.isVisible()) {
                 self.showDefaultList();
             } else {
@@ -355,14 +355,14 @@ createChildClass('Selector', UiControl, {
             }
         });
     },
-    destroyDropdown: function() {
+    destroyDropdown: function () {
         if (vk.al) cleanElems(this.dropdownButton);
         removeEvent(this.container, 'mouseover');
         removeEvent(this.container, 'mouseout');
         this.scrollbarWidth = 0;
         this.selectorWidth = this.options.width;
     },
-    destroy: function() {
+    destroy: function () {
         if (!vk.al || this.destroyed) return;
         this.destroyDropdown();
         var img = ge(this.options.imageId);
@@ -374,12 +374,12 @@ createChildClass('Selector', UiControl, {
         }
         this.destroyed = true;
     },
-    updateInput: function() {
+    updateInput: function () {
         if (!this._selectedItems.length && !this.hasFocus) {
             this.input.value = ((this.disabled && this.options.disabledText) ? this.options.disabledText : this.options.placeholder);
             if (!this.disabled) this.input.style.color = this.options.placeholderColor;
         }
-        if (!this.options.autocomplete && this.options.multiselect && this._selectedItems.length){
+        if (!this.options.autocomplete && this.options.multiselect && this._selectedItems.length) {
             hide(this.input);
         } else {
             if (!isVisible(this.input)) show(this.input);
@@ -389,35 +389,35 @@ createChildClass('Selector', UiControl, {
             this.input.style.width = Math.max(20, w) + 'px';
         }
     },
-    handleKeyboardEvent: function(e) {
+    handleKeyboardEvent: function (e) {
         var self = e.data.self;
-
         switch (e.type) {
             case 'keyup':
-
-                if(self.options.onKeyup) self.options.onKeyup(self.input.value);
-
+                if (self.options.onKeyup) self.options.onKeyup(self.input.value);
                 break;
             case 'paste':
                 clearTimeout(self.timeout);
-                self.timeout = setTimeout(function(){ self.onChange(); }, 0);
+                self.timeout = setTimeout(function () {
+                    self.onChange();
+                }, 0);
                 break;
-
             case 'keypress':
                 if (e.which == KEY.RETURN && browser.opera && self.options.enableCustom && (self.select.selectedItem() === null || self.select.selectedItem() === undefined)) {
                     self.select.hide();
-                    if (!self.options.noBlur) { self.input.blur(); }
-                    else if (isFunction(self.options.onChange)) {
+                    if (!self.options.noBlur) {
+                        self.input.blur();
+                    } else if (isFunction(self.options.onChange)) {
                         self.updateCustom();
                         self.options.onChange(self.resultField.value);
                     }
                     return false;
                 } else if (e.which == KEY.SPACE || e.which > 40 && !e.metaKey) {
                     clearTimeout(self.timeout);
-                    self.timeout = setTimeout(function(){ self.onChange(); }, 0);
+                    self.timeout = setTimeout(function () {
+                        self.onChange();
+                    }, 0);
                 }
                 break;
-
             case 'keydown':
                 switch (e.keyCode) {
                     case KEY.DOWN:
@@ -434,12 +434,11 @@ createChildClass('Selector', UiControl, {
                             if (self.selectedTokenId) {
                                 var nextTokenId = 0;
                                 for (var i = self._selectedItems.length - 2; i >= 0; i--) {
-                                    if (self._selectedItems[i][0] == self.selectedTokenId && self._selectedItems[i+1]) {
-                                        nextTokenId = self._selectedItems[i+1][0];
+                                    if (self._selectedItems[i][0] == self.selectedTokenId && self._selectedItems[i + 1]) {
+                                        nextTokenId = self._selectedItems[i + 1][0];
                                     }
                                 }
                                 self.removeTagData(self.selectedTokenId);
-
                                 if (nextTokenId) {
                                     self.selectToken(nextTokenId);
                                 } else if (!self.readOnly && !self.hasFocus) {
@@ -455,8 +454,9 @@ createChildClass('Selector', UiControl, {
                     case KEY.RETURN:
                         if (!browser.opera && self.options.enableCustom && (self.select.selectedItem() === null || self.select.selectedItem() === undefined)) {
                             self.select.hide();
-                            if (!self.options.noBlur) { self.input.blur(); }
-                            else if (isFunction(self.options.onChange)) {
+                            if (!self.options.noBlur) {
+                                self.input.blur();
+                            } else if (isFunction(self.options.onChange)) {
                                 self.updateCustom();
                                 self.options.onChange(self.resultField.value);
                             }
@@ -468,7 +468,6 @@ createChildClass('Selector', UiControl, {
                         break;
                 }
                 break;
-
             case 'focus':
                 if (!self.disabled && !self.select.isVisible() && !self.focusSelf) {
                     self.showDefaultList();
@@ -478,7 +477,6 @@ createChildClass('Selector', UiControl, {
                     self.input.blur();
                     return true;
                 }
-
                 if ((self._selectedItems.length == 0) || self.options.multiselect) {
                     if (browser.mozilla) {
                         setTimeout(function () {
@@ -492,10 +490,8 @@ createChildClass('Selector', UiControl, {
                 self.input.style.color = '#000';
                 self.hasFocus++;
                 break;
-
             case 'blur':
                 if (self.options.chooseFirst && self.options.chooseFirst(self.input.value)) { // email field
-
                     self.select.active = 0;
                     if (isFunction(self.select.options.onItemSelect)) {
                         self.select.options.onItemSelect(self.select.selectedItem(), undefined, true);
@@ -512,7 +508,9 @@ createChildClass('Selector', UiControl, {
                         }
                         self.changeAfterBlur = false;
                     }
-                    if (self.options.onBlur) { self.options.onBlur(); }
+                    if (self.options.onBlur) {
+                        self.options.onBlur();
+                    }
                 }
                 if (!hasClass(self.input, 'selected')) {
                     self.input.style.color = self.options.placeholderColor;
@@ -520,11 +518,10 @@ createChildClass('Selector', UiControl, {
                 removeClass(self.input, 'focused');
                 self.hasFocus = 0;
                 break;
-
         }
         return true;
     },
-    updateCustom: function() {
+    updateCustom: function () {
         var self = this;
         if (self.options.enableCustom && self.input.value.length) {
             var custom_val = self.input.value;
@@ -539,11 +536,11 @@ createChildClass('Selector', UiControl, {
             self.input.value = '';
         }
     },
-    handleKeyboardEventOutside: function(e) {
+    handleKeyboardEventOutside: function (e) {
         if (this.disabled || this.input.value.length > 0 && this.hasFocus || !this.hasFocus && this.selectedTokenId == 0) {
             return true;
         }
-        switch(e.keyCode) {
+        switch (e.keyCode) {
             case KEY.RETURN:
                 return false;
                 break;
@@ -560,12 +557,11 @@ createChildClass('Selector', UiControl, {
                 }
                 return false;
                 break;
-
             case KEY.RIGHT:
                 for (var i = 0; i < this._selectedItems.length; i++) {
                     if (this._selectedItems[i][0] == this.selectedTokenId) {
                         if (i < this._selectedItems.length - 1) {
-                            this.selectToken(this._selectedItems[i+1][0]);
+                            this.selectToken(this._selectedItems[i + 1][0]);
                             this.input.blur();
                         } else if (!this.readOnly) {
                             this.deselectTokens();
@@ -579,7 +575,7 @@ createChildClass('Selector', UiControl, {
         }
         return true;
     },
-    onInputClick: function(e) {
+    onInputClick: function (e) {
         var self = e.data.self;
         self.deselectTokens();
         if (!self.select.isVisible()) {
@@ -599,33 +595,33 @@ createChildClass('Selector', UiControl, {
             self.input.blur();
         }
     },
-    highlightInput: function(focus) {
+    highlightInput: function (focus) {
         if (focus) {
             addClass(this.container, 'selector_focused');
         } else {
             removeClass(this.container, 'selector_focused');
         }
     },
-    selectToken: function(id) {
+    selectToken: function (id) {
         if (!this.options.multiselect) return;
         this.select.hide();
         removeClass(ge('bit_' + this.guid + '_' + this.selectedTokenId), 'token_selected');
-        addClass(ge('bit_' + this.guid + '_' +  id), 'token_selected');
+        addClass(ge('bit_' + this.guid + '_' + id), 'token_selected');
         this.selectedTokenId = id;
         if (this.options.onTokenSelected) this.options.onTokenSelected(id);
         this.showImage(id);
     },
-    deselectTokens: function() {
+    deselectTokens: function () {
         if (!this.selectedTokenId || !this.options.multiselect) return;
         removeClass(ge('bit_' + this.guid + '_' + this.selectedTokenId), 'token_selected');
         this.selectedTokenId = 0;
         if (this.options.onTokenSelected) this.options.onTokenSelected();
         this.showImage();
     },
-    _blur: function() {
+    _blur: function () {
         this.select.hide();
     },
-    showImage: function(itemValue, itemData) {
+    showImage: function (itemValue, itemData) {
         if (!this.options.imageId) {
             return false;
         }
@@ -636,7 +632,6 @@ createChildClass('Selector', UiControl, {
                 itemValue = this.resultField.value.split(',')[0];
             }
             var data = this._selectedItems.concat(this.currenDataItems);
-
             if (data && data.length) {
                 for (var i in data) {
                     if (data[i] && data[i][0] == itemValue) {
@@ -646,8 +641,8 @@ createChildClass('Selector', UiControl, {
                 }
             }
         }
-        if (itemData !== undefined && typeof(itemData[3]) == 'string' && itemData[3].length) {
-            if (itemData[3] == 'none'){
+        if (itemData !== undefined && typeof (itemData[3]) == 'string' && itemData[3].length) {
+            if (itemData[3] == 'none') {
                 img.style.display = 'none';
             } else {
                 img.style.display = '';
@@ -659,11 +654,13 @@ createChildClass('Selector', UiControl, {
             img.style.display = '';
             img.setAttribute('src', this.options.noImageSrc);
             img.parentNode.href = '#'; // hack
-            addEvent(img.parentNode, 'click', function() { return true; });
+            addEvent(img.parentNode, 'click', function () {
+                return true;
+            });
         }
         return true;
     },
-    _selectItem: function(item, fireEvent, focusIfMultiselect) {
+    _selectItem: function (item, fireEvent, focusIfMultiselect) {
         if (item == null) {
             return;
         }
@@ -671,16 +668,15 @@ createChildClass('Selector', UiControl, {
             fireEvent = true;
         }
         var data;
-
         if (item == -2e9) {
             data = [this.curTerm, this.curTerm, cur.lang['mail_enter_email_address'], '/images/pics/contact_info.png', 0, ''];
-        } else if (typeof(item) == 'string' && item.indexOf('@') != -1) {
+        } else if (typeof (item) == 'string' && item.indexOf('@') != -1) {
             data = [item, item, cur.lang['mail_enter_email_address'], '/images/pics/contact_info.png', 0, ''];
-        } else if (typeof(item) == 'object') {
+        } else if (typeof (item) == 'object') {
             data = item;
         } else {
             var all_data = [];
-            each([this.dataItems, this.options.defaultItems, this.receivedData], function(i,items) {
+            each([this.dataItems, this.options.defaultItems, this.receivedData], function (i, items) {
                 if (items && items.length)
                     all_data = all_data.concat(items);
             });
@@ -691,13 +687,11 @@ createChildClass('Selector', UiControl, {
                 }
             }
         }
-
         if (typeof data != 'object') {
             data = [item, item]; // value and text
         };
         data[0] = data[0].toString();
         data[1] = data[1].toString();
-
         this.changeAfterBlur = false;
         if (data[0] === this.resultField.value) {
             if (!this.options.multiselect) {
@@ -719,11 +713,9 @@ createChildClass('Selector', UiControl, {
             this.select.hide();
             return;
         }
-
         this.deselectTokens();
         this.addTagData(data);
         this.showImage();
-
         if (this.options.multiselect) {
             this.input.value = '';
             if (this.dataURL) {
@@ -738,12 +730,10 @@ createChildClass('Selector', UiControl, {
                 this.input.style.color = this.resultField.value == '0' && this.options.zeroPlaceholder && this.options.placeholderColor || '#000';
             }
         }
-
         this.select.hide();
-
         this.updateInput();
         if (focusIfMultiselect && this.options.multiselect && !this.readOnly) {
-            setTimeout(function() {
+            setTimeout(function () {
                 if (!this.options.multinostop) {
                     this.focusSelf = true;
                 }
@@ -754,7 +744,6 @@ createChildClass('Selector', UiControl, {
         } else {
             if (!this.options.noBlur) this.input.blur();
         }
-
         if (fireEvent) {
             if (this.options.multiselect && isFunction(this.options.onTagAdd)) {
                 this.options.onTagAdd(data, this.resultField.value);
@@ -764,7 +753,7 @@ createChildClass('Selector', UiControl, {
             }
         }
     },
-    addTagData: function(data) {
+    addTagData: function (data) {
         if (!data || data.length < 2) return;
         if (!this.options.multiselect) {
             this._selectedItems.splice(0, this._selectedItems.length, data);
@@ -778,15 +767,12 @@ createChildClass('Selector', UiControl, {
             }
         }
         this._selectedItems.push(data);
-
         var resultArr = [];
         for (i in this._selectedItems) {
             resultArr.push(this._selectedItems[i][0]);
         }
         this.resultField.value = resultArr.join(',');
-
         this.input.style.width = '1px';
-
         // make box
         var token = ce('div', {
             id: 'bit_' + this.guid + '_' + data[0],
@@ -794,32 +780,30 @@ createChildClass('Selector', UiControl, {
         });
         var maxTokenWidth = Math.max(this.selector.clientWidth, getSize(token)[0]);
         var self = this;
-
         token.innerHTML = '<span class="l">' + data[1] + '</span><span class="x" />';
-
-        addEvent(token, 'click', function() {
+        addEvent(token, 'click', function () {
             self.selectToken(data[0]);
             return false;
         });
-        addEvent(token, 'dblclick', function() {
+        addEvent(token, 'dblclick', function () {
             if (data[4]) {
                 self.removeTagData(data[0]);
-                each(data[4], function(i, v) {
+                each(data[4], function (i, v) {
                     self._selectItem(v, false);
                 });
             }
             return false;
         });
-        addEvent(token, 'mouseover', function(e) {
+        addEvent(token, 'mouseover', function (e) {
             addClass(token, 'token_hover');
             self.showImage(data[0], data);
         });
-        addEvent(token, 'mouseout', function(e) {
+        addEvent(token, 'mouseout', function (e) {
             removeClass(token, 'token_hover');
             self.showImage(self.activeItemValue ? self.activeItemValue : self.selectedTokenId);
         });
         var close = token.firstChild.nextSibling;
-        addEvent(close, 'mousedown', function() {
+        addEvent(close, 'mousedown', function () {
             self.select.hide();
             self.removeTagData(data[0]);
             if (!self.readOnly && self.hasFocus) {
@@ -827,9 +811,7 @@ createChildClass('Selector', UiControl, {
             }
             return false;
         });
-
         self.selectedItemsContainer.appendChild(token);
-
         var label = token.firstChild;
         var labelStr = label.innerHTML;
         while (token.offsetWidth > maxTokenWidth && labelStr.length > 3) {
@@ -837,7 +819,7 @@ createChildClass('Selector', UiControl, {
             label.innerHTML = labelStr + '...';
         }
     },
-    removeTagData: function(id) {
+    removeTagData: function (id) {
         this.selectedTokenId = 0;
         var token = ge('bit_' + this.guid + '_' + id);
         if (!token) {
@@ -846,7 +828,6 @@ createChildClass('Selector', UiControl, {
         var close = token.firstChild.nextSibling;
         if (vk.al) cleanElems(token, close);
         token.parentNode.removeChild(token);
-
         var index, resultArr = [];
         for (i in this._selectedItems) {
             if (this._selectedItems[i][0] == id) {
@@ -856,9 +837,7 @@ createChildClass('Selector', UiControl, {
             resultArr.push(this._selectedItems[i][0]);
         }
         if (index == undefined) return false;
-
         this.resultField.value = resultArr.join(',');
-
         if (this.options.onTagRemove) {
             this.options.onTagRemove(this._selectedItems[i], this.resultField.value);
         }
@@ -873,7 +852,7 @@ createChildClass('Selector', UiControl, {
         this.updateInput();
         return false;
     },
-    onChange: function() {
+    onChange: function () {
         var term = trim(this.input.value.toLowerCase()),
             self = this;
         if (!this.options.multiselect) {
@@ -888,7 +867,8 @@ createChildClass('Selector', UiControl, {
             return;
         }
         this.curTerm = term;
-        var custom = this.options.customSearch, res = custom && custom(term);
+        var custom = this.options.customSearch,
+            res = custom && custom(term);
         if (res) {
             this.receiveData(term, res);
             return;
@@ -896,7 +876,7 @@ createChildClass('Selector', UiControl, {
         if (this.dataURL) {
             var data = this.cache.getData(term);
             if (data == null) {
-                this.requestTimeout = setTimeout(function() {
+                this.requestTimeout = setTimeout(function () {
                     self.request(self.receiveData.bind(self), self.showNoDataList.bind(self));
                 }, 300);
             } else {
@@ -916,13 +896,13 @@ createChildClass('Selector', UiControl, {
             }
         }
     },
-    showNoDataList: function() {
+    showNoDataList: function () {
         if (this.hasFocus || this.readOnly) {
             this._showSelectList(this.options.noResult);
             this.defaultList = false;
         }
     },
-    showDefaultList: function() {
+    showDefaultList: function () {
         var reversed = hasClass(this.resultList, 'reverse');
         if (reversed != this.needsReverse() && this.currenDataItems) {
             this.setSelectContent(this.currenDataText || '', this.currenDataItems);
@@ -942,42 +922,53 @@ createChildClass('Selector', UiControl, {
             if (!this._selectedItems.length) {
                 this.resultList.scrollTop = getSize(this.resultList.firstChild)[1] - getSize(this.resultList)[1] + 10;
             }
-            setStyle(this.resultList, {bottom: getSize(this.container)[1] - 1});
+            setStyle(this.resultList, {
+                bottom: getSize(this.container)[1] - 1
+            });
         } else {
-            setStyle(this.resultList, {bottom: 'auto'});
+            setStyle(this.resultList, {
+                bottom: 'auto'
+            });
         }
     },
-    showDataList: function(items, query) {
+    showDataList: function (items, query) {
         this.defaultList = false;
         this._showSelectList(null, items, query);
     },
-    needsReverse: function() {
+    needsReverse: function () {
         var scrollY = window.scrollGetY ? scrollGetY() : getScroll()[1],
             contY = getXY(this.container)[1] || 0,
             contH = getSize(this.container)[1] || 22,
             maxListH = this.options.height || 250,
             minListH = this.options.minHeight || 0,
             wh = (window.pageNode && window.browser.mozilla ? Math.min(getSize(pageNode)[1], window.lastWindowHeight) : window.lastWindowHeight) || getScroll()[3],
-            list_ul = this.resultList && this.resultList.firstChild, listH;
+            list_ul = this.resultList && this.resultList.firstChild,
+            listH;
         if (list_ul && list_ul.firstChild) {
-            var disp = getStyle(this.resultList, 'display'), vis = getStyle(this.resultList, 'visibility');
-            setStyle(this.resultList, {visibility: 'hidden', display: 'block'});
+            var disp = getStyle(this.resultList, 'display'),
+                vis = getStyle(this.resultList, 'visibility');
+            setStyle(this.resultList, {
+                visibility: 'hidden',
+                display: 'block'
+            });
             listH = getSize(this.resultList)[1];
-            setStyle(this.resultList, {visibility: vis, display: disp});
+            setStyle(this.resultList, {
+                visibility: vis,
+                display: disp
+            });
         } else {
             listH = minListH ? minListH : (this.currenDataItems ? this.currenDataItems.length * getSize(this.container)[1] : maxListH);
         }
         if (listH > maxListH) listH = maxListH;
         return (contY + contH + listH - scrollY > wh && contY - listH - scrollY > 0);
     },
-    setSelectContent: function(text, items, query) {
+    setSelectContent: function (text, items, query) {
         items = isArray(items) && items.length ? items : [];
         var adding = [];
         this.select.clear();
         if (text) {
             adding.push(['', text, true]);
         }
-
         if (items.length) {
             for (var i in items) {
                 if (typeof items[i] != 'object') items[i] = [items[i], items[i]];
@@ -988,12 +979,13 @@ createChildClass('Selector', UiControl, {
             if (this.options.dividingLine == 'smart') {
                 removeClass(this.resultList, 'dividing_line');
                 for (var i in items) {
-                    if (typeof(items[i][2]) == 'string' && items[i][2].length) {
+                    if (typeof (items[i][2]) == 'string' && items[i][2].length) {
                         addClass(this.resultList, 'dividing_line');
                     }
                 }
             }
-            var itemsToShow = (this.options.autocomplete && query) ? this.options.maxItemsShown(query.length) : items.length, self = this;
+            var itemsToShow = (this.options.autocomplete && query) ? this.options.maxItemsShown(query.length) : items.length,
+                self = this;
             for (var i = 0; i < items.length; ++i) {
                 var it = items[i];
                 if (!itemsToShow) break;
@@ -1013,7 +1005,7 @@ createChildClass('Selector', UiControl, {
         toggleClass(this.resultListShadow, 'reverse', rev);
         this.select.content(adding);
     },
-    _showSelectList: function(text, items, query) {
+    _showSelectList: function (text, items, query) {
         this.currenDataItems = items;
         this.currenDataText = text;
         // RTL fix
@@ -1021,7 +1013,6 @@ createChildClass('Selector', UiControl, {
             var l = getXY(this.container)[0];
             if (l) geByClass('results_container', this.container)[0].style.left = l + 'px';
         }
-
         this.setSelectContent(text, items, query);
         if (this.options.multiselect || !this._selectedItems.length) {
             this.select.show();
@@ -1030,7 +1021,7 @@ createChildClass('Selector', UiControl, {
         }
         return true;
     },
-    receiveData: function(q, data) {
+    receiveData: function (q, data) {
         if (q != this.curTerm) return;
         if (q != '' && data && data.length && this.hasFocus) {
             this.receivedData = data;
@@ -1039,9 +1030,10 @@ createChildClass('Selector', UiControl, {
             this.select.hide();
         }
     },
-    filterData: function(items) {
-        var result = [], self = this;
-        each(items, function(i) {
+    filterData: function (items) {
+        var result = [],
+            self = this;
+        each(items, function (i) {
             for (var j in self._selectedItems) {
                 if (this[0] == self._selectedItems[j][0])
                     return;
@@ -1050,13 +1042,14 @@ createChildClass('Selector', UiControl, {
         });
         return result;
     },
-    request: function(success, failure) {
+    request: function (success, failure) {
         if (!this.dataURL) return;
-        var term = trim(this.input.value.toLowerCase()), self = this;
+        var term = trim(this.input.value.toLowerCase()),
+            self = this;
         if (term.length == 0) return;
         var sep = this.dataURL.indexOf('?') == -1 ? '?' : '&';
         var url = this.dataURL + sep + 'str=' + encodeURIComponent(term);
-        var done = function(data) {
+        var done = function (data) {
             if (self.options.progressBar) {
                 hide(self.options.progressBar);
             }
@@ -1074,17 +1067,16 @@ createChildClass('Selector', UiControl, {
         if (vk.al) {
             ajax.plainpost(url, {}, done);
         } else {
-            var aj = new Ajax(function(obj, data) {
+            var aj = new Ajax(function (obj, data) {
                 done(data);
             });
             aj.post(url);
-
         }
         if (this.options.progressBar) {
             show(this.options.progressBar);
         }
     },
-    doSort: function(data) {
+    doSort: function (data) {
         var i, j, tmp;
         if (!data.length || data.length < 2) return;
         for (i = 0; i < data.length - 1; i++) {
@@ -1097,11 +1089,10 @@ createChildClass('Selector', UiControl, {
             }
         }
     },
-    disable: function(value) {
+    disable: function (value) {
         if (value && !this.disabled) {
             this.disabled = true;
             addClass(this.container, 'disabled');
-
             var s = getSize(this.container);
             if (this.options.disabledText) this.input.value = this.options.disabledText;
             this.container.appendChild(
@@ -1128,9 +1119,8 @@ createChildClass('Selector', UiControl, {
             //this.updateInput(); // Is it correct?
         }
     },
-    _clear: function() {
+    _clear: function () {
         this.showImage();
-
         if (this.options.multiselect) {
             this.selectedTokenId = 0;
             this.selectedItemsContainer.innerHTML = '';
@@ -1145,11 +1135,10 @@ createChildClass('Selector', UiControl, {
             this.resultField.value = '';
             this._selectedItems.splice(0, this._selectedItems.length);
         }
-
         return false;
     },
-    setURL: function(url) {
-        if (typeof(url) == 'string') {
+    setURL: function (url) {
+        if (typeof (url) == 'string') {
             this.dataURL = url;
             if (!this.cache) {
                 this.cache = new Cache(this.options);
@@ -1157,11 +1146,10 @@ createChildClass('Selector', UiControl, {
                 this.cache.flush();
             }
             if (this.indexer) delete this.indexer;
-
             this.dataItems = [];
         }
     },
-    setData: function(dataArr) {
+    setData: function (dataArr) {
         if (!isArray(dataArr)) return;
         if (!this.options.autocomplete) {
             this.select.clear();
@@ -1196,15 +1184,15 @@ createChildClass('Selector', UiControl, {
         }
         if (this.cache) delete this.cache;
     },
-    focus: function() {
+    focus: function () {
         if (!this.readOnly) {
             this.input.focus();
         }
     },
-    selectItem: function(item, fireEvent) {
+    selectItem: function (item, fireEvent) {
         this._selectItem(item, fireEvent);
     },
-    setOptions: function(new_options) {
+    setOptions: function (new_options) {
         new_options = this.prepareOptionsText(new_options);
         extend(this.options, new_options);
         if ('maxItems' in new_options && this.options.maxItems >= 0) {
@@ -1212,14 +1200,12 @@ createChildClass('Selector', UiControl, {
                 this.removeTagData(this._selectedItems[i][0]);
             }
         }
-
         if ('defaultItems' in new_options) {
             this.select.clear();
             if (this.select.isVisible(this.container)) {
                 this.showDefaultList();
             }
         }
-
         if ('enableCustom' in new_options) {
             if (this.options.enableCustom && !this.options.autocomplete) {
                 this.options.autocomplete = new_options.autocomplete = true;
@@ -1228,7 +1214,6 @@ createChildClass('Selector', UiControl, {
         if ('width' in new_options) {
             this.container.style.width = this.options.width + 'px';
             this.resultList.style.width = this.resultListShadow.style.width = this.options.width + 'px';
-
             this.selectorWidth = this.options.width - this.scrollbarWidth;
         }
         if ('dropdown' in new_options) {
@@ -1262,11 +1247,11 @@ createChildClass('Selector', UiControl, {
             }
         }
     },
-    val: function(value, fireEvent) {
+    val: function (value, fireEvent) {
         if (value !== undefined) this._selectItem(value, (fireEvent === undefined) ? false : fireEvent);
         return this.resultField.value;
     },
-    val_full: function() {
+    val_full: function () {
         if (this.options.multiselect) {
             return this._selectedItems;
         } else {
@@ -1277,22 +1262,21 @@ createChildClass('Selector', UiControl, {
             }
         }
     },
-    customVal: function(value, fireEvent) {
+    customVal: function (value, fireEvent) {
         if (value !== undefined) {
             this.customField.value = value;
             this.selectItem([this.options.valueForCustom, value], (fireEvent === undefined) ? false : fireEvent);
         }
         return this.customField.value;
     },
-    selectedItems: function() {
+    selectedItems: function () {
         return this._selectedItems;
     },
-    clear: function() {
+    clear: function () {
         this._clear();
         this.updateInput();
     }
 });
-
 //
 // Select class
 //
@@ -1300,21 +1284,20 @@ createChildClass('Select', UiControl, {
     // Static class fields
     common: {
         _sel: window.Select && Select._sel || [],
-        reg: function(obj) {
+        reg: function (obj) {
             this._sel.push(obj);
             return this._sel.length;
         },
-        destroy: function(uid) {
+        destroy: function (uid) {
             this._sel[uid - 1] = false;
         },
-        itemMouseMove: function(uid, i, el) {
+        itemMouseMove: function (uid, i, el) {
             this._sel[uid - 1].onMouseMove(i, el);
         },
-        itemMouseDown: function(uid, i, el) {
+        itemMouseDown: function (uid, i, el) {
             this._sel[uid - 1].onMouseDown(i, el);
         }
     },
-
     // Standart fields
     CSS: {
         FIRST: 'first',
@@ -1323,12 +1306,11 @@ createChildClass('Select', UiControl, {
         SCROLLABLE: 'result_list_scrollable'
     },
     controlName: 'SelectList',
-
     // Standart methods
-    initOptions: function(container, shadow, options) {
+    initOptions: function (container, shadow, options) {
         this.options = options || {};
     },
-    init: function(container, shadow, options) {
+    init: function (container, shadow, options) {
         this.container = container;
         this.shadow = shadow;
         this.active = -1;
@@ -1336,11 +1318,11 @@ createChildClass('Select', UiControl, {
         this.uid = this.common.reg(this);
         this.maxHeight = this.options.height ? this.options.height : 250;
     },
-    initDOM: function() {
+    initDOM: function () {
         this.list = ce('ul');
         this.container.appendChild(this.list);
     },
-    show: function(selectedItem) {
+    show: function (selectedItem) {
         var wasVisible = isVisible(this.container);
         if (!wasVisible) {
             this.performShow();
@@ -1355,7 +1337,8 @@ createChildClass('Select', UiControl, {
                 }
             }
         } else if (this.options.selectFirst) {
-            var reversed = this.container && hasClass(this.container, 'reverse'), ind;
+            var reversed = this.container && hasClass(this.container, 'reverse'),
+                ind;
             for (var i = 0; i < this.list.childNodes.length; i++) {
                 ind = reversed ? this.list.childNodes.length - 1 - i : i;
                 childNode = this.list.childNodes[ind];
@@ -1367,7 +1350,7 @@ createChildClass('Select', UiControl, {
         }
         if (!wasVisible && isFunction(this.options.onShow)) this.options.onShow();
     },
-    hide: function() {
+    hide: function () {
         if (!isVisible(this.container)) return;
         hide(this.container);
         hide(this.shadow);
@@ -1375,27 +1358,23 @@ createChildClass('Select', UiControl, {
         this.highlight(-1);
         if (isFunction(this.options.onItemActive)) this.options.onItemActive();
     },
-
     // Extended methods
-    handleKeyEvent: function(e) {
+    handleKeyEvent: function (e) {
         if (!isVisible(this.container)) {
             return true;
         }
-        switch(e.keyCode) {
+        switch (e.keyCode) {
             case KEY.UP:
                 this.movePosition(-1)
                 return cancelEvent(e);
                 break;
-
             case KEY.DOWN:
                 this.movePosition(1);
                 return cancelEvent(e);
                 break;
-
             case KEY.TAB:
                 this.hide();
                 break;
-
             case KEY.RETURN:
                 if (isFunction(this.options.onItemSelect) && this.active > -1) {
                     this.options.onItemSelect(this.selectedItem(), undefined, true);
@@ -1403,12 +1382,10 @@ createChildClass('Select', UiControl, {
                 cancelEvent(e);
                 return false;
                 break;
-
             case KEY.ESC:
                 this.hide();
                 return false;
                 break;
-
             case KEY.PAGEUP:
             case KEY.PAGEDOWN:
                 // deprecated
@@ -1417,16 +1394,16 @@ createChildClass('Select', UiControl, {
         }
         return true;
     },
-    clear: function() {
+    clear: function () {
         this.highlight(-1);
         this.list.innerHTML = '';
         this.updateContainer();
     },
-    destroy: function() {
+    destroy: function () {
         this.clear();
         Select.destroy(this.uid);
     },
-    selectedItem: function() {
+    selectedItem: function () {
         if (this.active >= 0) {
             var el = this.list.childNodes[this.active];
             var value = el.getAttribute('val') || el.innerHTML;
@@ -1434,7 +1411,7 @@ createChildClass('Select', UiControl, {
         }
         return undefined;
     },
-    movePosition: function(step) {
+    movePosition: function (step) {
         var selected = intval(this.active) + intval(step);
         if (selected < 0)
             this.container.scrollTop = 0;
@@ -1454,7 +1431,7 @@ createChildClass('Select', UiControl, {
         this.highlight(selected, this.list.childNodes[selected]);
         return true;
     },
-    highlight: function(i, el) {
+    highlight: function (i, el) {
         if (this.active != -1) {
             removeClass(this.list.childNodes[this.active], this.CSS.ACTIVE);
         }
@@ -1464,7 +1441,6 @@ createChildClass('Select', UiControl, {
         }
         this.active = i;
         addClass(el, this.CSS.ACTIVE);
-
         if (isFunction(this.options.onItemActive)) {
             this.options.onItemActive(el.getAttribute('val') || el.innerHTML);
         }
@@ -1474,19 +1450,19 @@ createChildClass('Select', UiControl, {
             this.container.scrollTop = el.offsetTop + this.list.offsetTop;
         }
     },
-    onMouseMove: function(i, el) {
+    onMouseMove: function (i, el) {
         if (hasClass(el, 'active')) return false;
         this.highlight(i, el);
         return true;
     },
-    onMouseDown: function(i, el) {
+    onMouseDown: function (i, el) {
         var val = el.getAttribute('val') || el.innerHTML;
         if (isFunction(this.options.onItemSelect)) {
             this.options.onItemSelect(val, undefined, true);
         }
         this.hide();
     },
-    updateContainer: function() {
+    updateContainer: function () {
         if (this.maxHeight < this.list.offsetHeight) {
             this.container.style.height = this.maxHeight + 'px';
             show(this.shadow);
@@ -1504,7 +1480,7 @@ createChildClass('Select', UiControl, {
             }
         }
     },
-    content: function(items) {
+    content: function (items) {
         var html = [],
             i, it, v, t, d, a, ind,
             len = items.length;
@@ -1515,19 +1491,13 @@ createChildClass('Select', UiControl, {
             t = it[1];
             d = it[2];
             ind = this.uid + ', ' + i;
-
             v = (v === undefined) ? '' : v.toString();
             t = ((t === undefined) ? '' : t.toString()) || v;
-
             html.push(
-                '<li ',
-                !d ? 'onmousemove="Select.itemMouseMove(' + ind + ', this)" onmousedown="Select.itemMouseDown(' + ind + ', this)"' : 'dis="1"',
+                '<li ', !d ? 'onmousemove="Select.itemMouseMove(' + ind + ', this)" onmousedown="Select.itemMouseDown(' + ind + ', this)"' : 'dis="1"',
                 ' val="',
                 v.replace(/&/g, '&amp;').replace(/"/g, '&quot;'),
-                '" class="',
-                (d ? 'disabled ' : ''),
-                ((i == len - 1) ? (this.CSS.LAST + ' ') : ''),
-                (i ? '' : this.CSS.FIRST) + '">',
+                '" class="', (d ? 'disabled ' : ''), ((i == len - 1) ? (this.CSS.LAST + ' ') : ''), (i ? '' : this.CSS.FIRST) + '">',
                 t,
                 '</li>'
             );
@@ -1536,8 +1506,9 @@ createChildClass('Select', UiControl, {
         this.updateContainer();
         return true;
     },
-    removeItem: function(value) {
-        var undefined, l = this.list.childNodes, len = l.length;
+    removeItem: function (value) {
+        var undefined, l = this.list.childNodes,
+            len = l.length;
         if (value === undefined) return;
         for (var i = 0; i < len; ++i) {
             var node = l[i];
@@ -1561,23 +1532,23 @@ createChildClass('Select', UiControl, {
         this.updateContainer();
     },
     // AntanubiS - if list.offsetHeight is greater, than screen without scrollbar - bugs.
-    performShow: function() {
+    performShow: function () {
         this.list.style.position = 'absolute';
         this.list.style.visibility = 'hidden';
-        show(this.container);// We see bug in MessageBox with Selector between theese lines.
+        show(this.container); // We see bug in MessageBox with Selector between theese lines.
         show(this.shadow);
         this.updateContainer();
         this.list.style.position = 'relative';
         this.list.style.visibility = 'visible';
     },
     // Shortcuts
-    isVisible: function() {
+    isVisible: function () {
         return isVisible(this.container);
     },
-    hasItems: function() {
+    hasItems: function () {
         return this.list.childNodes.length > 0;
     },
-    toggle: function() {
+    toggle: function () {
         if (this.isVisible(this.container)) {
             this.hide();
         } else {

@@ -5,32 +5,28 @@ onDomReady(function () {
         bodyNode: geByTag1('body'),
         htmlNode: geByTag1('html')
     });
-
-    if('devicePixelRatio' in window && window.devicePixelRatio == 2 ){
-
+    if ('devicePixelRatio' in window && window.devicePixelRatio == 2) {
         addClass(bodyNode, 'is_2x');
     }
-
 });
 
 function ge(el) {
-    return(typeof el == 'string' || typeof el == 'number') ? document.getElementById(el) : el;
+    return (typeof el == 'string' || typeof el == 'number') ? document.getElementById(el) : el;
 }
 
 function geByClass(searchClass, node, tag) {
     node = node || document;
     tag = tag || '*';
     var classElements = [];
-
-    if(!browser.msie8 && node.querySelectorAll && tag != '*') {
+    if (!browser.msie8 && node.querySelectorAll && tag != '*') {
         return node.querySelectorAll(tag + '.' + searchClass);
     }
-    if(node.getElementsByClassName) {
+    if (node.getElementsByClassName) {
         var nodes = node.getElementsByClassName(searchClass);
-        if(tag != '*') {
+        if (tag != '*') {
             tag = tag.toUpperCase();
-            for(var i = 0, l = nodes.length; i < l; ++i) {
-                if(nodes[i].tagName.toUpperCase() == tag) {
+            for (var i = 0, l = nodes.length; i < l; ++i) {
+                if (nodes[i].tagName.toUpperCase() == tag) {
                     classElements.push(nodes[i]);
                 }
             }
@@ -39,11 +35,10 @@ function geByClass(searchClass, node, tag) {
         }
         return classElements;
     }
-
     var els = geByTag(tag, node);
     var pattern = new RegExp('(^|\\s)' + searchClass + '(\\s|$)');
-    for(var i = 0, l = els.length; i < l; ++i) {
-        if(pattern.test(els[i].className)) {
+    for (var i = 0, l = els.length; i < l; ++i) {
+        if (pattern.test(els[i].className)) {
             classElements.push(els[i]);
         }
     }
@@ -57,7 +52,7 @@ function geByClass1(searchClass, node, tag) {
 }
 
 function geByTag(searchTag, node) {
-    return(node || document).getElementsByTagName(searchTag);
+    return (node || document).getElementsByTagName(searchTag);
 }
 
 function geByTag1(searchTag, node) {
@@ -67,14 +62,14 @@ function geByTag1(searchTag, node) {
 
 function ce(tagName, attr, style) {
     var el = document.createElement(tagName);
-    if(attr) extend(el, attr);
-    if(style) setStyle(el, style);
+    if (attr) extend(el, attr);
+    if (style) setStyle(el, style);
     return el;
 }
 
 function re(el) {
     el = ge(el);
-    if(el && el.parentNode) el.parentNode.removeChild(el);
+    if (el && el.parentNode) el.parentNode.removeChild(el);
     return el;
 }
 
@@ -84,19 +79,19 @@ function hasClass(obj, name) {
 }
 
 function addClass(obj, name) {
-    if((obj = ge(obj)) && !hasClass(obj, name)) {
+    if ((obj = ge(obj)) && !hasClass(obj, name)) {
         obj.className = (obj.className ? obj.className + ' ' : '') + name;
     }
 }
 
 function removeClass(obj, name) {
-    if(obj = ge(obj)) {
+    if (obj = ge(obj)) {
         obj.className = trim((obj.className || '').replace((new RegExp('(\\s|^)' + name + '(\\s|$)')), ' '));
     }
 }
 
 function toggleClass(obj, name, v) {
-    if(v === undefined) {
+    if (v === undefined) {
         v = !hasClass(obj, name);
     }
     (v ? addClass : removeClass)(obj, name);
@@ -109,34 +104,33 @@ function replaceClass(obj, oldName, newName) {
 
 function getStyle(elem, name, force) {
     elem = ge(elem);
-    if(isArray(name)) {
+    if (isArray(name)) {
         var res = {};
         each(name, function (i, v) {
             res[v] = getStyle(elem, v);
         });
         return res;
     }
-    if(force === undefined) {
+    if (force === undefined) {
         force = true;
     }
-    if(!force && name == 'opacity' && browser.msie) {
+    if (!force && name == 'opacity' && browser.msie) {
         var filter = elem.style['filter'];
         return filter ? (filter.indexOf('opacity=') >= 0 ?
             (parseFloat(filter.match(/opacity=([^)]*)/)[1]) / 100) + '' : '1') : '';
     }
-    if(!force && elem.style && (elem.style[name] || name == 'height')) {
+    if (!force && elem.style && (elem.style[name] || name == 'height')) {
         return elem.style[name];
     }
-
     var ret, defaultView = document.defaultView || window;
-    if(defaultView.getComputedStyle) {
+    if (defaultView.getComputedStyle) {
         name = name.replace(/([A-Z])/g, '-$1').toLowerCase();
         var computedStyle = defaultView.getComputedStyle(elem, null);
-        if(computedStyle) {
+        if (computedStyle) {
             ret = computedStyle.getPropertyValue(name);
         }
-    } else if(elem.currentStyle) {
-        if(name == 'opacity' && browser.msie) {
+    } else if (elem.currentStyle) {
+        if (name == 'opacity' && browser.msie) {
             var filter = elem.currentStyle['filter'];
             return filter && filter.indexOf('opacity=') >= 0 ? (parseFloat(filter.match(/opacity=([^)]*)/)[1]) / 100) + '' : '1';
         }
@@ -145,45 +139,40 @@ function getStyle(elem, name, force) {
         });
         ret = elem.currentStyle[name] || elem.currentStyle[camelCase];
         //dummy fix for ie
-        if(ret == 'auto') {
+        if (ret == 'auto') {
             ret = 0;
         }
-
-        if(!/^\d+(px)?$/i.test(ret) && /^\d/.test(ret)) {
+        if (!/^\d+(px)?$/i.test(ret) && /^\d/.test(ret)) {
             var style = elem.style,
                 left = style.left,
                 rsLeft = elem.runtimeStyle.left;
-
             elem.runtimeStyle.left = elem.currentStyle.left;
             style.left = ret || 0;
             ret = style.pixelLeft + 'px';
-
             style.left = left;
             elem.runtimeStyle.left = rsLeft;
         }
     }
-
-    if(force && (name == 'width' || name == 'height')) {
+    if (force && (name == 'width' || name == 'height')) {
         var ret2 = getSize(elem, true)[({
             'width': 0,
             'height': 1
         })[name]];
         ret = (intval(ret) ? Math.max(floatval(ret), ret2) : ret2) + 'px';
     }
-
     return ret;
 }
 
 function setStyle(elem, name, value) {
     elem = ge(elem);
-    if(!elem) return;
-    if(typeof name == 'object') return each(name, function (k, v) {
+    if (!elem) return;
+    if (typeof name == 'object') return each(name, function (k, v) {
         setStyle(elem, k, v);
     });
-    if(name == 'opacity') {
-        if(browser.msie) {
-            if((value + '').length) {
-                if(value !== 1) {
+    if (name == 'opacity') {
+        if (browser.msie) {
+            if ((value + '').length) {
+                if (value !== 1) {
                     elem.style.filter = 'alpha(opacity=' + value * 100 + ')';
                 } else {
                     elem.style.filter = '';
@@ -197,9 +186,9 @@ function setStyle(elem, name, value) {
     } else {
         try {
             var isN = typeof (value) == 'number';
-            if(isN && (/height|width/i).test(name)) value = Math.abs(value);
+            if (isN && (/height|width/i).test(name)) value = Math.abs(value);
             elem.style[name] = isN && !(/z-?index|font-?weight|opacity|zoom|line-?height/i).test(name) ? value + 'px' : value;
-        } catch(e) {
+        } catch (e) {
             console.log([name, value]);
         }
     }
@@ -207,18 +196,18 @@ function setStyle(elem, name, value) {
 
 function getRGB(color) {
     var result;
-    if(color && isArray(color) && color.length == 3) return color;
-    if(result = /rgb\(\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*\)/.exec(color)) return [parseInt(result[1]), parseInt(result[2]), parseInt(result[3])];
-    if(result = /rgb\(\s*([0-9]+(?:\.[0-9]+)?)\%\s*,\s*([0-9]+(?:\.[0-9]+)?)\%\s*,\s*([0-9]+(?:\.[0-9]+)?)\%\s*\)/.exec(color)) return [parseFloat(result[1]) * 2.55, parseFloat(result[2]) * 2.55, parseFloat(result[3]) * 2.55];
-    if(result = /#([a-fA-F0-9]{2})([a-fA-F0-9]{2})([a-fA-F0-9]{2})/.exec(color)) return [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)];
-    if(result = /#([a-fA-F0-9])([a-fA-F0-9])([a-fA-F0-9])/.exec(color)) return [parseInt(result[1] + result[1], 16), parseInt(result[2] + result[2], 16), parseInt(result[3] + result[3], 16)];
+    if (color && isArray(color) && color.length == 3) return color;
+    if (result = /rgb\(\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*\)/.exec(color)) return [parseInt(result[1]), parseInt(result[2]), parseInt(result[3])];
+    if (result = /rgb\(\s*([0-9]+(?:\.[0-9]+)?)\%\s*,\s*([0-9]+(?:\.[0-9]+)?)\%\s*,\s*([0-9]+(?:\.[0-9]+)?)\%\s*\)/.exec(color)) return [parseFloat(result[1]) * 2.55, parseFloat(result[2]) * 2.55, parseFloat(result[3]) * 2.55];
+    if (result = /#([a-fA-F0-9]{2})([a-fA-F0-9]{2})([a-fA-F0-9]{2})/.exec(color)) return [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)];
+    if (result = /#([a-fA-F0-9])([a-fA-F0-9])([a-fA-F0-9])/.exec(color)) return [parseInt(result[1] + result[1], 16), parseInt(result[2] + result[2], 16), parseInt(result[3] + result[3], 16)];
 }
 
 function getColor(elem, attr) {
     var color;
     do {
         color = getStyle(elem, attr);
-        if(color != '' && color != 'transparent' || elem.nodeName.toLowerCase() == "body") break;
+        if (color != '' && color != 'transparent' || elem.nodeName.toLowerCase() == "body") break;
         attr = "backgroundColor";
     } while (elem = elem.parentNode);
     return getRGB(color);
@@ -226,7 +215,7 @@ function getColor(elem, attr) {
 
 function animate(el, params, speed, callback) {
     el = ge(el);
-    if(!el) return;
+    if (!el) return;
     var _cb = isFunction(callback) ? callback : function () {};
     var options = extend({}, typeof speed == 'object' ? speed : {
         duration: speed,
@@ -237,64 +226,61 @@ function animate(el, params, speed, callback) {
         p;
     options.orig = {};
     params = clone(params);
-    if(params.discrete) {
+    if (params.discrete) {
         options.discrete = 1;
         delete(params.discrete);
     }
-    if(browser.iphone) options.duration = 0;
+    if (browser.iphone) options.duration = 0;
     var tween = data(el, 'tween'),
         i, name, toggleAct = visible ? 'hide' : 'show';
-    if(tween && tween.isTweening) {
+    if (tween && tween.isTweening) {
         options.orig = extend(options.orig, tween.options.orig);
         tween.stop(false);
-        if(tween.options.show) toggleAct = 'hide';
-        else if(tween.options.hide) toggleAct = 'show';
+        if (tween.options.show) toggleAct = 'hide';
+        else if (tween.options.hide) toggleAct = 'show';
     }
-    for(p in params) {
-        if(!tween && (params[p] == 'show' && visible || params[p] == 'hide' && !visible)) {
+    for (p in params) {
+        if (!tween && (params[p] == 'show' && visible || params[p] == 'hide' && !visible)) {
             return options.onComplete.call(this, el);
         }
-        if((p == 'height' || p == 'width') && el.style) {
-            if(!params.overflow) {
-                if(options.orig.overflow == undefined) {
+        if ((p == 'height' || p == 'width') && el.style) {
+            if (!params.overflow) {
+                if (options.orig.overflow == undefined) {
                     options.orig.overflow = getStyle(el, 'overflow');
                 }
                 el.style.overflow = 'hidden';
             }
-            if(!hasClass(el, 'inl_bl') && el.tagName != 'TD') {
+            if (!hasClass(el, 'inl_bl') && el.tagName != 'TD') {
                 el.style.display = 'block';
             }
         }
-        if(/show|hide|toggle/.test(params[p])) {
-            if(params[p] == 'toggle') {
+        if (/show|hide|toggle/.test(params[p])) {
+            if (params[p] == 'toggle') {
                 params[p] = toggleAct;
             }
-            if(params[p] == 'show') {
+            if (params[p] == 'show') {
                 var from = 0;
                 options.show = true;
-                if(options.orig[p] == undefined) {
+                if (options.orig[p] == undefined) {
                     options.orig[p] = getStyle(el, p, false) || '';
                     setStyle(el, p, 0);
                 }
-
                 var o;
-                if(p == 'height' && browser.msie6) {
+                if (p == 'height' && browser.msie6) {
                     o = '0px';
                     el.style.overflow = '';
                 } else {
                     o = options.orig[p];
                 }
-
                 var old = el.style[p];
                 el.style[p] = o;
                 params[p] = parseFloat(getStyle(el, p, true));
                 el.style[p] = old;
-
-                if(p == 'height' && browser.msie && !params.overflow) {
+                if (p == 'height' && browser.msie && !params.overflow) {
                     el.style.overflow = 'hidden';
                 }
             } else {
-                if(options.orig[p] == undefined) {
+                if (options.orig[p] == undefined) {
                     options.orig[p] = getStyle(el, p, false) || '';
                 }
                 options.hide = true;
@@ -302,50 +288,47 @@ function animate(el, params, speed, callback) {
             }
         }
     }
-    if(options.show && !visible) {
+    if (options.show && !visible) {
         show(el);
     }
     tween = new Fx.Base(el, options);
     each(params, function (name, to) {
-        if(/backgroundColor|borderBottomColor|borderLeftColor|borderRightColor|borderTopColor|color|borderColor|outlineColor/.test(name)) {
+        if (/backgroundColor|borderBottomColor|borderLeftColor|borderRightColor|borderTopColor|color|borderColor|outlineColor/.test(name)) {
             var p = (name == 'borderColor') ? 'borderTopColor' : name;
             from = getColor(el, p);
             to = getRGB(to);
         } else {
             var parts = to.toString().match(/^([+-]=)?([\d+-.]+)(.*)$/),
                 start = tween.cur(name, true) || 0;
-            if(parts) {
+            if (parts) {
                 to = parseFloat(parts[2]);
-                if(parts[1]) {
+                if (parts[1]) {
                     to = ((parts[1] == '-=' ? -1 : 1) * to) + to;
                 }
             }
-
-            if(options.hide && name == 'height' && browser.msie6) {
+            if (options.hide && name == 'height' && browser.msie6) {
                 el.style.height = '0px';
                 el.style.overflow = '';
             }
             from = tween.cur(name, true);
-            if(options.hide && name == 'height' && browser.msie6) {
+            if (options.hide && name == 'height' && browser.msie6) {
                 el.style.height = '';
                 el.style.overflow = 'hidden';
             }
-            if(from == 0 && (name == 'width' || name == 'height')) from = 1;
-
-            if(name == 'opacity' && to > 0 && !visible) {
+            if (from == 0 && (name == 'width' || name == 'height')) from = 1;
+            if (name == 'opacity' && to > 0 && !visible) {
                 setStyle(el, 'opacity', 0);
                 from = 0;
                 show(el);
             }
         }
-        if(from != to || (isArray(from) && from.join(',') == to.join(','))) {
+        if (from != to || (isArray(from) && from.join(',') == to.join(','))) {
             fromArr[name] = from;
             toArr[name] = to;
         }
     });
     tween.start(fromArr, toArr);
     data(el, 'tween', tween);
-
     return tween;
 }
 
@@ -354,8 +337,6 @@ function fadeTo(el, speed, to, callback) {
         opacity: to
     }, speed, callback);
 }
-
-
 var Fx = fx = {
     Transitions: {
         linear: function (t, b, c, d) {
@@ -397,40 +378,43 @@ function genFx(type, num) {
     });
     return obj;
 }
-
 // Shortcuts for custom animations
 each({
     slideDown: genFx('show', 1),
     slideUp: genFx('hide', 1),
     slideToggle: genFx('toggle', 1),
-    fadeIn: {opacity: 'show'},
-    fadeOut: {opacity: 'hide'},
-    fadeToggle: {opacity: 'toggle'}
+    fadeIn: {
+        opacity: 'show'
+    },
+    fadeOut: {
+        opacity: 'hide'
+    },
+    fadeToggle: {
+        opacity: 'toggle'
+    }
 }, function (f, val) {
     window[f] = function (el, speed, callback) {
         return animate(el, val, speed, callback);
     }
 });
-
 Fx.Base.prototype = {
     start: function (from, to) {
         this.from = from;
         this.to = to;
         this.time = Now();
         this.isTweening = true;
-
         var self = this;
 
         function t(gotoEnd) {
             return self.step(gotoEnd);
         }
         t.el = this.el;
-        if(t() && Fx.Timers.push(t) && !Fx.TimerId) {
+        if (t() && Fx.Timers.push(t) && !Fx.TimerId) {
             Fx.TimerId = setInterval(function () {
                 var timers = Fx.Timers;
-                for(var i = 0; i < timers.length; i++)
-                    if(!timers[i]()) timers.splice(i--, 1);
-                if(!timers.length) {
+                for (var i = 0; i < timers.length; i++)
+                    if (!timers[i]()) timers.splice(i--, 1);
+                if (!timers.length) {
                     clearInterval(Fx.TimerId);
                     Fx.TimerId = null;
                 }
@@ -438,31 +422,29 @@ Fx.Base.prototype = {
         }
         return this;
     },
-
     stop: function (gotoEnd) {
         var timers = Fx.Timers;
         // go in reverse order so anything added to the queue during the loop is ignored
-        for(var i = timers.length - 1; i >= 0; i--)
-            if(timers[i].el == this.el) {
-                if(gotoEnd)
+        for (var i = timers.length - 1; i >= 0; i--)
+            if (timers[i].el == this.el) {
+                if (gotoEnd)
                 // force the next step to be the last
                     timers[i](true);
                 timers.splice(i, 1);
             }
         this.isTweening = false;
     },
-
     step: function (gotoEnd) {
         var time = Now();
-        if(!gotoEnd && time < this.time + this.options.duration) {
+        if (!gotoEnd && time < this.time + this.options.duration) {
             this.cTime = time - this.time;
             this.now = {};
-            for(p in this.to) {
+            for (p in this.to) {
                 // color fx
-                if(isArray(this.to[p])) {
+                if (isArray(this.to[p])) {
                     var color = [],
                         j;
-                    for(j = 0; j < 3; j++)
+                    for (j = 0; j < 3; j++)
                         color.push(Math.min(parseInt(this.compute(this.from[p][j], this.to[p][j])), 255));
                     this.now[p] = color;
                 } else this.now[p] = this.compute(this.from[p], this.to[p]);
@@ -474,46 +456,42 @@ Fx.Base.prototype = {
             setTimeout(this.options.onComplete.bind(this, this.el), 10);
             this.now = extend(this.to, this.options.orig);
             this.update();
-            if(this.options.hide) hide(this.el);
+            if (this.options.hide) hide(this.el);
             this.isTweening = false;
             return false;
         }
     },
-
     compute: function (from, to) {
         var change = to - from;
         return this.options.transition(this.cTime, from, change, this.options.duration);
     },
-
     update: function () {
-        for(var p in this.now) {
-            if(isArray(this.now[p])) setStyle(this.el, p, 'rgb(' + this.now[p].join(',') + ')');
+        for (var p in this.now) {
+            if (isArray(this.now[p])) setStyle(this.el, p, 'rgb(' + this.now[p].join(',') + ')');
             else this.el[p] != undefined ? (this.el[p] = this.now[p]) : setStyle(this.el, p, this.now[p]);
         }
     },
-
     cur: function (name, force) {
-        if(this.el[name] != null && (!this.el.style || this.el.style[name] == null)) return this.el[name];
+        if (this.el[name] != null && (!this.el.style || this.el.style[name] == null)) return this.el[name];
         return parseFloat(getStyle(this.el, name, force)) || 0;
     }
 };
 
 function getXY(obj) {
     obj = ge(obj);
-    if(!obj) return [0, 0];
-
+    if (!obj) return [0, 0];
     var left = 0,
         top = 0,
         pos, lastLeft;
-    if(obj.offsetParent) {
+    if (obj.offsetParent) {
         do {
             left += (lastLeft = obj.offsetLeft);
             top += obj.offsetTop;
             pos = getStyle(obj, 'position');
-            if(pos == 'fixed' || pos == 'absolute' || (pos == 'relative')) {
+            if (pos == 'fixed' || pos == 'absolute' || (pos == 'relative')) {
                 left -= obj.scrollLeft;
                 top -= obj.scrollTop;
-                if(pos == 'fixed') {
+                if (pos == 'fixed') {
                     left += ((obj.offsetParent || {}).scrollLeft || document.body.scrollLeft || document.documentElement.scrollLeft);
                     top += ((obj.offsetParent || {}).scrollTop || document.body.scrollTop || document.documentElement.scrollTop);
                 }
@@ -527,7 +505,7 @@ function getSize(elem, withoutBounds) {
     elem = ge(elem);
     var s = [0, 0],
         de = document.documentElement;
-    if(elem == document) {
+    if (elem == document) {
         s = [Math.max(
             de.clientWidth,
             bodyNode.scrollWidth, de.scrollWidth,
@@ -535,10 +513,10 @@ function getSize(elem, withoutBounds) {
             de.clientHeight,
             bodyNode.scrollHeight, de.scrollHeight,
             bodyNode.offsetHeight, de.offsetHeight)];
-    } else if(elem) {
+    } else if (elem) {
         function getWH() {
             s = [elem.offsetWidth, elem.offsetHeight];
-            if(!withoutBounds) return;
+            if (!withoutBounds) return;
             var padding = 0,
                 border = 0;
             each(s, function (i, v) {
@@ -550,7 +528,7 @@ function getSize(elem, withoutBounds) {
             });
             s = [Math.round(s[0]), Math.round(s[1])];
         }
-        if(!isVisible(elem)) {
+        if (!isVisible(elem)) {
             var props = {
                 position: 'absolute',
                 visibility: 'hidden',
@@ -566,34 +544,26 @@ function getSize(elem, withoutBounds) {
                 elem.style[i] = old[i];
             });
         } else getWH();
-
     }
     return s;
 }
 
-function getPosition(e)
-{
+function getPosition(e) {
     var left = 0;
-    var top  = 0;
-
-    while (e.offsetParent)
-    {
+    var top = 0;
+    while (e.offsetParent) {
         left += e.offsetLeft;
-        top  += e.offsetTop;
-        e    = e.offsetParent;
+        top += e.offsetTop;
+        e = e.offsetParent;
     }
-
     left += e.offsetLeft;
-    top  += e.offsetTop;
-
+    top += e.offsetTop;
     return [left, top];
 }
 
-function getMouseOffset(e)
-{
-    var docPos  = getPosition(e.target);
-    return [e.pageX-docPos[0], e.pageY-docPos[1]];
-
+function getMouseOffset(e) {
+    var docPos = getPosition(e.target);
+    return [e.pageX - docPos[0], e.pageY - docPos[1]];
 }
 
 function elfocus(el, from, to) {
@@ -611,7 +581,7 @@ function elfocus(el, from, to) {
         } else if (el.setSelectionRange) {
             el.setSelectionRange(from, to);
         }
-    } catch(e) {}
+    } catch (e) {}
 }
 
 function scrollGetY() {
@@ -619,17 +589,17 @@ function scrollGetY() {
 }
 
 function getScroll() {
-    var b = document.body, de = document.documentElement;
+    var b = document.body,
+        de = document.documentElement;
     return [
         b.scrollLeft || de.scrollLeft || window.pageXOffset || 0,
-        b.scrollTop || de.scrollTop  || window.pageYOffset || 0,
+        b.scrollTop || de.scrollTop || window.pageYOffset || 0,
         de.clientWidth || b.clientWidth || 0,
         de.clientHeight || b.clientHeight || 0
     ];
 }
 
-function windowSize()
-{
+function windowSize() {
     return [windowWidth(), windowHeight()];
 }
 
@@ -641,28 +611,25 @@ function windowWidth() {
     return window.innerWidth ? window.innerWidth : (document.documentElement.clientWidth ? document.documentElement.clientWidth : document.body.offsetWidth);
 }
 
-
 function show(elem) {
-    if(arguments.length > 1) {
-        for(var i = 0, l = arguments.length; i < l; ++i) {
+    if (arguments.length > 1) {
+        for (var i = 0, l = arguments.length; i < l; ++i) {
             show(arguments[i]);
         }
         return;
     }
     elem = ge(elem);
-    if(!elem || !elem.style) return;
+    if (!elem || !elem.style) return;
     var old = elem.olddisplay,
         newStyle = 'block',
         tag = elem.tagName.toLowerCase();
     elem.style.display = old || '';
-
-
-    if(getStyle(elem, 'display') == 'none') {
-        if(hasClass(elem, 'inline')) {
+    if (getStyle(elem, 'display') == 'none') {
+        if (hasClass(elem, 'inline')) {
             newStyle = 'inline';
-        } else if(tag == 'tr' && !browser.msie) {
+        } else if (tag == 'tr' && !browser.msie) {
             newStyle = 'table-row';
-        } else if(tag == 'table' && !browser.msie) {
+        } else if (tag == 'table' && !browser.msie) {
             newStyle = 'table';
         } else {
             newStyle = 'block';
@@ -673,14 +640,14 @@ function show(elem) {
 
 function hide(elem) {
     var l = arguments.length;
-    if(l > 1) {
-        for(var i = 0; i < l; i++) {
+    if (l > 1) {
+        for (var i = 0; i < l; i++) {
             hide(arguments[i]);
         }
         return;
     }
     elem = ge(elem);
-    if(!elem || !elem.style) return;
+    if (!elem || !elem.style) return;
     var d = getStyle(elem, 'display');
     elem.olddisplay = (d != 'none') ? d : '';
     elem.style.display = 'none';
@@ -688,15 +655,15 @@ function hide(elem) {
 
 function isVisible(elem) {
     elem = ge(elem);
-    if(!elem || !elem.style) return false;
+    if (!elem || !elem.style) return false;
     return getStyle(elem, 'display') != 'none';
 }
 
 function toggle(elem, v) {
-    if(v === undefined) {
+    if (v === undefined) {
         v = !isVisible(elem);
     }
-    if(v) {
+    if (v) {
         show(elem);
     } else {
         hide(elem);
@@ -705,8 +672,8 @@ function toggle(elem, v) {
 
 function placeholderSetup(id) {
     var el = ge(id);
-    if(!el) return;
-    if(browser.opera && browser.mobile) {
+    if (!el) return;
+    if (browser.opera && browser.mobile) {
         el.getValue = function () {
             return el.value;
         };
@@ -716,27 +683,27 @@ function placeholderSetup(id) {
         return;
     }
     var ph = el.getAttribute("placeholder");
-    if(!el['phevents'] && ph && ph != "") {
+    if (!el['phevents'] && ph && ph != "") {
         el['active'] = 1;
-        if((!el.value || el.value == ph) && !el.focused) {
+        if ((!el.value || el.value == ph) && !el.focused) {
             el.style.color = '#777';
             el.value = ph;
             el['active'] = 0;
         }
         addEvent(el, 'focus', function () {
-            if(el['active']) return;
+            if (el['active']) return;
             el['active'] = 1;
             el.value = '';
             el.style.color = '#000';
         });
         addEvent(el, 'blur', function () {
-            if(!el['active'] || !ph || el.value != "") return;
+            if (!el['active'] || !ph || el.value != "") return;
             el['active'] = 0;
             el.style.color = '#777';
             el.value = ph;
         });
         el.getValue = function () {
-            return(el['active'] || el.value != ph) ? el.value : '';
+            return (el['active'] || el.value != ph) ? el.value : '';
         };
         el.setValue = function (val) {
             el.active = val ? 1 : 0;
@@ -747,15 +714,15 @@ function placeholderSetup(id) {
     }
 }
 
-
 function boxRefreshCoords(cont, center) {
-    var wsize = windowSize(), top = scrollGetY(), containerSize = getSize(cont);
+    var wsize = windowSize(),
+        top = scrollGetY(),
+        containerSize = getSize(cont);
     cont.style.top = Math.max(0, top + (wsize[1] - containerSize[1]) / 3) + 'px';
-    if(center) cont.style.left = Math.max(0, (wsize[0] - containerSize[0]) / 2) + 'px';
+    if (center) cont.style.left = Math.max(0, (wsize[0] - containerSize[0]) / 2) + 'px';
 }
 
-function BGLayer()
-{
+function BGLayer() {
     if (!ge('popupTransparentBG')) {
         window.transparentBG = ce('div', {
             id: 'popupTransparentBG',
@@ -773,6 +740,6 @@ function BGLayer()
     }
 }
 
-function sbWidth(){
+function sbWidth() {
     return 16;
 }

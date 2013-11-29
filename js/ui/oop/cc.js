@@ -1,12 +1,13 @@
 if (!window.vk) vk = {};
 var UI_CONTROLS_DEBUG = false;
+
 function debug(e) {
     if (!UI_CONTROLS_DEBUG) return;
     debugLog(e);
 }
 
 function inherit(child, parent) {
-    var F = function() {};
+    var F = function () {};
     F.prototype = parent.prototype;
     child.prototype = new F();
     child.prototype.constructor = child;
@@ -19,7 +20,6 @@ function createChildClass(className, parent, proto) {
     this.__className = "' + className + '";\
     return this.__construct__(arguments);\
   };';
-
     if (window.execScript) {
         window.execScript(code);
     } else {
@@ -33,17 +33,16 @@ function createChildClass(className, parent, proto) {
     }
     extend(childClass.prototype, proto);
 }
-
 if (window._ui === undefined) {
     var _ui = {
         _guid: 0,
         _sel: false,
         _uids: [false],
-        reg: function(obj) {
+        reg: function (obj) {
             _ui._uids.push(obj);
             return ++_ui._guid;
         },
-        sel: function(nsel) {
+        sel: function (nsel) {
             if (nsel !== undefined) {
                 var s = _ui.selobj();
                 if (s && s._blur) {
@@ -53,15 +52,14 @@ if (window._ui === undefined) {
             }
             return _ui._sel;
         },
-        selobj: function(val) {
+        selobj: function (val) {
             if (_ui._sel && val !== undefined) {
                 _ui._uids[_ui._sel] = val;
             }
             return _ui._uids[_ui._sel];
         }
     };
-
-    addEvent(document, 'keypress keydown mousedown', function(e) {
+    addEvent(document, 'keypress keydown mousedown', function (e) {
         if (_ui.sel()) {
             var sel = _ui.selobj();
             if (!sel) {
@@ -79,16 +77,18 @@ if (window._ui === undefined) {
 function UiControl(args) {
     return this.__construct__(args);
 }
-
 extend(UiControl.prototype, {
     CSS: {},
     defaultOptions: null,
     dom: {},
-    __construct__: function(args) {
-        if (this.beforeInit) if (this.beforeInit.apply(this, args) === false) return false;
-        if (this.initOptions) if (this.initOptions.apply(this, args) === false) return false;
+    __construct__: function (args) {
+        if (this.beforeInit)
+            if (this.beforeInit.apply(this, args) === false) return false;
+        if (this.initOptions)
+            if (this.initOptions.apply(this, args) === false) return false;
         if (this.init.apply(this, args) === false) return false;
-        if (this.initDOM) if (this.initDOM.apply(this, args) === false) return false;
+        if (this.initDOM)
+            if (this.initDOM.apply(this, args) === false) return false;
         if (this.initEvents) this.initEvents.apply(this, args);
         if (this.afterInit) this.afterInit.apply(this, args);
         return this;
@@ -110,13 +110,12 @@ function createUiClass(className, functions) {
 function UiUtil(args) {
     return this.__construct__(args);
 }
-
 extend(UiUtil.prototype, {
     defaultOptions: null,
     __components: {},
     __cid: 0,
     storage: null,
-    __construct__: function(args) {
+    __construct__: function (args) {
         if (this.beforeInit) this.beforeInit.apply(this, args);
         if (this.initOptions) this.initOptions.apply(this, args);
         this.init.apply(this, args);

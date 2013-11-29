@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Checkboxes</title>
     <meta charset="utf-8">
@@ -11,39 +12,57 @@
     <script type="text/javascript" src="/js/ui/oop/cc.js"></script>
     <script type="text/javascript" src="/js/ui/oop/checkbox.js"></script>
 </head>
+
 <body>
-<div class="label"></div><div class="labeled"><input type="text" id="check1" name="check1" value="" /></div><div class="labeleds" id="check1_change"></div><br class="cl" />
-<div class="label"></div><div class="labeled"><input type="text" id="check2" name="check2" value="" /></div><div class="labeleds" id="check1_change"></div><br class="cl"  />
-<div class="label"></div><div class="labeled"><input type="text" id="check3" name="check3" value="" /></div><div class="labeleds" id="check1_change"></div><br class="cl"  />
-
-
+<div class="label"></div>
+<div class="labeled">
+    <input type="text" id="check1" name="check1" value="" />
+</div>
+<div class="labeleds" id="check1_change"></div>
+<br class="cl" />
+<div class="label"></div>
+<div class="labeled">
+    <input type="text" id="check2" name="check2" value="" />
+</div>
+<div class="labeleds" id="check2_change"></div>
+<br class="cl" />
+<div class="label"></div>
+<div class="labeled">
+    <input type="text" id="check3" name="check3" value="" />
+</div>
+<div class="labeleds" id="check3_change"></div>
+<br class="cl" />
 <script type="text/javascript">
-
     var ch2, ch3;
-    onDomReady(function(){
-
-        new Checkbox(ge('check1'),{width: 200,checked: 0,label: 'Checkbox', onChange:function(v)
-        {
-            alert(v?'true':false);
-
-        }});
-
-        ch2 = new Checkbox(ge('check2'),{width: 200,checked: 0, label: 'Checkbox2', onChange:function(v)
-        {
-            alert(v?'true':false);
-
-        }});
+    onDomReady(function () {
+        new Checkbox(ge('check1'), {
+            width: 200,
+            checked: 0,
+            label: 'Checkbox',
+            onChange: function (v) {
+                alert(v ? 'true' : false);
+            }
+        });
+        ch2 = new Checkbox(ge('check2'), {
+            width: 200,
+            checked: 0,
+            label: 'Checkbox2',
+            onChange: function (v) {
+                alert(v ? 'true' : false);
+            }
+        });
         ch2.disable(true);
-
-        ch3 = new Checkbox(ge('check3'),{width: 200,checked: 1,label: 'Checkbox3', onChange:function(v)
-        {
-            alert(v?'true':false);
-
-        }});
+        ch3 = new Checkbox(ge('check3'), {
+            width: 200,
+            checked: 1,
+            label: 'Checkbox3',
+            onChange: function (v) {
+                alert(v ? 'true' : false);
+            }
+        });
         ch3.disable(true);
-
     });
-
 </script>
 </body>
+
 </html>

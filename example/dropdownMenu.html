@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>DropDown Menu</title>
     <meta charset="utf-8">
@@ -11,26 +12,32 @@
     <script type="text/javascript" src="/js/ui/oop/cc.js"></script>
     <script type="text/javascript" src="/js/ui/oop/dropdownMenu.js"></script>
 </head>
+
 <body>
-
-<div class="label"></div><div class="labeled"><a id="dmenu" href="#">Тест</a></div><br class="cl" />
-
+<div class="label"></div>
+<div class="labeled"><a id="dmenu" href="#">Тест</a>
+</div>
+<br class="cl" />
 <script type="text/javascript">
-
-
-    onDomReady(function(){
-
+    onDomReady(function () {
         var menuParams = {};
         menuParams.target = ge('dmenu');
-        menuParams.onSelect = function(s){console.log(s);};
+        menuParams.onSelect = function (s) {
+            console.log(s);
+        };
         menuParams.showHover = false;
         if (0) {
             menuParams.updateTarget = false;
         }
-        new DropdownMenu([{"l":"Остановлена","i":"off"},{"l":"Архивная","i":"archived"}], menuParams);
-
+        new DropdownMenu([{
+            "l": "Остановлена",
+            "i": "off"
+        }, {
+            "l": "Архивная",
+            "i": "archived"
+        }], menuParams);
     });
-
 </script>
 </body>
+
 </html>

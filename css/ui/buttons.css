@@ -1,155 +1,126 @@
-.button_blue,
-.button_gray {
-    border: 0;
-    display: inline-block;
-    *display: inline;
-    position: relative;
-    line-height: normal;
-    zoom: 1;
+.button_blue,.button_gray {
+    border:0;
+    display:inline;
+    position:relative;
+    line-height:normal;
+    zoom:1;
 }
-.box_controls .button_blue,
-.box_controls .button_gray {
-    margin: 2px 5px;
+
+.box_controls .button_blue,.box_controls .button_gray {
+    margin:2px 5px;
 }
-.button_blue button,
-.button_gray button {
-    border: 0;
-    -webkit-border-radius: 2px;
-    -khtml-border-radius: 2px;
-    -moz-border-radius: 2px;
-    border-radius: 2px;
-    background: none;
-    font-size: 11px;
-    margin: 0px;
-    cursor: pointer;
-    white-space: nowrap;
-    outline: none;
-    font-family: tahoma, arial, verdana, sans-serif, Lucida Sans;
-    vertical-align: top;
-    overflow: visible;
-    line-height: 13px;
+
+.button_blue button,.button_gray button {
+    border:0;
+    -webkit-border-radius:2px;
+    -khtml-border-radius:2px;
+    -moz-border-radius:2px;
+    border-radius:2px;
+    background:none;
+    font-size:11px;
+    cursor:pointer;
+    white-space:nowrap;
+    outline:none;
+    font-family:tahoma, arial, verdana, sans-serif, Lucida Sans;
+    vertical-align:top;
+    overflow:visible;
+    line-height:13px;
+    margin:0;
 }
-.font_medium .button_blue button,
-.font_medium .button_gray button {
-    font-size: 12px;
-    line-height: 14px;
-}
+
 .button_wide {
-    display: block;
+    display:block;
 }
+
 .button_wide button {
-    width: 100%;
+    width:100%;
 }
 
-.button_blue button::-moz-focus-inner,
-.button_gray button::-moz-focus-inner {
-    border: 0;
+.button_blue button::-moz-focus-inner,.button_gray button::-moz-focus-inner {
+    border:0;
 }
 
-.button_blue button,
-.button_blue.button_disabled button:active,
-.button_blue.button_disabled button.active,
-.button_blue.button_disabled button:hover,
-.button_blue.button_disabled button.hover {
-    padding: 4px 14px;
-    *padding: 4px 15px;
-    border: 0;
-    border-bottom: 1px solid #496b93;
-    text-shadow: 0 1px 0 #5578A0;
-    background: #658AB0 url(/images/button_bgf.png?1) repeat-x top;
-    background-position: 0px -12px;
-    *border: 0;
-    color: #FFF;
+.button_blue button,.button_blue.button_disabled button:active,.button_blue.button_disabled button.active,.button_blue.button_disabled button:hover,.button_blue.button_disabled button.hover {
+    border-bottom:1px solid #496b93;
+    text-shadow:0 1px 0 #5578A0;
+    background:#658AB0 url(/images/button_bgf.png?1) repeat-x top;
+    background-position:0 -12px;
+    border:0;
+    color:#FFF;
+    padding:4px 15px;
 }
-.button_blue button:hover,
-.button_blue button.hover {
-    background-position: 0px -5px;
-    border-bottom-color: #4e7199;
+
+.button_blue button:hover,.button_blue button.hover {
+    background-position:0 -5px;
+    border-bottom-color:#4e7199;
 }
-.button_blue button:active,
-.button_blue button.active,
-.is_2x .button_blue button:active,
-.is_2x .button_blue button.active {
-    background: #5e80a5;
-    border-bottom-color: #51749c;
-    position: relative;
+
+.button_blue button:active,.button_blue button.active,.is_2x .button_blue button:active,.is_2x .button_blue button.active {
+    background:#5e80a5;
+    border-bottom-color:#51749c;
+    position:relative;
 }
+
 .button_big.button_blue button {
-    padding: 6px 15px;
-    *padding: 6px 16px;
+    padding:6px 16px;
 }
 
-.button_gray button,
-.button_gray.button_disabled button:active,
-.button_gray.button_disabled button.active,
-.button_gray.button_disabled button:hover,
-.button_gray.button_disabled button.hover {
-    padding: 3px 12px 4px;
-    *padding: 4px 13px 4px;
-    border: 1px solid;
-    border-top-color: #D3D3D3;
-    border-bottom-color: #AEAEAE;
-    border-left-color: #C7C7C7;
-    border-right-color: #C7C7C7;
-    color: #555;
-    text-shadow: 0 1px 0 #F6F6F6;
-    *border: 0;
-    background: #E9E9E9 url(/images/button_bgf.png?1) repeat-x top;
-    background-position: 0px -59px;
+.button_gray button,.button_gray.button_disabled button:active,.button_gray.button_disabled button.active,.button_gray.button_disabled button:hover,.button_gray.button_disabled button.hover {
+    color:#555;
+    text-shadow:0 1px 0 #F6F6F6;
+    border:0;
+    background:#E9E9E9 url(/images/button_bgf.png?1) repeat-x top;
+    background-position:0 -59px;
+    border-color:#D3D3D3 #C7C7C7 #AEAEAE;
+    padding:4px 13px;
 }
-.button_gray button:hover,
-.button_gray button.hover {
-    background-position: 0px -53px;
-    border-top-color: #D7D7D7;
-    border-bottom-color: #B7B7B7;
-    border-left-color: #CBCBCB;
-    border-right-color: #CBCBCB;
+
+.button_gray button:hover,.button_gray button.hover {
+    background-position:0 -53px;
+    border-color:#D7D7D7 #CBCBCB #B7B7B7;
 }
-.button_gray button:active,
-.button_gray button.active,
-.is_2x .button_gray button:active,
-.is_2x .button_gray button.active {
-    background: #DCDCDC;
-    border-top-color: #BEBEBE;
-    border-bottom-color: #B6B6B6;
-    border-left-color: #BDBDBD;
-    border-right-color: #BDBDBD;
-    position: relative;
+
+.button_gray button:active,.button_gray button.active,.is_2x .button_gray button:active,.is_2x .button_gray button.active {
+    background:#DCDCDC;
+    position:relative;
+    border-color:#BEBEBE #BDBDBD #B6B6B6;
 }
+
 .button_big.button_gray button {
-    padding: 6px 15px 7px;
-    *padding: 6px 16px 7px;
+    padding:6px 16px 7px;
 }
 
 .button_lock {
-    background: url('/images/upload_inv.gif') center no-repeat;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-}
-.button_gray .button_lock {
-    background: url('/images/upload.gif') center no-repeat;
+    background:url(/images/upload_inv.gif) center no-repeat;
+    position:absolute;
+    width:100%;
+    height:100%;
 }
 
-a.button_link:hover,
-a.button_blue:hover,
-a.button_gray:hover {
-    text-decoration: none;
+.button_gray .button_lock {
+    background:url(/images/upload.gif) center no-repeat;
 }
+
+a.button_link:hover,a.button_blue:hover,a.button_gray:hover {
+    text-decoration:none;
+}
+
 .button_disabled {
-    opacity: 0.7;
-    filter: alpha(opacity=70);
+    opacity:0.7;
+    filter:alpha(opacity=70);
 }
+
 .button_disabled button {
-    cursor: default;
+    cursor:default;
 }
 
 .as_button {
-    padding: 6px 16px 7px 16px;
-    font-size: 11px;
-    line-height: 13px;
+    font-size:11px;
+    line-height:13px;
+    padding:6px 16px 7px;
 }
-.font_medium .as_button {
-    font-size: 12px;
-    line-height: 14px;
+
+.font_medium .button_blue button,.font_medium .button_gray button,.font_medium .as_button {
+    font-size:12px;
+    line-height:14px;
 }

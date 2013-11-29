@@ -28,11 +28,9 @@ function MessageBox(options) {
         onShow: false,
         onHide: false,
         onLoadError: false,
-        onLoad:false
+        onLoad: false
     };
-
     options = extend(defaults, options);
-
     var buttonsCount = 0,
         boxContainer,
         boxLayout,
@@ -44,12 +42,8 @@ function MessageBox(options) {
         guid = (++_message_box_guid),
         isVisible = false,
         hiddenBox;
-
-
-
     var x_button = options.closeButton ? '<div class="box_x_button"></div>' : '';
     var full_page_button = options.fullPageLink ? '<a onfocus="this.blur()" class="box_full_page_link" href="' + options.fullPageLink + '"></a>' : '';
-
     boxContainer = ce('div', {
         className: 'popup_box_container',
         innerHTML: '<div class="box_layout"><div class="box_title_wrap">' + x_button + full_page_button + '<div class="box_title"></div></div><div class="box_body box_progress" style="' + options.bodyStyle + '"></div><div class="box_controls_wrap"><div class="box_controls"></div></div></div>'
@@ -62,7 +56,6 @@ function MessageBox(options) {
     boxControls = geByClass1('box_controls', boxContainer);
     boxCloseButton = options.closeButton ? geByClass1('box_x_button', boxContainer) : false;
     boxFullPageLink = options.fullPageLink ? geByClass1('box_full_page_link', boxContainer) : false;
-
     if (options.closeEsc) {
         addEvent(document, 'keydown', function (e) {
             if (e.keyCode == 27) {
@@ -216,7 +209,6 @@ function MessageBox(options) {
         else
             onHide();
     }
-
     var fadeToColor = function (color) {
         return function () {
             animate(this, {
@@ -224,7 +216,6 @@ function MessageBox(options) {
             }, 200);
         }
     };
-
     if (boxCloseButton) {
         addEvent(boxCloseButton, 'mouseover', fadeToColor('#FFFFFF'));
         addEvent(boxCloseButton, 'mouseout', fadeToColor('#9DB7D4'));
@@ -288,7 +279,6 @@ function MessageBox(options) {
                     if (isFunction(options.onLoad)) options.onLoad(responseText);
                 },
                 onFail: function (ajaxObj, responseText) {
-
                     onLoadError('Request error occured.');
                 }
             });
@@ -325,7 +315,7 @@ function MessageBox(options) {
             boxRefreshCoords(boxContainer, true);
             return this;
         },
-        refreshCoord: function(){
+        refreshCoord: function () {
             boxRefreshCoords(boxContainer, true);
         },
         fixIE6: refreshBox,
@@ -358,9 +348,15 @@ function AlertBox(title, text, callback, options) {
     else options = {};
     aBox.removeButtons();
     if (options.boxType == 'CONFIRM') {
-        aBox.addButton({label: options.no || getLang('box_no'), style: 'button_no', onClick: aBox.hide});
-        aBox.addButton({label: options.yes || getLang('box_yes'),onClick: function () {
-            if (isFunction(callback) && callback() === false) return;
+        aBox.addButton({
+            label: options.no || getLang('box_no'),
+            style: 'button_no',
+            onClick: aBox.hide
+        });
+        aBox.addButton({
+            label: options.yes || getLang('box_yes'),
+            onClick: function () {
+                if (isFunction(callback) && callback() === false) return;
                 aBox.hide();
             }
         });
@@ -378,11 +374,13 @@ function AlertBox(title, text, callback, options) {
 
 function ConfirmBox(title, text, callback, options) {
     options = options || {};
-    options = extend({boxType: 'CONFIRM'}, options);
+    options = extend({
+        boxType: 'CONFIRM'
+    }, options);
     return AlertBox(title, text, callback, options);
 }
-
 var winBoxes = {};
+
 function showBox(name, url, query, lnk, reload, params, files) {
     if (typeof lnk == 'object') {
         reload = lnk.reload;
@@ -429,18 +427,18 @@ function showDoneBox(msg, opts) {
     var style = opts.w ? opts.w : l;
     var resEl = ce('div', {
         className: 'top_result_baloon_wrap',
-        innerHTML: '<div class="top_result_baloon" style="width:'+style+'px">' + msg + '</div>'
+        innerHTML: '<div class="top_result_baloon" style="width:' + style + 'px">' + msg + '</div>'
     });
     bodyNode.appendChild(resEl);
     boxRefreshCoords(resEl, true);
     var out = opts.out || 2000;
-    var _fadeOut = function() {
-        setTimeout(function() {
+    var _fadeOut = function () {
+        setTimeout(function () {
             if (opts.permit && !opts.permit()) {
                 _fadeOut();
                 return;
             }
-            fadeOut(resEl.firstChild, 500, function() {
+            fadeOut(resEl.firstChild, 500, function () {
                 re(resEl);
                 if (opts.callback) {
                     opts.callback();

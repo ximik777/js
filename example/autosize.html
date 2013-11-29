@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>AutoSize</title>
     <meta charset="utf-8">
@@ -11,20 +12,21 @@
     <script type="text/javascript" src="/js/ui/oop/cc.js"></script>
     <script type="text/javascript" src="/js/ui/oop/autosize.js"></script>
 </head>
+
 <body>
-
-<div class="label"></div><div class="labeled"><textarea class="autosize" style="height: 50px; width: 200px;" id="text"></textarea></div><br class="cl" />
-
+<div class="label"></div>
+<div class="labeled">
+    <textarea class="autosize" style="height: 50px; width: 200px;" id="text"></textarea>
+</div>
+<br class="cl" />
 <script type="text/javascript">
-
-
-    onDomReady(function(){
-
-        new Autosize(ge('text'), {height:100, minHeight:50});
-
-
+    onDomReady(function () {
+        new Autosize(ge('text'), {
+            height: 100,
+            minHeight: 50
+        });
     });
-
 </script>
 </body>
+
 </html>

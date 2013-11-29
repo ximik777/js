@@ -1,5 +1,3 @@
-/* EVENTS FUNCTIONS */
-
 var KEY = window.KEY = {
         LEFT: 37,
         UP: 38,
@@ -21,12 +19,10 @@ var KEY = window.KEY = {
 
 function addEvent(elem, types, handler, custom, context) {
     elem = ge(elem);
-    if(!elem || elem.nodeType == 3 || elem.nodeType == 8) return;
-
-    if(/mousewheel/.test(types)) {
+    if (!elem || elem.nodeType == 3 || elem.nodeType == 8) return;
+    if (/mousewheel/.test(types)) {
         types = types + ' DOMMouseScroll';
     }
-
     var realHandler = context ? function () {
         var newHandler = function (e) {
             var prevData = e.data;
@@ -38,75 +34,69 @@ function addEvent(elem, types, handler, custom, context) {
         newHandler.handler = handler;
         return newHandler;
     }() : handler;
-
     // For IE
-    if(elem.setInterval && elem != window) elem = window;
-
+    if (elem.setInterval && elem != window) elem = window;
     var events = data(elem, 'events') || data(elem, 'events', {}),
         handle = data(elem, 'handle') || data(elem, 'handle', function () {
             _eventHandle.apply(arguments.callee.elem, arguments);
         });
     // to prevent a memory leak
     handle.elem = elem;
-
     each(types.split(/\s+/), function (index, type) {
-        if(!events[type]) {
+        if (!events[type]) {
             events[type] = [];
-            if(!custom && elem.addEventListener) {
+            if (!custom && elem.addEventListener) {
                 elem.addEventListener(type, handle, false);
-            } else if(!custom && elem.attachEvent) {
+            } else if (!custom && elem.attachEvent) {
                 elem.attachEvent('on' + type, handle);
             }
         }
         events[type].push(realHandler);
     });
-
     elem = null;
 }
 
 function removeEvent(elem, types, handler) {
     elem = ge(elem);
-    if(!elem) return;
+    if (!elem) return;
     var events = data(elem, 'events');
-    if(!events) return;
-    if(typeof (types) != 'string') {
-        for(var i in events) {
+    if (!events) return;
+    if (typeof (types) != 'string') {
+        for (var i in events) {
             removeEvent(elem, i);
         }
         return;
     }
-
-    if(/mousewheel/.test(types)) {
+    if (/mousewheel/.test(types)) {
         types = types + ' DOMMouseScroll';
     }
-
     each(types.split(/\s+/), function (index, type) {
-        if(!isArray(events[type])) return;
+        if (!isArray(events[type])) return;
         var l = events[type].length;
-        if(isFunction(handler)) {
-            for(var i = l - 1; i >= 0; i--) {
-                if(events[type][i] && (events[type][i] === handler || events[type][i].handler === handler)) {
+        if (isFunction(handler)) {
+            for (var i = l - 1; i >= 0; i--) {
+                if (events[type][i] && (events[type][i] === handler || events[type][i].handler === handler)) {
                     events[type].splice(i, 1);
                     l--;
                     break;
                 }
             }
         } else {
-            for(var i = 0; i < l; i++) {
+            for (var i = 0; i < l; i++) {
                 delete events[type][i];
             }
             l = 0;
         }
-        if(!l) {
-            if(elem.removeEventListener) {
+        if (!l) {
+            if (elem.removeEventListener) {
                 elem.removeEventListener(type, data(elem, 'handle'), false);
-            } else if(elem.detachEvent) {
+            } else if (elem.detachEvent) {
                 elem.detachEvent('on' + type, data(elem, 'handle'));
             }
             delete events[type];
         }
     });
-    if(isEmpty(events)) {
+    if (isEmpty(events)) {
         removeData(elem, 'events')
         removeData(elem, 'handle')
     }
@@ -115,7 +105,7 @@ function removeEvent(elem, types, handler) {
 function triggerEvent(elem, type, ev, now) {
     elem = ge(elem);
     var handle = data(elem, 'handle');
-    if(handle) {
+    if (handle) {
         var f = function () {
             handle.call(elem, extend((ev || {}), {
                 type: type,
@@ -128,12 +118,12 @@ function triggerEvent(elem, type, ev, now) {
 
 function cancelEvent(event) {
     event = (event || window.event);
-    if(!event) return false;
-    while(event.originalEvent) {
+    if (!event) return false;
+    while (event.originalEvent) {
         event = event.originalEvent;
     }
-    if(event.preventDefault) event.preventDefault();
-    if(event.stopPropagation) event.stopPropagation();
+    if (event.preventDefault) event.preventDefault();
+    if (event.stopPropagation) event.stopPropagation();
     event.cancelBubble = true;
     event.returnValue = false;
     return false;
@@ -141,22 +131,19 @@ function cancelEvent(event) {
 
 function removeData(elem, name) {
     var id = elem ? elem[eventExpand] : false;
-    if(!id) return;
-
-    if(name) {
-        if(eventCache[id]) {
+    if (!id) return;
+    if (name) {
+        if (eventCache[id]) {
             delete eventCache[id][name];
             name = '';
-
             var count = 0;
-            for(name in eventCache[id]) {
-                if(name !== '__elem') {
+            for (name in eventCache[id]) {
+                if (name !== '__elem') {
                     count++;
                     break;
                 }
             }
-
-            if(!count) {
+            if (!count) {
                 removeData(elem);
             }
         }
@@ -169,9 +156,9 @@ function removeData(elem, name) {
 
 function cleanElems() {
     var a = arguments;
-    for(var i = 0; i < a.length; ++i) {
+    for (var i = 0; i < a.length; ++i) {
         var el = ge(a[i]);
-        if(el) {
+        if (el) {
             removeData(el);
             removeAttr(el, 'btnevents');
         }
@@ -181,62 +168,58 @@ function cleanElems() {
 function data(elem, name, data) {
     var id = elem[eventExpand],
         undefined;
-    if(!id) {
+    if (!id) {
         id = elem[eventExpand] = ++eventUUID;
     }
-
-    if(data !== undefined) {
-        if(!eventCache[id]) {
+    if (data !== undefined) {
+        if (!eventCache[id]) {
             eventCache[id] = {};
-            if(eventDebugMode) eventCache[id].__elem = elem;
+            if (eventDebugMode) eventCache[id].__elem = elem;
         }
         eventCache[id][name] = data;
     }
-
     return name ? eventCache[id] && eventCache[id][name] : id;
 }
 
 function removeAttr(el) {
-    for(var i = 0, l = arguments.length; i < l; ++i) {
+    for (var i = 0, l = arguments.length; i < l; ++i) {
         var n = arguments[i];
-        if(el[n] === undefined) continue;
+        if (el[n] === undefined) continue;
         try {
             delete el[n];
-        } catch(e) {
+        } catch (e) {
             try {
                 el.removeAttribute(n);
-            } catch(e) {}
+            } catch (e) {}
         }
     }
 }
 
 function _eventHandle(event) {
     event = normEvent(event);
-
     var handlers = data(this, 'events');
-    if(!handlers || typeof (event.type) != 'string' || !handlers[event.type] || !handlers[event.type].length) {
+    if (!handlers || typeof (event.type) != 'string' || !handlers[event.type] || !handlers[event.type].length) {
         return;
     }
-
-    for(var i in (handlers[event.type] || [])) {
-        if(event.type == 'mouseover' || event.type == 'mouseout') {
+    for (var i in (handlers[event.type] || [])) {
+        if (event.type == 'mouseover' || event.type == 'mouseout') {
             var parent = event.relatedElement;
-            while(parent && parent != this) {
+            while (parent && parent != this) {
                 try {
                     parent = parent.parentNode;
-                } catch(e) {
+                } catch (e) {
                     parent = this;
                 }
             }
-            if(parent == this) {
+            if (parent == this) {
                 continue
             }
         }
         var ret = handlers[event.type][i].apply(this, arguments);
-        if(ret === false || ret === -1) {
+        if (ret === false || ret === -1) {
             cancelEvent(event);
         }
-        if(ret === -1) {
+        if (ret === -1) {
             return false;
         }
     }
@@ -244,61 +227,47 @@ function _eventHandle(event) {
 
 function normEvent(event) {
     event = event || window.event;
-
     var originalEvent = event;
     event = clone(originalEvent);
     event.originalEvent = originalEvent;
-
-    if(!event.target) {
+    if (!event.target) {
         event.target = event.srcElement || document;
     }
-
     // check if target is a textnode (safari)
-    if(event.target.nodeType == 3) {
+    if (event.target.nodeType == 3) {
         event.target = event.target.parentNode;
     }
-
-    if(!event.relatedTarget && event.fromElement) {
+    if (!event.relatedTarget && event.fromElement) {
         event.relatedTarget = event.fromElement == event.target;
     }
-
-    if(event.pageX == null && event.clientX != null) {
+    if (event.pageX == null && event.clientX != null) {
         var doc = document.documentElement,
             body = bodyNode;
         event.pageX = event.clientX + (doc && doc.scrollLeft || body && body.scrollLeft || 0) - (doc.clientLeft || 0);
         event.pageY = event.clientY + (doc && doc.scrollTop || body && body.scrollTop || 0) - (doc.clientTop || 0);
     }
-
-    if(!event.which && ((event.charCode || event.charCode === 0) ? event.charCode : event.keyCode)) {
+    if (!event.which && ((event.charCode || event.charCode === 0) ? event.charCode : event.keyCode)) {
         event.which = event.charCode || event.keyCode;
     }
-
-    if(!event.metaKey && event.ctrlKey) {
+    if (!event.metaKey && event.ctrlKey) {
         event.metaKey = event.ctrlKey;
-    } else if(!event.ctrlKey && event.metaKey && browser.mac) {
+    } else if (!event.ctrlKey && event.metaKey && browser.mac) {
         event.ctrlKey = event.metaKey;
     }
-
     // click: 1 == left; 2 == middle; 3 == right
-    if(!event.which && event.button) {
+    if (!event.which && event.button) {
         event.which = (event.button & 1 ? 1 : (event.button & 2 ? 3 : (event.button & 4 ? 2 : 0)));
     }
-
-    if(!event.wheel && (event.wheelDelta || ((event.detail == 3 || event.detail == -3) && browser.mozilla))) {
+    if (!event.wheel && (event.wheelDelta || ((event.detail == 3 || event.detail == -3) && browser.mozilla))) {
         event.wheel = event.wheelDelta && event.wheelDelta > 0 || event.detail && event.detail < 0 || false;
     }
-
     return event;
 }
 
 function onCtrlEnter(event, handler) {
     event = event || window.event;
-    if(event.keyCode == 10 || event.keyCode == 13 && (event.ctrlKey || event.metaKey && browser.mac)) {
+    if (event.keyCode == 10 || event.keyCode == 13 && (event.ctrlKey || event.metaKey && browser.mac)) {
         handler();
         cancelEvent(ev);
     }
 }
-
-
-
-/* EVENTS FUNCTIONS END */
