@@ -381,3 +381,8 @@
 .mobile_selector_container .result_list {
     opacity:1
 }
+
+.result_list ul li {
+    font-family: Tahoma;
+    font-size: 11px;
+}

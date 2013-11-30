@@ -362,7 +362,7 @@ function AlertBox(title, text, callback, options) {
         });
     } else {
         aBox.addButton({
-            label: options.no || getLang('global-close'),
+            label: options.no || getLang('box_close'),
             onClick: isFunction(callback) ? function () {
                 aBox.hide();
                 callback();

@@ -1,3 +1,9 @@
+a.dd_menu_target,
+.dd_menu {
+    font-family: Tahoma;
+    font-size: 11px
+}
+
 a.dd_menu_target:hover {
     text-decoration:none!important
 }

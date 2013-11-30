@@ -72,6 +72,7 @@ createChildClass('InlineEdit', UiControl, {
     },
     init: function (target) {
         this.target = target;
+        addClass(this.target, 'inline_edit_target');
     },
     initDOM: function (target, options) {
         this.container = ce('div', {

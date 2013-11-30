@@ -39,7 +39,9 @@
     text-align:center;
     line-height:26px;
     color:#666;
-    text-shadow:0 2px 1px rgba(255,255,255,0.7)
+    text-shadow:0 2px 1px rgba(255,255,255,0.7);
+    font-family: Tahoma;
+    font-size: 11px
 }
 .slider .disabled-area {
     background:#f4f4f4;

@@ -1,3 +1,22 @@
+.inline_edit_target,
+.inlInput {
+    font-family: Tahoma;
+    font-size: 11px;
+}
+
+.inlInput {
+    -webkit-border-radius:0;
+    -moz-border-radius:0;
+    -khtml-border-radius:0;
+    border-radius:0;
+    -webkit-appearance:none;
+    background:#FFF;
+    color:#000;
+    border:1px solid #C0CAD5;
+    margin:0;
+    padding:3px;
+}
+
 .inlContainer {
     position:absolute;
     display:none;

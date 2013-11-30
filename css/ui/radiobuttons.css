@@ -1,5 +1,7 @@
 .radiobtn_container {
-    cursor:pointer
+    cursor:pointer;
+    font-family: Tahoma;
+    font-size: 11px
 }
 .radiobtn_container table {
     width:100%;
