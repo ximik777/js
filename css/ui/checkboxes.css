@@ -1,71 +1,60 @@
 .checkbox_container {
-    cursor: pointer;
+    cursor:pointer
 }
-
 .checkbox_container table {
-    width: 100%;
-    z-index: 0;
-    margin: 5px 0 5px 0;
+    width:100%;
+    z-index:0;
+    margin:5px 0 5px 0
 }
-
 .checkbox_container table td {
-    vertical-align: middle;
+    vertical-align:middle
 }
-
 .checkbox_container table td.checkbox {
-    width: 20px;
-    padding: 2px 0 0;
+    width:20px;
+    padding:2px 0 0
 }
-
 .checkbox_container table td.checkbox_label,
 .radiobtn_container table td.radiobtn_label {
-    line-height: 140%;
-    padding: 0 0 0 3px;
-    text-align: left;
+    line-height:140%;
+    padding:0 0 0 3px;
+    text-align:left
 }
-
 .checkbox_container table td.checkbox_label {
-    padding-top: 1px;
+    padding-top:1px
 }
-
 .checkbox_container table td .checkbox_on,
 .checkbox_container table td .checkbox_off,
 .checkbox_container table td .checkbox_on_over,
 .checkbox_container table td .checkbox_off_over {
-    height: 14px;
-    width: 15px;
-    overflow: hidden;
-    background: transparent url(/images/check.gif?1) 0 0 no-repeat;
+    height:14px;
+    width:15px;
+    overflow:hidden;
+    background:transparent url(/images/check.gif?1) 0 0 no-repeat
 }
-
 .checkbox_container table td .checkbox_on {
-    background-position: 0 -14px;
+    background-position:0 -14px
 }
-
 .checkbox_container table td .checkbox_off_over {
-    background-position: 0 -28px;
+    background-position:0 -28px
 }
-
 .checkbox_container table td .checkbox_on_over {
-    background-position: 0 -42px;
+    background-position:0 -42px
 }
-
 .is_2x .checkbox_container table td .checkbox_on,
 .is_2x .checkbox_container table td .checkbox_off,
 .is_2x .checkbox_container table td .checkbox_on_over,
 .is_2x .checkbox_container table td .checkbox_off_over {
-    background-image: url("/images/check_2x.gif");
-    background-size: 15px 56px;
+    background-image:url("/images/check_2x.gif");
+    background-size:15px 56px
 }
-
 .checkbox_container.disabled {
-    cursor: default;
-    opacity: 0.5;
-    filter: alpha(opacity=50);
+    cursor:default;
+    opacity:.5;
+    filter:alpha(opacity=50)
 }
 .checkbox_container.disabled td.checkbox div.checkbox_on_over {
-    background-position: 0 -14px;
+    background-position:0 -14px
 }
 .checkbox_container.disabled td.checkbox div.checkbox_off_over {
-    background-position: 0 0;
+    background-position:0 0
 }
