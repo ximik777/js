@@ -1,7 +1,25 @@
 var base_domain = location.protocol + '//' + location.host,
     _ua = navigator.userAgent.toLowerCase(),
     lang = lang || {},
-    vk = {};
+    vk = {},
+    parseJSON = (window.JSON && JSON.parse) ? function (obj) {
+        try {
+            return JSON.parse(obj);
+        } catch (e) {
+            try {
+                return eval('(' + obj + ')');
+            } catch (e) {
+                return false;
+            }
+        }
+    } : function (obj) {
+        try {
+            return eval('(' + obj + ')');
+        } catch (e) {
+            return false;
+        }
+    };
+
 var browser = {
     version: (_ua.match(/.+(?:me|ox|on|rv|it|era|ie)[\/: ]([\d.]+)/) || [0, '0'])[1],
     opera: /opera/i.test(_ua),
@@ -111,7 +129,7 @@ Function.prototype.bind = function () {
         var curArgs = Array.prototype.slice.call(arguments);
         return func.apply(obj, args.concat(curArgs));
     }
-}
+};
 
 function indexOf(arr, value, from) {
     for (var i = from || 0, l = (arr || []).length; i < l; i++) {

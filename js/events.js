@@ -10,7 +10,9 @@ var KEY = window.KEY = {
         ESC: 27,
         PAGEUP: 33,
         PAGEDOWN: 34,
-        SPACE: 32
+        SPACE: 32,
+        CTRL: 17,
+        BACKSPACE: 8
     },
     eventExpand = 'EV' + Now(),
     eventUUID = 0,
@@ -268,6 +270,11 @@ function onCtrlEnter(event, handler) {
     event = event || window.event;
     if (event.keyCode == 10 || event.keyCode == 13 && (event.ctrlKey || event.metaKey && browser.mac)) {
         handler();
-        cancelEvent(ev);
+        cancelEvent(event);
     }
+}
+
+function press(e, code)
+{
+    return !!((e.keyCode==KEY[code]));
 }

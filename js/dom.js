@@ -743,3 +743,49 @@ function BGLayer() {
 function sbWidth() {
     return 16;
 }
+
+function notaBene(el, color, nofocus) {
+    el = ge(el);
+    if (!el) return;
+
+    if (!nofocus) elfocus(el);
+    if (data(el, 'backstyle') === undefined) data(el, 'backstyle', el.style.backgroundColor || '');
+    var oldBack = data(el, 'back') || data(el, 'back', getStyle(el, 'backgroundColor'));
+    var colors = {notice: '#FFFFE0', warning: '#FAEAEA'};
+    setStyle(el, 'backgroundColor', colors[color] || color || colors.warning);
+    setTimeout(animate.pbind(el, {backgroundColor: oldBack}, 300, function() {
+        el.style.backgroundColor = data(el, 'backstyle');
+    }), 400);
+}
+
+function doGetCaretPosition (el) {
+    el = ge(el);
+    var pos = 0;
+    if (document.selection)
+    {
+        el.focus();
+        var Sel = document.selection.createRange();
+        Sel.moveStart('character', -el.value.length);
+        pos = Sel.text.length;
+    }
+    else if (el.selectionStart || el.selectionStart == '0') pos = el.selectionStart;
+    return pos;
+}
+
+function setCaretPosition(el, pos)
+{
+    el = ge(el);
+    if(el.setSelectionRange)
+    {
+        el.focus();
+        el.setSelectionRange(pos,pos);
+    }
+    else if (el.createTextRange) {
+        var range = el.createTextRange();
+        range.collapse(true);
+        range.moveEnd('character', pos);
+        range.moveStart('character', pos);
+        range.select();
+    }
+    return true;
+}
