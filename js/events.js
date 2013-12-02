@@ -278,3 +278,8 @@ function press(e, code)
 {
     return !!((e.keyCode==KEY[code]));
 }
+
+
+function getTarget(e) {
+    return e.srcElement || e.target;
+}
