@@ -1,32 +1,23 @@
-function langNumeric(count, vars, format_num) {
-    if (!vars || !window.langConfig) {
-        return count;
-    }
+function langNumeric(count, vars, formatNum) {
+    if (!vars || !window.langConfig) { return count; }
     var res;
     if (!isArray(vars)) {
-        result = vars;
+        res = vars;
     } else {
         res = vars[1];
-        if (count != Math.floor(count)) {
-            res = vars[langConfig.numRules.float];
+        if(count != Math.floor(count)) {
+            res = vars[langConfig.numRules['float']];
         } else {
-            each(langConfig.numRules.int, function (i, v) {
-                if (v[0] == '*') {
-                    res = vars[v[2]];
-                    return false;
-                }
+            each(langConfig.numRules['int'], function(i,v){
+                if (v[0] == '*') { res = vars[v[2]]; return false; }
                 var c = v[0] ? count % v[0] : count;
-                if (indexOf(v[1], c) != -1) {
-                    res = vars[v[2]];
-                    return false;
-                }
+                if(indexOf(v[1], c) != -1) { res = vars[v[2]]; return false; }
             });
         }
     }
-    if (format_num) {
-        var n = count.toString().split('.'),
-            c = [];
-        for (var i = n[0].length - 3; i > -3; i -= 3) {
+    if (formatNum) {
+        var n = count.toString().split('.'), c = [];
+        for(var i = n[0].length - 3; i > -3; i -= 3) {
             c.unshift(n[0].slice(i > 0 ? i : 0, i + 3));
         }
         n[0] = c.join(langConfig.numDel);
@@ -40,17 +31,34 @@ function langSex(sex, vars) {
     if (!isArray(vars)) return vars;
     var res = vars[1];
     if (!window.langConfig) return res;
-    each(langConfig.sexRules, function (i, v) {
-        if (v[0] == '*') {
-            res = vars[v[1]];
-            return false;
-        }
-        if (sex == v[0] && vars[v[1]]) {
-            res = vars[v[1]];
-            return false;
-        }
+    each(langConfig.sexRules, function(i,v){
+        if (v[0] == '*') { res = vars[v[1]]; return false; }
+        if (sex == v[0] && vars[v[1]]) { res = vars[v[1]]; return false; }
     });
     return res;
+}
+
+function getLang() {
+    try {
+        var args = Array.prototype.slice.call(arguments);
+        var key = args.shift();
+        if (!key) return '...';
+        var val = (window.cur.lang && window.cur.lang[key]) || (window.lang && window.lang[key]) || (window.langpack && window.langpack[key]) || window[key];
+        if (!val) {
+            var res = key.split('_');
+            res.shift();
+            return res.join(' ');
+        }
+        if (isFunction(val)) {
+            return val.apply(null, args);
+        } else if (args[0] !== undefined || isArray(val)) {
+            return langNumeric(args[0], val, args[1]);
+        } else {
+            return val;
+        }
+    } catch(e) {
+        debugLog('lang error:' + e.message + '(' + Array.prototype.slice.call(arguments).join(', ') + ')');
+    }
 }
 
 function getLangW(key) {
@@ -64,29 +72,6 @@ function getLangW(key) {
         return document.write(res.join(' '));
     }
     return document.write(val);
-}
-
-function getLang() {
-    try {
-        var args = Array.prototype.slice.call(arguments);
-        var key = args.shift();
-        if (!key) return '...';
-        var val = (window.lang && window.lang[key]) || (window.langpack && window.langpack[key]) || window[key];
-        if (!val) {
-            var res = key.split('-');
-            res.shift();
-            return res.join(' ');
-        }
-        if (isFunction(val)) {
-            return val.apply(null, args);
-        } else if (isArray(val)) {
-            return langNumeric(args[0], val);
-        } else {
-            return val;
-        }
-    } catch (e) {
-        debugLog('lang error:' + e.message + '(' + Array.prototype.slice.call(arguments).join(', ') + ')');
-    }
 }
 
 function parseLatin(text, back) {

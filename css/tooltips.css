@@ -758,3 +758,5 @@ button.mention_tt_half_btn {
     margin-left:64px;
     margin-right:0
 }
+
+.is_2x #invite_hint_close {background-image: url(/images/hide_left_2x.gif); background-size: 14px 14px;}

@@ -61,7 +61,7 @@ createChildClass('Selector', UiControl, {
         placeholderColor: '#afb8c2',
         introText: 'Начните вводить',
         noResult: 'Ничего не найденно',
-        noImageSrc: '/template/images/q.png',
+        noImageSrc: '/images/question_s.gif',
         formatResult: function (data) {
             return data[1] + (typeof (data[2]) == 'string' ? ' <span>' + data[2] + '</span>' : '');
         },
@@ -669,9 +669,9 @@ createChildClass('Selector', UiControl, {
         }
         var data;
         if (item == -2e9) {
-            data = [this.curTerm, this.curTerm, cur.lang['mail_enter_email_address'], '/images/pics/contact_info.png', 0, ''];
+            data = [this.curTerm, this.curTerm, cur.lang['mail_enter_email_address'], '/images/contact_info.png', 0, ''];
         } else if (typeof (item) == 'string' && item.indexOf('@') != -1) {
-            data = [item, item, cur.lang['mail_enter_email_address'], '/images/pics/contact_info.png', 0, ''];
+            data = [item, item, cur.lang['mail_enter_email_address'], '/images/contact_info.png', 0, ''];
         } else if (typeof (item) == 'object') {
             data = item;
         } else {
