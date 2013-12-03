@@ -99,3 +99,36 @@ input[type="checkbox"],input[type~="checkbox"] {
 ::-webkit-input-placeholder,input:-moz-placeholder,textarea:-moz-placeholder {
     color:#777;
 }
+
+a {color: #2B587A;}
+a:hover {text-decoration: none;}
+
+.files {margin-left: 30px;}
+.files ul {margin-left: 30px;}
+.files ul ul {margin-left: 30px; display: none;}
+.files .images {display: inline;}
+.files .images:hover ul {display: block;}
+.files ul li {padding: 5px;}
+
+.packedge {margin: 0 auto; width: 1000px; background: #F7F7F7; border: solid 1px #D9E0E7}
+.packedge .left, .packedge .right {width: 499px;}
+.packedge .left {border-right: solid 1px #FFFFFF;border-bottom: solid 1px #E0E0E0;}
+.packedge .right {border-left: solid 1px #E0E0E0;border-bottom: solid 1px #E0E0E0;}
+.packedge .imgs {border-top: solid 1px #FFFFFF;}
+.packedge .cont {margin: 15px;}
+ h2 {color: #45688E; font-weight: bold; padding: 2px 0 14px; font-size: 12px;}
+ h2 a, .dw_min {color: #777777; font-size: 9px; text-decoration: none; font-weight: normal;}
+ h2 a:hover, .dw_min:hover {text-decoration: underline;}
+ ul {list-style: square; padding-left: 40px; color: #758EAC; margin: 0px 0px 15px 0px}
+ ul li {padding: 1px 0px;}
+ .custom_area {border: solid 1px #E0E0E0; padding: 10px; background: #FFF;}
+
+.modules {margin: 0 auto; width: 1000px; }
+.modules ul {padding-left: 20px;}
+.modules ul li {padding: 5px;background: #F7F7F7; border: solid 1px #D9E0E7; margin-bottom: 5px; }
+
+.rel {color: #000;}
+
+.cf:after {clear: both;content: " "; display: block;font-size: 0;height: 0;visibility: hidden;}
+.fl {float:left;}
+.fr {float:right;}

@@ -1,3 +1,4 @@
 .idea/
 *.php
+*.htaccess
 cache/
