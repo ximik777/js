@@ -850,3 +850,29 @@ function setCaretPosition(el, pos)
     }
     return true;
 }
+
+function se(html) {return ce('div', {innerHTML: html}).firstChild;}
+function rs(html, repl) {
+    each (repl, function(k, v) {
+        html = html.replace(new RegExp('%' + k + '%', 'g'), v);
+    });
+    return html;
+}
+
+function val(input, value, nofire) {
+    input = ge(input);
+    if (!input) return;
+
+    if (value !== undefined) {
+        if (input.setValue) {
+            input.setValue(value);
+            !nofire && input.phonblur && input.phonblur();
+        } else if (input.tagName == 'INPUT' || input.tagName == 'TEXTAREA') {
+            input.value = value
+        } else {
+            input.innerHTML = value
+        }
+    }
+    return input.getValue ? input.getValue() :
+        (((input.tagName == 'INPUT' || input.tagName == 'TEXTAREA') ? input.value : input.innerHTML) || '');
+}

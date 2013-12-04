@@ -33,7 +33,7 @@ createChildClass('Indexer', UiUtil, {
             index_key, already_indexed = {};
         for (i = 0; i < this.options.indexkeys.length; i++) {
             if (!v[this.options.indexkeys[i]]) continue;
-            current_words += ' ' + v[this.options.indexkeys[i]].replace(this.options.delimeter, ' ').replace(/<[^>]*>/, '');
+            current_words += ' ' + v[this.options.indexkeys[i]].toString().replace(this.options.delimeter, ' ').replace(/<[^>]*>/, '');
         }
         current_words = trim(winToUtf(current_words).toLowerCase()).split(/\s+/);
         for (i = 0; i < current_words.length; i++) {

@@ -314,3 +314,8 @@ function addCss(c) {
             }));
     }
 }
+
+function debugLog(a)
+{
+    console.log(a);
+}

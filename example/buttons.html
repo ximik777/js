@@ -58,9 +58,24 @@
     }
     onDomReady(function () {
         lockButton(ge('look_button'));
+        addEvent(ge('disable_button'), 'click', function(){alert(123)});
+
         disableButton(ge('disable_button'), true);
     });
 </script>
+<div style="text-align: center">
+    <!--LiveInternet counter--><script type="text/javascript"><!--
+document.write("<a href='http://www.liveinternet.ru/click' "+
+        "target=_blank><img src='//counter.yadro.ru/hit?t29.1;r"+
+        escape(document.referrer)+((typeof(screen)=="undefined")?"":
+        ";s"+screen.width+"*"+screen.height+"*"+(screen.colorDepth?
+                screen.colorDepth:screen.pixelDepth))+";u"+escape(document.URL)+
+        ";"+Math.random()+
+        "' alt='' title='LiveInternet: показано количество просмотров и"+
+        " посетителей' "+
+        "border='0' width='88' height='120'><\/a>")
+//--></script><!--/LiveInternet-->
+</div>
 </body>
 
 </html>
