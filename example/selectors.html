@@ -66,6 +66,12 @@
 </div>
 <div class="labeleds" id="selectors_change"></div>
 <br class="cl">
+<div class="label">Dropdown Big:</div>
+<div class="labeled">
+    <input type="text" id="dropdown_big" name="dropdown" value="" />
+</div>
+<div class="labeleds" id="dropdown_big_change"></div>
+<br class="cl">
 <br />
 <script type="text/javascript">
 var Data = {
@@ -278,13 +284,21 @@ onDomReady(function () {
             ge('selectors_change').innerHTML = 'id:' + value;
         }
     });
-    Drops[0] = new Dropdown(ge('dropdown2'), Data.city, {
+    Drops[7] = new Dropdown(ge('dropdown2'), Data.city, {
         width: 200,
         onChange: function (k) {
-            ge('dropdown_change').innerHTML = 'id:' + k;
+            ge('dropdown_change2').innerHTML = 'id:' + k;
         }
     });
-    Drops[0].disable(true);
+    Drops[7].disable(true);
+
+    Drops[8] = new Dropdown(ge('dropdown_big'), Data.city, {
+        width: 200,
+        big: true,
+        onChange: function (k) {
+            ge('dropdown_big_change').innerHTML = 'id:' + k;
+        }
+    });
 });
 </script>
 <div style="text-align: center">

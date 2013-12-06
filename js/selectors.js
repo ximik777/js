@@ -1,1385 +1,1513 @@
-function Dropdown(input, data, options) {
-    if (!options) options = {};
-    return new Selector(
-        input,
-        options.autocomplete ? data : [], extend({
-            introText: '',
-            multiselect: false,
-            autocomplete: false,
-            selectedItems: options.selectedItem
-        }, options, {
-            defaultItems: data
-        }));
+function Dropdown(a, c, b) {
+    if (!b) {
+        b = {}
+    }
+    return new Selector(a, b.autocomplete ? c : [], extend({
+        introText: "",
+        multiselect: false,
+        autocomplete: false,
+        selectedItems: b.selectedItem
+    }, b, {
+        defaultItems: c
+    }))
 }
 
-function Autocomplete(input, data, options) {
-    return new Selector(input, data, options);
+function Autocomplete(a, c, b) {
+    return new Selector(a, c, b)
 }
-createChildClass('Selector', UiControl, {
+createChildClass("Selector", UiControl, {
     CSS: {},
     defaultOptions: {
         selectedItems: [],
         defaultItems: [],
         multiselect: true,
+        multinostop: false,
         autocomplete: true,
         dropdown: true,
-        cacheLength: 100,
-        showMax: 10,
         maxItems: 50,
-        maxItemsShown: function (query_length) {
-            if (query_length > 6) {
-                return 500;
-            } else if (query_length > 4) {
-                return 200;
-            } else if (query_length > 2) {
-                return 150;
-            } else {
-                return 100;
-            }
-        },
         selectFirst: true,
-        dividingLine: 'smart',
+        dividingLine: "smart",
+        resultField: undefined,
+        customField: undefined,
         enableCustom: false,
         valueForCustom: -1,
         width: 300,
         height: 250,
+        resultListWidth: 0,
         progressBar: false,
-        highlight: function (label, term) {
-            label = term.indexOf(' ') == -1 ? label.split(' ') : [label];
-            var tmp = '';
-            var termRus = parseLatin(term);
-            if (termRus != null) {
-                term = term + '|' + termRus;
+        imageId: undefined,
+        noImageSrc: "http://vk.com/images/question_s.gif",
+        hrefPrefix: "id",
+        noBlur: false,
+        zeroDefault: false,
+        customArrow: false,
+        customArrowWidth: 0,
+        big: false,
+        placeholder: "",
+        placeholderColor: "#777777",
+        placeholderColorBack: "#AFB8C2",
+        zeroPlaceholder: false,
+        introText: "Start typing",
+        disabledText: "",
+        noResult: getLang("search_nothing_found"),
+        cacheLength: 100,
+        indexkeys: undefined,
+        onShow: undefined,
+        onHide: undefined,
+        onChange: undefined,
+        onTagAdd: undefined,
+        onTagRemove: undefined,
+        onItemSelect: undefined,
+        onTokenSelected: undefined,
+        customSearch: false,
+        chooseFirst: false,
+        maxItemsShown: function (a) {
+            if (a > 6) {
+                return 500
+            } else {
+                if (a > 4) {
+                    return 200
+                } else {
+                    if (a > 2) {
+                        return 150
+                    } else {
+                        return 100
+                    }
+                }
             }
-            var re = new RegExp("(?![^&;]+;)(?!<[^<>]*)((\\(*)(" + term.replace('+', '\\+') + "))(?![^<>]*>)(?![^&;]+;)", "gi");
-            for (var i in label) {
-                tmp += (i > 0 ? ' ' : '') + label[i].replace(re, "$2<em>$3</em>");
+        },
+        highlight: function (b, e) {
+            b = e.indexOf(" ") == -1 ? b.split(" ") : [b];
+            var d = "";
+            var a = parseLatin(e);
+            if (a !== null) {
+                e = e + "|" + a
             }
-            return tmp;
+            var f = new RegExp("(?![^&;]+;)(?!<[^<>]*)((\\(*)(" + escapeRE(e) + "))(?![^<>]*>)(?![^&;]+;)", "gi");
+            for (var c in b) {
+                d += (c > 0 ? " " : "") + b[c].replace(f, "$2<em>$3</em>")
+            }
+            return d
         },
-        placeholder: '',
-        placeholderColor: '#afb8c2',
-        introText: 'Начните вводить',
-        noResult: 'Ничего не найденно',
-        noImageSrc: '/images/question_s.gif',
-        formatResult: function (data) {
-            return data[1] + (typeof (data[2]) == 'string' ? ' <span>' + data[2] + '</span>' : '');
+        formatResult: function (a) {
+            return a[1] + (typeof (a[2]) == "string" ? " <span>" + a[2] + "</span>" : "")
         },
-        hrefPrefix: 'id'
+        lastOptionWithoutCommaAtEnd: false
     },
-    controlName: 'Selector',
-    // Standart object methods
-    beforeInit: function (input) {
-        if (input == null || input['autocomplete']) {
+    controlName: "Selector",
+    beforeInit: function (a) {
+        if (a === null || a.autocomplete) {
             try {
-                console.error("Can't init ", input);
-            } catch (e) {}
-            return false;
+                console.error("Can't init ", a)
+            } catch (b) {}
+            return false
         }
-        this.guid = _ui.reg(this);
+        this.guid = _ui.reg(this)
     },
-    initOptions: function (input, data, options) {
-        var opts = this.options = extend({}, this.defaultOptions, {
-            resultField: input['name'] || 'selectedItems',
-            customField: input['name'] ? (input['name'] + '_custom') : 'selectedItems_custom'
-        }, this.prepareOptionsText(options || {}));
-        // if highlight is set to false, replace it with a do-nothing function
-        opts.highlight = opts.highlight || function (label) {
-            return label;
+    initOptions: function (a, c, b) {
+        this.options = extend({}, this.defaultOptions, {
+            resultField: a.name || "selectedItems",
+            customField: a.name ? (a.name + "_custom") : "selectedItems_custom"
+        }, this.prepareOptionsText(b || {}));
+        this.options.highlight = this.options.highlight || function (d) {
+            return d
         };
-        // Get selected value
-        if (!isArray(opts.selectedItems) && isEmpty(opts.selectedItems)) {
-            opts.selectedItems = [];
+        if (!isArray(this.options.selectedItems) && isEmpty(this.options.selectedItems)) {
+            this.options.selectedItems = []
         }
-        if (input['value'] && !opts.selectedItems.length) {
-            opts.selectedItems = input['value'];
+        if (a.value && !this.options.selectedItems.length) {
+            this.options.selectedItems = a.value
         }
-        opts.width = parseInt(opts.width) > 0 ? parseInt(opts.width) : this.defaultOptions.width;
-        opts.height = parseInt(opts.height) > 0 ? parseInt(opts.height) : this.defaultOptions.height;
-        opts.resultListWidth = parseInt(opts.resultListWidth) > 0 ? parseInt(opts.resultListWidth) : opts.width;
-        if (opts.imageId) {
-            opts.imageId = ge(opts.imageId);
+        this.options.width = parseInt(this.options.width) > 0 ? parseInt(this.options.width) : this.defaultOptions.width;
+        this.options.height = parseInt(this.options.height) > 0 ? parseInt(this.options.height) : this.defaultOptions.height;
+        this.options.resultListWidth = parseInt(this.options.resultListWidth) > 0 ? parseInt(this.options.resultListWidth) : this.options.width;
+        if (this.options.imageId) {
+            this.options.imageId = ge(this.options.imageId)
         }
     },
-    init: function (input, data) {
-        this.dataURL = typeof (data) == 'string' ? data : null;
-        this.dataItems = isArray(data) ? data : [];
+    init: function (a, b) {
+        this.disableSomeFeatures = (location.pathname.indexOf("/join") === 0);
+        this.dataURL = typeof (b) == "string" ? b : null;
+        this.dataItems = isArray(b) ? b : [];
         this.currentList = this.dataItems;
         if (this.dataURL) {
-            this.cache = new Cache(this.options);
+            this.cache = new Cache(this.options)
         } else {
             this.indexer = new Indexer(this.dataItems, {
                 indexkeys: this.options.indexkeys
-            });
+            })
         }
         this._selectedItems = [];
-        this.input = input;
+        this.input = a;
         this.disabled = false;
         this.mouseIsOver = false;
         this.hasFocus = 0;
         this.scrollbarWidth = 0;
         this.timeout = null;
-        this.readOnly = (!this.options.autocomplete ? 'readonly="true"' : '');
+        this.readOnly = (!this.options.autocomplete ? 'readonly="true"' : "");
         this.requestTimeout = null;
         this.selectedTokenId = 0;
-        this.selectorWidth = this.options.width;
+        this.selectorWidth = this.options.width
     },
-    initDOM: function (input, data, options) {
-        var opts = this.options,
-            self = this;
-        this.container = ce('div', {
-            id: 'container' + this.guid,
-            className: 'selector_container' + (!opts.autocomplete ? ' dropdown_container' : '') + (browser.mobile ? ' mobile_selector_container' : ''),
-            innerHTML: '<table cellspacing="0" cellpadding="0" class="selector_table">\
-                  <tr>\
-                    <td class="selector">\
-                      <span class="selected_items"></span>\
-                      <input type="text" class="selector_input" ' + this.readOnly + ' />\
-        <input type="hidden" name="' + opts.resultField + '" id="' + opts.resultField + '" value="" class="resultField"><input type="hidden" name="' + opts.customField + '" id="' + opts.customField + '" value="" class="customField">\
-      </td>' + (opts.dropdown ? '<td id="dropdown' + this.guid + '" class="selector_dropdown">&nbsp;</td>' : '') + '\
-    </tr>\
-  </table>\
-  <div class="results_container">\
-    <div class="result_list" style="display:none;"></div>\
-    <div class="result_list_shadow">\
-      <div class="shadow1"></div>\
-      <div class="shadow2"></div>\
-    </div>\
-  </div>'
+    initDOM: function (b, c) {
+        var a = this;
+        this.container = ce("div", {
+            id: "container" + this.guid,
+            className: "selector_container" + (!a.options.autocomplete ? " dropdown_container" : "") + (a.options.big ? " big" : "") + (browser.mobile ? " mobile_selector_container" : ""),
+            innerHTML: '<table cellspacing="0" cellpadding="0" class="selector_table">                  <tr>                    <td class="selector">                      <div class="placeholder_wrap1">                        <div class="placeholder_wrap2">                          <div class="placeholder_content"></div>                          <div class="placeholder_cover"></div>                        </div>                      </div>                      <span class="selected_items"></span>                      <input type="text" class="selector_input" ' + this.readOnly + ' />        <input type="hidden" name="' + a.options.resultField + '" id="' + a.options.resultField + '" value="" class="resultField">        <input type="hidden" name="' + a.options.customField + '" id="' + a.options.customField + '" value="" class="customField">      </td>' + (a.options.dropdown ? '<td id="dropdown' + this.guid + '" class="selector_dropdown">&nbsp;</td>' : "") + '    </tr>  </table>  <div class="results_container">    <div class="result_list" style="display:none;"></div>    <div class="result_list_shadow">      <div class="shadow1"></div>      <div class="shadow2"></div>    </div>  </div>'
         }, {
-            width: opts.width + 'px'
+            width: a.options.width + "px"
         });
-        input.parentNode.replaceChild(this.container, input);
+        b.parentNode.replaceChild(this.container, b);
         each({
-            selector: 'selector',
-            resultList: 'result_list',
-            resultListShadow: 'result_list_shadow',
-            input: 'selector_input',
-            selectedItemsContainer: 'selected_items',
-            resultField: 'resultField',
-            customField: 'customField',
-            dropdownButton: 'selector_dropdown'
-        }, function (k, v) {
-            self[k] = geByClass(v, self.container)[0];
+            selector: "selector",
+            resultList: "result_list",
+            resultListShadow: "result_list_shadow",
+            input: "selector_input",
+            placeholder: "placeholder_wrap1",
+            placeholderContent: "placeholder_content",
+            selectedItemsContainer: "selected_items",
+            resultField: "resultField",
+            customField: "customField",
+            dropdownButton: "selector_dropdown"
+        }, function (e, d) {
+            a[e] = geByClass(d, a.container)[0]
         });
         if (browser.chrome) {
-            this.resultList.style.opacity = 1;
+            this.resultList.style.opacity = 1
         }
-        //if (!this.disabled) // always enabled at init
-        input.style.color = opts.placeholderColor;
-        input.autocomplete = '1';
-        if (opts.dividingLine) {
-            addClass(this.resultList, 'dividing_line')
+        b.autocomplete = "1";
+        if (a.options.dividingLine) {
+            addClass(this.resultList, "dividing_line")
         }
-        this.resultList.style.width = this.resultListShadow.style.width = opts.resultListWidth + 'px';
+        this.resultList.style.width = this.resultListShadow.style.width = a.options.resultListWidth + "px";
         if (this.options.dropdown) {
-            this.initDropdown();
+            this.initDropdown()
         }
+        this.updatePlaceholder();
         this.select = new Select(this.resultList, this.resultListShadow, {
-            selectFirst: opts.selectFirst,
-            height: opts.height,
-            onItemActive: function (value) {
-                self.showImage(value);
-                self.activeItemValue = value;
+            selectFirst: a.options.selectFirst,
+            height: a.options.height,
+            onItemActive: function (d) {
+                a.showImage(d);
+                a.activeItemValue = d
             },
-            onItemSelect: self._selectItem.bind(self),
+            onItemSelect: a._selectItem.bind(a),
             onShow: function () {
-                _ui.sel(self.guid);
-                self.highlightInput(true);
-                if (options.onShow) {
-                    options.onShow();
+                _ui.sel(a.guid);
+                a.highlightInput(true);
+                if (isFunction(a.options.onShow)) {
+                    a.options.onShow()
                 }
             },
             onHide: function () {
                 _ui.sel(false);
-                self.highlightInput(false);
-                if (options.onHide) {
-                    options.onHide();
+                a.highlightInput(false);
+                if (isFunction(a.options.onHide)) {
+                    a.options.onHide()
                 }
             }
-        });
+        })
     },
     initEvents: function () {
-        var self = this;
+        var a = this;
         if (this.options.dropdown) {
-            this.initDropdownEvents();
+            this.initDropdownEvents()
         }
-        var keyev1 = browser.opera || browser.mozilla ? 'keypress' : 'keydown';
-        var keyev2 = browser.opera ? 'keypress' : 'keydown';
-        this.onEvent = function (e) {
-            if (e.type == 'mousedown') {
-                var outside = true,
-                    t = e.target;
-                while (t && t != t.parentNode) {
-                    if (t == self.container) {
-                        outside = false;
-                        break;
+        var c = browser.opera || browser.mozilla ? "keypress" : "keydown";
+        var b = browser.opera ? "keypress" : "keydown";
+        this.onEvent = function (g) {
+            if (g.type == "mousedown") {
+                var f = true;
+                var d = g.target;
+                while (d && d != d.parentNode) {
+                    if (d == a.container) {
+                        f = false;
+                        break
                     }
-                    t = t.parentNode;
+                    d = d.parentNode
                 }
-                if (outside) {
-                    self.select.hide();
-                    self.deselectTokens();
+                if (f) {
+                    a.select.hide();
+                    a.deselectTokens()
                 }
             }
-            if (e.type == keyev1) {
-                self.handleKeyboardEventOutside(e);
+            if (g.type == c) {
+                a.handleKeyboardEventOutside(g)
             }
-            if (e.type == keyev2) {
-                self.select.handleKeyEvent(e);
+            if (g.type == b) {
+                a.select.handleKeyEvent(g)
             }
+        };
+        if (this.disableSomeFeatures) {
+            addEvent(this.input, "paste keypress keydown focus blur", this.handleKeyboardEvent, false, {
+                self: this
+            })
+        } else {
+            addEvent(this.input, "keydown keypress change paste cut drop input focus blur", this.handleKeyboardEvent, false, {
+                self: this
+            })
         }
-        addEvent(this.input, 'paste keypress keydown keyup focus blur', this.handleKeyboardEvent, false, {
-            self: this
-        });
-        addEvent(this.selector, 'mousedown', function (e) {
-            var click_over_token = false;
-            var el = e.target;
-            while (el != null) {
-                if (hasClass(el, 'token')) {
-                    click_over_token = true;
-                    break;
+        addEvent(this.selector, "mousedown", function (f) {
+            var g = false;
+            var d = f.target;
+            while (d !== null) {
+                if (hasClass(d, "token")) {
+                    g = true;
+                    break
                 }
-                el = el.parentNode;
+                d = d.parentNode
             }
-            if (!click_over_token) {
-                return self.onInputClick(e);
+            if (!g) {
+                return a.onInputClick(f)
             }
-            return true;
+            return true
         }, false, {
             self: this
-        });
+        })
     },
     afterInit: function () {
         this.updateInput();
-        var opt = this.options,
-            self = this;
-        if (opt.selectedItems !== undefined) {
-            if (isArray(opt.selectedItems)) {
-                for (var i in opt.selectedItems) {
-                    this._selectItem(opt.selectedItems[i], false);
+        var a = this;
+        if (this.options.selectedItems !== undefined) {
+            if (isArray(this.options.selectedItems)) {
+                for (var b in this.options.selectedItems) {
+                    this._selectItem(this.options.selectedItems[b], false)
                 }
             } else {
-                each((opt.selectedItems + '').split(','), function (i, x) {
-                    self._selectItem(x, false);
-                });
+                each((this.options.selectedItems + "").split(","), function (d, c) {
+                    a._selectItem(c, false)
+                })
             }
         }
-        // Select first item if it is dropdown
         if (!this._selectedItems.length && !this.options.autocomplete && !this.options.multiselect && this.options.defaultItems.length) {
-            this._selectItem(this.options.defaultItems[0], false);
+            this._selectItem(this.options.defaultItems[0], false)
         }
     },
-    // Extended methods
-    prepareOptionsText: function (options) {
-        each(['disabledText', 'placeholder'], function () {
-            if (this in options) {
-                options[this] = winToUtf(stripHTML(options[this]));
+    prepareOptionsText: function (a) {
+        each(["disabledText", "placeholder"], function () {
+            if (this in a) {
+                a[this] = winToUtf(stripHTML(a[this]))
             }
         });
-        return options;
+        return a
     },
     fadeButtonToColor: function () {
-        if (this.options.customArrow) return;
-        var state = window.is_rtl ? {
-            backgroundColor: '#E1E8ED',
-            borderRightColor: '#D2DBE0'
+        if (this.options.customArrow || this.options.big) {
+            return
+        }
+        var b = window.is_rtl ? {
+            backgroundColor: "#E1E8ED",
+            borderRightColor: "#D2DBE0"
         } : {
-            backgroundColor: '#E1E8ED',
-            borderLeftColor: '#D2DBE0'
+            backgroundColor: "#E1E8ED",
+            borderLeftColor: "#D2DBE0"
         };
-        var self = this;
-        animate(this.dropdownButton, state, 200, function () {
-            if (!self.mouseIsOver) {
-                if (!self.select.isVisible()) {
-                    self.fadeButtonToWhite();
+        var a = this;
+        animate(this.dropdownButton, b, 200, function () {
+            if (!a.mouseIsOver) {
+                if (!a.select.isVisible()) {
+                    a.fadeButtonToWhite()
                 } else {
-                    self.dropdownButton.style.backgroundColor = self.dropdownButton.style[window.is_rtl ? 'borderRightColor' : 'borderLeftColor'] = '';
+                    a.dropdownButton.style.backgroundColor = a.dropdownButton.style[window.is_rtl ? "borderRightColor" : "borderLeftColor"] = ""
                 }
             }
-        });
+        })
     },
     fadeButtonToWhite: function () {
-        if (this.options.customArrow) return;
-        var self = this;
+        if (this.options.customArrow || this.options.big) {
+            return
+        }
+        var a = this;
         animate(this.dropdownButton, {
-            backgroundColor: '#FFFFFF',
-            borderLeftColor: '#FFFFFF'
+            backgroundColor: "#FFFFFF",
+            borderLeftColor: "#FFFFFF"
         }, 200, function () {
-            self.dropdownButton.style.backgroundColor = self.dropdownButton.style[window.is_rtl ? 'borderRightColor' : 'borderLeftColor'] = '';
-            if (self.mouseIsOver) {
-                self.fadeButtonToColor();
+            a.dropdownButton.style.backgroundColor = a.dropdownButton.style[window.is_rtl ? "borderRightColor" : "borderLeftColor"] = "";
+            if (a.mouseIsOver) {
+                a.fadeButtonToColor()
             }
-        });
+        })
     },
     initDropdown: function () {
-        this.scrollbarWidth = this.options.customArrowWidth || window.sbWidth();
+        this.scrollbarWidth = this.options.customArrowWidth || this.options.big && 25 || window.sbWidth();
         if (this.scrollbarWidth <= 3) {
-            this.scrollbarWidth = browser.mobile ? 20 : 14;
+            this.scrollbarWidth = browser.mobile ? 20 : 14
         }
         if (!this.options.customArrow) {
-            this.dropdownButton.style.width = this.scrollbarWidth + 'px';
+            this.dropdownButton.style.width = this.scrollbarWidth + "px"
         }
-        this.selectorWidth -= this.scrollbarWidth;
+        this.selectorWidth -= this.scrollbarWidth
     },
     initDropdownEvents: function () {
-        var self = this;
-        addEvent(this.dropdownButton, 'mouseover', function () {
-            addClass(this, 'selector_dropdown_hover');
+        var a = this;
+        addEvent(this.dropdownButton, "mouseover", function () {
+            addClass(this, "selector_dropdown_hover")
         });
-        addEvent(this.dropdownButton, 'mouseout', function () {
-            removeClass(this, 'selector_dropdown_hover');
+        addEvent(this.dropdownButton, "mouseout", function () {
+            removeClass(this, "selector_dropdown_hover")
         });
-        addEvent(this.container, 'mouseover', function (e) {
-            self.mouseIsOver = true;
-            if (self.disabled) return;
-            self.fadeButtonToColor();
-        });
-        addEvent(this.container, 'mouseout', function () {
-            self.mouseIsOver = false;
-            if (self.disabled) return;
-            setTimeout(function () {
-                if (self.mouseIsOver) return;
-                if (!self.select.isVisible()) {
-                    self.fadeButtonToWhite();
-                } else {
-                    self.dropdownButton.style.backgroundColor = self.dropdownButton.style[window.is_rtl ? 'borderRightColor' : 'borderLeftColor'] = '';
-                }
-            }, 0);
-        });
-        addEvent(this.dropdownButton, 'mousedown', function () {
-            if (!self.select.isVisible()) {
-                self.showDefaultList();
-            } else {
-                self.select.toggle();
+        addEvent(this.container, "mouseover", function (b) {
+            a.mouseIsOver = true;
+            if (a.disabled) {
+                return
             }
+            a.fadeButtonToColor()
         });
+        addEvent(this.container, "mouseout", function () {
+            a.mouseIsOver = false;
+            if (a.disabled) {
+                return
+            }
+            setTimeout(function () {
+                if (a.mouseIsOver) {
+                    return
+                }
+                if (!a.select.isVisible()) {
+                    a.fadeButtonToWhite()
+                } else {
+                    a.dropdownButton.style.backgroundColor = a.dropdownButton.style[window.is_rtl ? "borderRightColor" : "borderLeftColor"] = ""
+                }
+            }, 0)
+        });
+        addEvent(this.dropdownButton, "mousedown", function () {
+            if (!a.select.isVisible()) {
+                a.showDefaultList()
+            } else {
+                a.select.toggle()
+            }
+        })
     },
     destroyDropdown: function () {
-        if (vk.al) cleanElems(this.dropdownButton);
-        removeEvent(this.container, 'mouseover');
-        removeEvent(this.container, 'mouseout');
+        if (vk.al) {
+            cleanElems(this.dropdownButton)
+        }
+        removeEvent(this.container, "mouseover");
+        removeEvent(this.container, "mouseout");
         this.scrollbarWidth = 0;
-        this.selectorWidth = this.options.width;
+        this.selectorWidth = this.options.width
     },
     destroy: function () {
-        if (!vk.al || this.destroyed) return;
-        this.destroyDropdown();
-        var img = ge(this.options.imageId);
-        if (img) removeEvent(img, 'click');
-        this.select.destroy();
-        cleanElems(this.container, this.input, this.selector, this.resultList, this.resultListShadow);
-        for (var el = this.selectedItemsContainer.firstChild; el; el = el.nextSibling) {
-            cleanElems(el, el.firstChild.nextSibling);
+        if (!vk.al || this.destroyed) {
+            return
         }
-        this.destroyed = true;
+        this.destroyDropdown();
+        var a = ge(this.options.imageId);
+        if (a) {
+            removeEvent(a, "click")
+        }
+        this.select.destroy();
+        cleanElems(this.container, this.input, this.selector, this.resultList, this.resultListShadow, this.placeholderContent);
+        for (var b = this.selectedItemsContainer.firstChild; b; b = b.nextSibling) {
+            cleanElems(b, b.firstChild.nextSibling)
+        }
+        this.destroyed = true
     },
     updateInput: function () {
-        if (!this._selectedItems.length && !this.hasFocus) {
-            this.input.value = ((this.disabled && this.options.disabledText) ? this.options.disabledText : this.options.placeholder);
-            if (!this.disabled) this.input.style.color = this.options.placeholderColor;
-        }
         if (!this.options.autocomplete && this.options.multiselect && this._selectedItems.length) {
-            hide(this.input);
+            hide(this.input)
         } else {
-            if (!isVisible(this.input)) show(this.input);
-            this.input.style.width = '20px';
-            var offset = this._selectedItems.length ? this.input.offsetLeft : (window.is_rtl ? this.selectorWidth - 9 : 0);
-            var w = window.is_rtl ? offset : (this.selectorWidth - offset - 9);
-            this.input.style.width = Math.max(20, w) + 'px';
+            if (!isVisible(this.input)) {
+                show(this.input)
+            }
+            this.input.style.width = "20px";
+            var a = (this.options.big ? 12 : 9);
+            var c = this._selectedItems.length ? this.input.offsetLeft : (window.is_rtl ? this.selectorWidth - a : 0);
+            var b = window.is_rtl ? c : (this.selectorWidth - c - a);
+            this.input.style.width = Math.max(20, b) + "px"
         }
+        this.updatePlaceholder()
     },
-    handleKeyboardEvent: function (e) {
-        var self = e.data.self;
-        switch (e.type) {
-            case 'keyup':
-                if (self.options.onKeyup) self.options.onKeyup(self.input.value);
-                break;
-            case 'paste':
-                clearTimeout(self.timeout);
-                self.timeout = setTimeout(function () {
-                    self.onChange();
+    updatePlaceholder: function () {
+        if (this.disableSomeFeatures) {
+            return
+        }
+        var c = (this.resultField.value == "0" && this.options.zeroPlaceholder);
+        var d = ((this.disabled && this.options.disabledText) ? this.options.disabledText : this.options.placeholder);
+        var e = (this.hasFocus ? this.options.placeholderColorBack : this.options.placeholderColor);
+        var b = ((c || this.disabled) && this.options.placeholderColor || "#000");
+        var a = !(this._selectedItems.length && this.options.multiselect || this.input.value.length || c);
+        if (d !== this.placeholderTextPrev) {
+            this.placeholderContent.innerHTML = d
+        }
+        if (e !== this.placeholderColorPrev) {
+            animate(this.placeholderContent, {
+                color: e
+            }, 200)
+        }
+        if (b !== this.placeholderInputColorPrev) {
+            this.input.style.color = b
+        }
+        if (a !== this.placeholderVisiblePrev) {
+            toggle(this.placeholder, a)
+        }
+        this.placeholderTextPrev = d;
+        this.placeholderColorPrev = e;
+        this.placeholderInputColorPrev = b;
+        this.placeholderVisiblePrev = a
+    },
+    handleKeyboardEvent: function (d) {
+        var b = d.data.self;
+        switch (d.type) {
+            case "paste":
+            case "cut":
+            case "drop":
+            case "input":
+                clearTimeout(b.timeout);
+                b.timeout = setTimeout(function () {
+                    b.onChange()
                 }, 0);
                 break;
-            case 'keypress':
-                if (e.which == KEY.RETURN && browser.opera && self.options.enableCustom && (self.select.selectedItem() === null || self.select.selectedItem() === undefined)) {
-                    self.select.hide();
-                    if (!self.options.noBlur) {
-                        self.input.blur();
-                    } else if (isFunction(self.options.onChange)) {
-                        self.updateCustom();
-                        self.options.onChange(self.resultField.value);
+            case "keypress":
+                if (d.which == KEY.RETURN && browser.opera && b.options.enableCustom && (b.select.selectedItem() === null || b.select.selectedItem() === undefined)) {
+                    b.select.hide();
+                    if (!b.options.noBlur) {
+                        b.input.blur()
+                    } else {
+                        if (isFunction(b.options.onChange)) {
+                            b.updateCustom();
+                            b.options.onChange(b.resultField.value)
+                        }
                     }
-                    return false;
-                } else if (e.which == KEY.SPACE || e.which > 40 && !e.metaKey) {
-                    clearTimeout(self.timeout);
-                    self.timeout = setTimeout(function () {
-                        self.onChange();
-                    }, 0);
+                    return false
+                } else {
+                    if (d.which == KEY.SPACE || d.which > 40 && !d.metaKey) {
+                        clearTimeout(b.timeout);
+                        b.timeout = setTimeout(function () {
+                            b.onChange()
+                        }, 0)
+                    }
                 }
                 break;
-            case 'keydown':
-                switch (e.keyCode) {
+            case "keydown":
+                switch (d.keyCode) {
                     case KEY.DOWN:
-                        if (!self.select.isVisible()) {
-                            setTimeout(self.showDefaultList.bind(self), 0);
-                            return false;
+                        if (!b.select.isVisible()) {
+                            setTimeout(b.showDefaultList.bind(b), 0);
+                            return false
                         }
                         break;
                     case KEY.DEL:
-                        if (self.input.value.length > 0) {
-                            clearTimeout(self.timeout);
-                            self.timeout = setTimeout(self.onChange.bind(self), 0);
+                        if (b.input.value.length > 0) {
+                            clearTimeout(b.timeout);
+                            b.timeout = setTimeout(b.onChange.bind(b), 0)
                         } else {
-                            if (self.selectedTokenId) {
-                                var nextTokenId = 0;
-                                for (var i = self._selectedItems.length - 2; i >= 0; i--) {
-                                    if (self._selectedItems[i][0] == self.selectedTokenId && self._selectedItems[i + 1]) {
-                                        nextTokenId = self._selectedItems[i + 1][0];
+                            if (b.selectedTokenId) {
+                                var a = 0;
+                                for (var c = b._selectedItems.length - 2; c >= 0; c--) {
+                                    if (b._selectedItems[c][0] == b.selectedTokenId && b._selectedItems[c + 1]) {
+                                        a = b._selectedItems[c + 1][0]
                                     }
                                 }
-                                self.removeTagData(self.selectedTokenId);
-                                if (nextTokenId) {
-                                    self.selectToken(nextTokenId);
-                                } else if (!self.readOnly && !self.hasFocus) {
-                                    self.input.focus();
+                                b.removeTagData(b.selectedTokenId);
+                                if (a) {
+                                    b.selectToken(a)
+                                } else {
+                                    if (!b.readOnly) {
+                                        setTimeout(function () {
+                                            b.input.focus()
+                                        }, 0)
+                                    }
                                 }
-                            } else if (self.hasFocus && self._selectedItems.length) {
-                                self.selectToken(self._selectedItems[self._selectedItems.length - 1][0]);
+                            } else {
+                                if (b.hasFocus && b._selectedItems.length) {
+                                    b.selectToken(b._selectedItems[b._selectedItems.length - 1][0])
+                                }
                             }
-                            cancelEvent(e);
+                            cancelEvent(d)
                         }
                         return true;
                         break;
                     case KEY.RETURN:
-                        if (!browser.opera && self.options.enableCustom && (self.select.selectedItem() === null || self.select.selectedItem() === undefined)) {
-                            self.select.hide();
-                            if (!self.options.noBlur) {
-                                self.input.blur();
-                            } else if (isFunction(self.options.onChange)) {
-                                self.updateCustom();
-                                self.options.onChange(self.resultField.value);
+                        if (!browser.opera && b.options.enableCustom && (b.select.selectedItem() === null || b.select.selectedItem() === undefined)) {
+                            b.select.hide();
+                            if (!b.options.noBlur) {
+                                b.input.blur()
+                            } else {
+                                if (isFunction(b.options.onChange)) {
+                                    b.updateCustom();
+                                    b.options.onChange(b.resultField.value)
+                                }
                             }
-                            return false;
+                            return false
                         }
                         break;
                     case KEY.ESC:
-                        self.input.blur();
-                        break;
+                        b.input.blur();
+                        break
                 }
                 break;
-            case 'focus':
-                if (!self.disabled && !self.select.isVisible() && !self.focusSelf) {
-                    self.showDefaultList();
+            case "focus":
+                if (!b.disabled && !b.select.isVisible() && !b.focusSelf) {
+                    b.showDefaultList()
                 }
-                self.focusSelf = false;
-                if (self.disabled || self.readOnly) {
-                    self.input.blur();
-                    return true;
+                b.focusSelf = false;
+                if (b.disabled || b.readOnly) {
+                    b.input.blur();
+                    return true
                 }
-                if ((self._selectedItems.length == 0) || self.options.multiselect) {
+                if ((b._selectedItems.length == 0) || b.options.multiselect) {
                     if (browser.mozilla) {
                         setTimeout(function () {
-                            self.input.value = '';
-                        }, 0);
+                            b.input.value = ""
+                        }, 0)
                     } else {
-                        self.input.value = '';
+                        b.input.value = ""
                     }
                 }
-                addClass(self.input, 'focused');
-                self.input.style.color = '#000';
-                self.hasFocus++;
+                addClass(b.input, "focused");
+                b.input.style.color = "#000";
+                b.hasFocus++;
+                b.updatePlaceholder();
                 break;
-            case 'blur':
-                if (self.options.chooseFirst && self.options.chooseFirst(self.input.value)) { // email field
-                    self.select.active = 0;
-                    if (isFunction(self.select.options.onItemSelect)) {
-                        self.select.options.onItemSelect(self.select.selectedItem(), undefined, true);
+            case "blur":
+                if (isFunction(b.options.chooseFirst) && b.options.chooseFirst(b.input.value)) {
+                    b.select.active = 0;
+                    if (isFunction(b.select.options.onItemSelect)) {
+                        b.select.options.onItemSelect(b.select.selectedItem(), undefined, true)
                     }
-                    return cancelEvent(e);
+                    return cancelEvent(d)
                 }
-                if (self.readOnly) return true;
-                if (!self.disabled) {
-                    self.updateCustom();
-                    clearTimeout(self.requestTimeout);
-                    if (self.changeAfterBlur && isFunction(self.options.onChange)) {
-                        if (!self.options.enableCustom || !self._selectedItems.length) {
-                            self.options.onChange('');
+                if (b.readOnly) {
+                    return true
+                }
+                if (!b.disabled) {
+                    b.updateCustom();
+                    clearTimeout(b.requestTimeout);
+                    if (b.changeAfterBlur && isFunction(b.options.onChange)) {
+                        if (!b.options.enableCustom || !b._selectedItems.length) {
+                            b.options.onChange("")
                         }
-                        self.changeAfterBlur = false;
+                        b.changeAfterBlur = false
                     }
-                    if (self.options.onBlur) {
-                        self.options.onBlur();
+                    if (b.options.onBlur) {
+                        b.options.onBlur()
                     }
                 }
-                if (!hasClass(self.input, 'selected')) {
-                    self.input.style.color = self.options.placeholderColor;
-                }
-                removeClass(self.input, 'focused');
-                self.hasFocus = 0;
-                break;
+                removeClass(b.input, "focused");
+                b.hasFocus = 0;
+                b.updatePlaceholder();
+                break
         }
-        return true;
+        return true
     },
     updateCustom: function () {
-        var self = this;
-        if (self.options.enableCustom && self.input.value.length) {
-            var custom_val = self.input.value;
-            if (self._selectedItems.length == 0) {
-                self.resultField.value = parseInt(!self.options.valueForCustom);
-                self.customField.value = custom_val;
-                self._selectItem([self.options.valueForCustom, custom_val]);
+        var a = this;
+        if (a.options.enableCustom && a.input.value.length) {
+            var b = a.input.value;
+            if (a._selectedItems.length == 0) {
+                a.resultField.value = parseInt(!a.options.valueForCustom);
+                a.customField.value = b;
+                a._selectItem([a.options.valueForCustom, b])
             }
-        } else if (self._selectedItems.length == 0) {
-            self.input.value = self.options.placeholder;
-        } else if (self.options.multiselect) {
-            self.input.value = '';
+        } else {
+            if (a._selectedItems.length == 0) {
+                a.input.value = ""
+            } else {
+                if (a.options.multiselect) {
+                    a.input.value = ""
+                }
+            }
         }
+        a.updatePlaceholder()
     },
-    handleKeyboardEventOutside: function (e) {
+    handleKeyboardEventOutside: function (b) {
+        var a;
         if (this.disabled || this.input.value.length > 0 && this.hasFocus || !this.hasFocus && this.selectedTokenId == 0) {
-            return true;
+            return true
         }
-        switch (e.keyCode) {
+        switch (b.keyCode) {
             case KEY.RETURN:
                 return false;
                 break;
             case KEY.LEFT:
-                for (var i = this._selectedItems.length - 1; i >= 0; i--) {
-                    if (!this.selectedTokenId || this._selectedItems[i][0] == this.selectedTokenId && i > 0) {
+                for (a = this._selectedItems.length - 1; a >= 0; a--) {
+                    if (!this.selectedTokenId || this._selectedItems[a][0] == this.selectedTokenId && a > 0) {
                         if (this.selectedTokenId) {
-                            i--;
+                            a--
                         }
-                        this.selectToken(this._selectedItems[i][0]);
+                        this.selectToken(this._selectedItems[a][0]);
                         this.input.blur();
-                        break;
+                        break
                     }
                 }
                 return false;
                 break;
             case KEY.RIGHT:
-                for (var i = 0; i < this._selectedItems.length; i++) {
-                    if (this._selectedItems[i][0] == this.selectedTokenId) {
-                        if (i < this._selectedItems.length - 1) {
-                            this.selectToken(this._selectedItems[i + 1][0]);
-                            this.input.blur();
-                        } else if (!this.readOnly) {
-                            this.deselectTokens();
-                            this.input.focus();
+                for (a = 0; a < this._selectedItems.length; a++) {
+                    if (this._selectedItems[a][0] == this.selectedTokenId) {
+                        if (a < this._selectedItems.length - 1) {
+                            this.selectToken(this._selectedItems[a + 1][0]);
+                            this.input.blur()
+                        } else {
+                            if (!this.readOnly) {
+                                this.deselectTokens();
+                                this.input.focus()
+                            }
                         }
-                        break;
+                        break
                     }
                 }
                 return false;
-                break;
+                break
         }
-        return true;
+        return true
     },
-    onInputClick: function (e) {
-        var self = e.data.self;
-        self.deselectTokens();
-        if (!self.select.isVisible()) {
-            self.showDefaultList();
+    onInputClick: function (b) {
+        var a = b.data.self;
+        a.deselectTokens();
+        if (!a.select.isVisible()) {
+            a.showDefaultList()
         } else {
-            if (self.input.readOnly) {
-                self.focusSelf = true;
-                self.select.toggle();
+            if (a.input.readOnly) {
+                a.focusSelf = true;
+                a.select.toggle()
             } else {
-                self.onChange();
+                a.onChange()
             }
-        }
-        if (!self.readOnly) {
-            // self.focusSelf = true;
-            self.input.focus();
+        } if (!a.readOnly) {
+            a.input.focus()
         } else {
-            self.input.blur();
+            a.input.blur()
         }
     },
-    highlightInput: function (focus) {
-        if (focus) {
-            addClass(this.container, 'selector_focused');
+    highlightInput: function (a) {
+        if (a) {
+            addClass(this.container, "selector_focused")
         } else {
-            removeClass(this.container, 'selector_focused');
+            removeClass(this.container, "selector_focused")
         }
     },
-    selectToken: function (id) {
-        if (!this.options.multiselect) return;
+    selectToken: function (a) {
+        if (!this.options.multiselect) {
+            return
+        }
         this.select.hide();
-        removeClass(ge('bit_' + this.guid + '_' + this.selectedTokenId), 'token_selected');
-        addClass(ge('bit_' + this.guid + '_' + id), 'token_selected');
-        this.selectedTokenId = id;
-        if (this.options.onTokenSelected) this.options.onTokenSelected(id);
-        this.showImage(id);
+        removeClass(ge("bit_" + this.guid + "_" + this.selectedTokenId), "token_selected");
+        addClass(ge("bit_" + this.guid + "_" + a), "token_selected");
+        this.selectedTokenId = a;
+        if (isFunction(this.options.onTokenSelected)) {
+            this.options.onTokenSelected(a)
+        }
+        this.showImage(a)
     },
     deselectTokens: function () {
-        if (!this.selectedTokenId || !this.options.multiselect) return;
-        removeClass(ge('bit_' + this.guid + '_' + this.selectedTokenId), 'token_selected');
+        if (!this.selectedTokenId || !this.options.multiselect) {
+            return
+        }
+        removeClass(ge("bit_" + this.guid + "_" + this.selectedTokenId), "token_selected");
         this.selectedTokenId = 0;
-        if (this.options.onTokenSelected) this.options.onTokenSelected();
-        this.showImage();
+        if (isFunction(this.options.onTokenSelected)) {
+            this.options.onTokenSelected()
+        }
+        this.showImage()
     },
     _blur: function () {
-        this.select.hide();
+        this.select.hide()
     },
-    showImage: function (itemValue, itemData) {
+    showImage: function (e, a) {
         if (!this.options.imageId) {
-            return false;
+            return false
         }
-        var img = ge(this.options.imageId);
-        if (!img) return false;
-        if (itemData === undefined) {
-            if (!itemValue) { // 0 or undefined
-                itemValue = this.resultField.value.split(',')[0];
+        var b = ge(this.options.imageId);
+        if (!b) {
+            return false
+        }
+        if (a === undefined) {
+            if (!e) {
+                e = this.resultField.value.split(",")[0]
             }
-            var data = this._selectedItems.concat(this.currenDataItems);
-            if (data && data.length) {
-                for (var i in data) {
-                    if (data[i] && data[i][0] == itemValue) {
-                        itemData = data[i];
-                        break;
+            var d = this._selectedItems.concat(this.currenDataItems);
+            if (d && d.length) {
+                for (var c in d) {
+                    if (d[c] && d[c][0] == e) {
+                        a = d[c];
+                        break
                     }
                 }
             }
         }
-        if (itemData !== undefined && typeof (itemData[3]) == 'string' && itemData[3].length) {
-            if (itemData[3] == 'none') {
-                img.style.display = 'none';
+        if (a !== undefined && typeof (a[3]) == "string" && a[3].length) {
+            if (a[3] == "none") {
+                b.style.display = "none"
             } else {
-                img.style.display = '';
-                img.setAttribute('src', itemData[3]);
-                img.parentNode.href = '/' + this.options.hrefPrefix + itemData[0]; // hack
-                removeEvent(img.parentNode, 'click');
+                b.style.display = "";
+                b.setAttribute("src", a[3]);
+                b.parentNode.href = "/" + this.options.hrefPrefix + a[0];
+                removeEvent(b.parentNode, "click")
             }
         } else {
-            img.style.display = '';
-            img.setAttribute('src', this.options.noImageSrc);
-            img.parentNode.href = '#'; // hack
-            addEvent(img.parentNode, 'click', function () {
-                return true;
-            });
+            b.style.display = "";
+            b.setAttribute("src", this.options.noImageSrc);
+            b.parentNode.href = "#";
+            addEvent(b.parentNode, "click", function () {
+                return true
+            })
         }
-        return true;
+        return true
     },
-    _selectItem: function (item, fireEvent, focusIfMultiselect) {
-        if (item == null) {
-            return;
+    _selectItem: function (e, d, a) {
+        if (e === null || e === undefined) {
+            return
         }
-        if (fireEvent === undefined) {
-            fireEvent = true;
+        if (d === undefined) {
+            d = true
         }
-        var data;
-        if (item == -2e9) {
-            data = [this.curTerm, this.curTerm, cur.lang['mail_enter_email_address'], '/images/contact_info.png', 0, ''];
-        } else if (typeof (item) == 'string' && item.indexOf('@') != -1) {
-            data = [item, item, cur.lang['mail_enter_email_address'], '/images/contact_info.png', 0, ''];
-        } else if (typeof (item) == 'object') {
-            data = item;
+        var f;
+        if (e == -2000000000) {
+            f = [this.curTerm, this.curTerm, cur.lang.mail_enter_email_address, "/images/pics/contact_info.png", 0, ""]
         } else {
-            var all_data = [];
-            each([this.dataItems, this.options.defaultItems, this.receivedData], function (i, items) {
-                if (items && items.length)
-                    all_data = all_data.concat(items);
-            });
-            for (var i in all_data) {
-                if (all_data[i][0] == item || all_data[i] == item) {
-                    data = all_data[i];
-                    break;
+            if (typeof (e) == "string" && e.indexOf("@") != -1) {
+                f = [e, e, cur.lang.mail_enter_email_address, "/images/pics/contact_info.png", 0, ""]
+            } else {
+                if (typeof (e) == "object") {
+                    f = e
+                } else {
+                    var b = [];
+                    each([this.dataItems, this.options.defaultItems, this.receivedData], function (h, g) {
+                        if (g && g.length) {
+                            b = b.concat(g)
+                        }
+                    });
+                    for (var c in b) {
+                        if (b[c][0] == e || b[c] == e) {
+                            f = b[c];
+                            break
+                        }
+                    }
                 }
             }
+        } if (typeof f != "object") {
+            f = [e, e]
         }
-        if (typeof data != 'object') {
-            data = [item, item]; // value and text
-        };
-        data[0] = data[0].toString();
-        data[1] = data[1].toString();
+        f[0] = f[0].toString();
+        f[1] = f[1].toString();
         this.changeAfterBlur = false;
-        if (data[0] === this.resultField.value) {
+        if (f[0] === this.resultField.value) {
             if (!this.options.multiselect) {
-                this.input.value = winToUtf(stripHTML(data[1])); // It could have changed in setData method
+                this.input.value = winToUtf(stripHTML(f[1]));
                 this.showImage();
                 if (this.input.value.length || !this.options.placeholder) {
-                    addClass(this.input, 'selected');
-                    if (!this.disabled) {
-                        this.input.style.color = this.resultField.value == '0' && this.options.zeroPlaceholder && this.options.placeholderColor || '#000';
-                    }
-                } else {
-                    this.input.value = this.options.placeholder;
-                    if (!this.disabled) this.input.style.color = this.options.placeholderColor;
+                    addClass(this.input, "selected")
                 }
+                this.updatePlaceholder()
             }
-            return;
+            return
         }
         if (this._selectedItems.length >= this.options.maxItems) {
             this.select.hide();
-            return;
+            return
         }
         this.deselectTokens();
-        this.addTagData(data);
+        this.addTagData(f);
         this.showImage();
         if (this.options.multiselect) {
-            this.input.value = '';
+            this.input.value = "";
             if (this.dataURL) {
-                this.select.clear();
+                this.select.clear()
             } else {
-                this.select.removeItem(data[0]);
+                this.select.removeItem(f[0])
             }
         } else {
-            this.input.value = winToUtf(stripHTML(data[1]));
-            addClass(this.input, 'selected');
-            if (!this.disabled) {
-                this.input.style.color = this.resultField.value == '0' && this.options.zeroPlaceholder && this.options.placeholderColor || '#000';
-            }
+            this.input.value = winToUtf(stripHTML(f[1]));
+            addClass(this.input, "selected");
+            this.updatePlaceholder()
         }
         this.select.hide();
         this.updateInput();
-        if (focusIfMultiselect && this.options.multiselect && !this.readOnly) {
+        if (a && this.options.multiselect && !this.readOnly) {
             setTimeout(function () {
                 if (!this.options.multinostop) {
-                    this.focusSelf = true;
+                    this.focusSelf = true
                 }
                 hide(this.input);
                 show(this.input);
-                this.input.focus();
-            }.bind(this), 100);
+                this.input.focus()
+            }.bind(this), 100)
         } else {
-            if (!this.options.noBlur) this.input.blur();
-        }
-        if (fireEvent) {
+            if (!this.options.noBlur) {
+                this.input.blur()
+            }
+        } if (d) {
             if (this.options.multiselect && isFunction(this.options.onTagAdd)) {
-                this.options.onTagAdd(data, this.resultField.value);
+                this.options.onTagAdd(f, this.resultField.value)
             }
             if (isFunction(this.options.onChange)) {
-                this.options.onChange(this.resultField.value);
+                this.options.onChange(this.resultField.value)
             }
         }
     },
-    addTagData: function (data) {
-        if (!data || data.length < 2) return;
+    addTagData: function (c) {
+        if (!c || c.length < 2) {
+            return
+        }
         if (!this.options.multiselect) {
-            this._selectedItems.splice(0, this._selectedItems.length, data);
-            this.resultField.value = data[0];
-            return;
+            this._selectedItems.splice(0, this._selectedItems.length, c);
+            this.resultField.value = c[0];
+            return
         }
-        for (var i in this._selectedItems) {
-            if (this._selectedItems[i][0] == data[0]) {
-                this.selectToken(this._selectedItems[i][0]);
-                return;
+        for (var e in this._selectedItems) {
+            if (this._selectedItems[e][0] == c[0]) {
+                this.selectToken(this._selectedItems[e][0]);
+                return
             }
         }
-        this._selectedItems.push(data);
-        var resultArr = [];
-        for (i in this._selectedItems) {
-            resultArr.push(this._selectedItems[i][0]);
+        this._selectedItems.push(c);
+        var d = [];
+        for (e in this._selectedItems) {
+            d.push(this._selectedItems[e][0])
         }
-        this.resultField.value = resultArr.join(',');
-        this.input.style.width = '1px';
-        // make box
-        var token = ce('div', {
-            id: 'bit_' + this.guid + '_' + data[0],
-            className: 'token'
+        this.resultField.value = d.join(",");
+        this.input.style.width = "1px";
+        var b = ce("div", {
+            id: "bit_" + this.guid + "_" + c[0],
+            className: "token"
         });
-        var maxTokenWidth = Math.max(this.selector.clientWidth, getSize(token)[0]);
-        var self = this;
-        token.innerHTML = '<span class="l">' + data[1] + '</span><span class="x" />';
-        addEvent(token, 'click', function () {
-            self.selectToken(data[0]);
-            return false;
+        var f = Math.max(this.selector.clientWidth, getSize(b)[0]);
+        var j = this;
+        b.innerHTML = '<span class="l">' + c[1] + '</span><span class="x" />';
+        addEvent(b, "click", function () {
+            j.selectToken(c[0]);
+            return false
         });
-        addEvent(token, 'dblclick', function () {
-            if (data[4]) {
-                self.removeTagData(data[0]);
-                each(data[4], function (i, v) {
-                    self._selectItem(v, false);
-                });
+        addEvent(b, "dblclick", function () {
+            if (c[4]) {
+                j.removeTagData(c[0]);
+                each(c[4], function (l, k) {
+                    j._selectItem(k, false)
+                })
             }
-            return false;
+            return false
         });
-        addEvent(token, 'mouseover', function (e) {
-            addClass(token, 'token_hover');
-            self.showImage(data[0], data);
+        addEvent(b, "mouseover", function (k) {
+            addClass(b, "token_hover");
+            j.showImage(c[0], c)
         });
-        addEvent(token, 'mouseout', function (e) {
-            removeClass(token, 'token_hover');
-            self.showImage(self.activeItemValue ? self.activeItemValue : self.selectedTokenId);
+        addEvent(b, "mouseout", function (k) {
+            removeClass(b, "token_hover");
+            j.showImage(j.activeItemValue ? j.activeItemValue : j.selectedTokenId)
         });
-        var close = token.firstChild.nextSibling;
-        addEvent(close, 'mousedown', function () {
-            self.select.hide();
-            self.removeTagData(data[0]);
-            if (!self.readOnly && self.hasFocus) {
-                self.input.focus();
+        var h = b.firstChild.nextSibling;
+        addEvent(h, "mousedown", function () {
+            j.select.hide();
+            j.removeTagData(c[0]);
+            if (!j.readOnly && j.hasFocus) {
+                j.input.focus()
             }
-            return false;
+            return false
         });
-        self.selectedItemsContainer.appendChild(token);
-        var label = token.firstChild;
-        var labelStr = label.innerHTML;
-        while (token.offsetWidth > maxTokenWidth && labelStr.length > 3) {
-            labelStr = labelStr.substr(0, labelStr.length - 2);
-            label.innerHTML = labelStr + '...';
+        j.selectedItemsContainer.appendChild(b);
+        var g = b.firstChild;
+        var a = g.innerHTML;
+        while (b.offsetWidth > f && a.length > 3) {
+            a = a.substr(0, a.length - 2);
+            g.innerHTML = a + "..."
         }
     },
-    removeTagData: function (id) {
+    removeTagData: function (e) {
         this.selectedTokenId = 0;
-        var token = ge('bit_' + this.guid + '_' + id);
-        if (!token) {
-            return false;
+        var b = ge("bit_" + this.guid + "_" + e);
+        if (!b) {
+            return false
         }
-        var close = token.firstChild.nextSibling;
-        if (vk.al) cleanElems(token, close);
-        token.parentNode.removeChild(token);
-        var index, resultArr = [];
+        var d = b.firstChild.nextSibling;
+        if (vk.al) {
+            cleanElems(b, d)
+        }
+        b.parentNode.removeChild(b);
+        var a, c = [];
         for (i in this._selectedItems) {
-            if (this._selectedItems[i][0] == id) {
-                index = i;
-                continue;
+            if (this._selectedItems[i][0] == e) {
+                a = i;
+                continue
             }
-            resultArr.push(this._selectedItems[i][0]);
+            c.push(this._selectedItems[i][0])
         }
-        if (index == undefined) return false;
-        this.resultField.value = resultArr.join(',');
-        if (this.options.onTagRemove) {
-            this.options.onTagRemove(this._selectedItems[i], this.resultField.value);
+        if (a == undefined) {
+            return false
+        }
+        this.resultField.value = c.join(",");
+        if (isFunction(this.options.onTagRemove)) {
+            this.options.onTagRemove(this._selectedItems[a], this.resultField.value)
         }
         if (isFunction(this.options.onChange)) {
-            this.options.onChange(this.resultField.value);
+            this.options.onChange(this.resultField.value)
         }
-        this._selectedItems.splice(index, 1);
+        this._selectedItems.splice(a, 1);
         if (this.options.multiselect) {
-            this.defaultList = false;
+            this.defaultList = false
         }
         this.showImage();
         this.updateInput();
-        return false;
+        return false
     },
     onChange: function () {
-        var term = trim(this.input.value.toLowerCase()),
-            self = this;
+        var b = trim(this.input.value.toLowerCase());
         if (!this.options.multiselect) {
             if (this._selectedItems.length) {
-                this.changeAfterBlur = true;
+                this.changeAfterBlur = true
             }
-            this._clear();
+            this._clear()
         }
+        this.updatePlaceholder();
         clearTimeout(this.requestTimeout);
-        if (term.length == 0) {
+        if (b.length == 0) {
             this.showDefaultList();
-            return;
+            return
         }
-        this.curTerm = term;
-        var custom = this.options.customSearch,
-            res = custom && custom(term);
-        if (res) {
-            this.receiveData(term, res);
-            return;
+        this.curTerm = b;
+        var a = isFunction(this.options.customSearch) && this.options.customSearch(b);
+        var c;
+        if (a) {
+            this.receiveData(b, a);
+            return
         }
         if (this.dataURL) {
-            var data = this.cache.getData(term);
-            if (data == null) {
+            c = this.cache.getData(b);
+            if (c === null) {
                 this.requestTimeout = setTimeout(function () {
-                    self.request(self.receiveData.bind(self), self.showNoDataList.bind(self));
-                }, 300);
+                    this.request(this.receiveData.bind(this), this.showNoDataList.bind(this))
+                }.bind(this), 300)
             } else {
-                // receive the cached data
-                if (data && data.length) {
-                    this.receiveData(term, data);
+                if (c && c.length) {
+                    this.receiveData(b, c)
                 } else {
-                    this.showNoDataList();
+                    this.showNoDataList()
                 }
             }
         } else {
-            var data = this.indexer.search(term);
-            if (data && data.length) {
-                this.receiveData(term, data);
+            c = this.indexer.search(b);
+            if (c && c.length) {
+                this.receiveData(b, c)
             } else {
-                this.showNoDataList();
+                this.showNoDataList()
             }
         }
     },
     showNoDataList: function () {
         if (this.hasFocus || this.readOnly) {
             this._showSelectList(this.options.noResult);
-            this.defaultList = false;
+            this.defaultList = false
         }
     },
     showDefaultList: function () {
-        var reversed = hasClass(this.resultList, 'reverse');
-        if (reversed != this.needsReverse() && this.currenDataItems) {
-            this.setSelectContent(this.currenDataText || '', this.currenDataItems);
+        var c = hasClass(this.resultList, "reverse");
+        var a = this.needsReverse();
+        if (c != a) {
+            if (this.currenDataItems) {
+                this.setSelectContent(this.currenDataText || "", this.currenDataItems)
+            }
+            toggleClass(this.resultList, "reverse", a);
+            toggleClass(this.resultListShadow, "reverse", a);
+            c = a
         }
         if (this.defaultList && this.select.hasItems()) {
-            if (this.options.multiselect || !this._selectedItems.length)
-                this.select.show();
-            else
-                this.select.show(this._selectedItems[0][0]);
+            if (this.options.multiselect || !this._selectedItems.length) {
+                this.select.show()
+            } else {
+                this.select.show(this._selectedItems[0][0])
+            }
         } else {
             this.defaultList = true;
-            var text = this.options.autocomplete ? this.options.introText : null;
-            this._showSelectList(text, (this.options.defaultItems.length || this.options.zeroDefault) ? this.options.defaultItems : this.dataItems);
-        }
-        reversed = hasClass(this.resultList, 'reverse');
-        if (reversed) {
-            if (!this._selectedItems.length) {
-                this.resultList.scrollTop = getSize(this.resultList.firstChild)[1] - getSize(this.resultList)[1] + 10;
-            }
+            var b = null;
+            this._showSelectList(b, (this.options.defaultItems.length || this.options.zeroDefault) ? this.options.defaultItems : this.dataItems)
+        } if (c) {
+            if (!this._selectedItems.length) {}
             setStyle(this.resultList, {
                 bottom: getSize(this.container)[1] - 1
-            });
+            })
         } else {
             setStyle(this.resultList, {
-                bottom: 'auto'
-            });
+                bottom: "auto"
+            })
         }
     },
-    showDataList: function (items, query) {
+    showDataList: function (a, b) {
         this.defaultList = false;
-        this._showSelectList(null, items, query);
+        this._showSelectList(null, a, b)
     },
     needsReverse: function () {
-        var scrollY = window.scrollGetY ? scrollGetY() : getScroll()[1],
-            contY = getXY(this.container)[1] || 0,
-            contH = getSize(this.container)[1] || 22,
-            maxListH = this.options.height || 250,
-            minListH = this.options.minHeight || 0,
-            wh = (window.pageNode && window.browser.mozilla ? Math.min(getSize(pageNode)[1], window.lastWindowHeight) : window.lastWindowHeight) || getScroll()[3],
-            list_ul = this.resultList && this.resultList.firstChild,
-            listH;
-        if (list_ul && list_ul.firstChild) {
-            var disp = getStyle(this.resultList, 'display'),
-                vis = getStyle(this.resultList, 'visibility');
+        var g = window.scrollGetY ? scrollGetY() : getScroll()[1];
+        var c = getXY(this.container)[1] || 0;
+        var j = getSize(this.container)[1] || 22;
+        var d = this.options.height || 250;
+        var e = this.options.minHeight || 0;
+        var a = (window.pageNode && window.browser.mozilla ? Math.min(getSize(pageNode)[1], window.lastWindowHeight) : window.lastWindowHeight) || getScroll()[3];
+        var k = this.resultList && this.resultList.firstChild;
+        var f;
+        if (k && k.firstChild) {
+            var h = getStyle(this.resultList, "display"),
+                b = getStyle(this.resultList, "visibility");
             setStyle(this.resultList, {
-                visibility: 'hidden',
-                display: 'block'
+                visibility: "hidden",
+                display: "block"
             });
-            listH = getSize(this.resultList)[1];
+            f = getSize(this.resultList)[1];
             setStyle(this.resultList, {
-                visibility: vis,
-                display: disp
-            });
+                visibility: b,
+                display: h
+            })
         } else {
-            listH = minListH ? minListH : (this.currenDataItems ? this.currenDataItems.length * getSize(this.container)[1] : maxListH);
+            f = e ? e : (this.currenDataItems ? this.currenDataItems.length * getSize(this.container)[1] : d)
+        } if (f > d) {
+            f = d
         }
-        if (listH > maxListH) listH = maxListH;
-        return (contY + contH + listH - scrollY > wh && contY - listH - scrollY > 0);
+        return (c + j + f - g > a && c - f - g > 0 && c - f > 40)
     },
-    setSelectContent: function (text, items, query) {
-        items = isArray(items) && items.length ? items : [];
-        var adding = [];
+    setSelectContent: function (g, e, f) {
+        e = isArray(e) && e.length ? e : [];
+        var a = [];
         this.select.clear();
-        if (text) {
-            adding.push(['', text, true]);
+        if (g) {
+            a.push(["", g, true])
         }
-        if (items.length) {
-            for (var i in items) {
-                if (typeof items[i] != 'object') items[i] = [items[i], items[i]];
+        var d;
+        if (e.length) {
+            for (d in e) {
+                if (typeof e[d] != "object") {
+                    e[d] = [e[d], e[d]]
+                }
             }
             if (this.options.multiselect) {
-                items = this.filterData(items);
+                e = this.filterData(e)
             }
-            if (this.options.dividingLine == 'smart') {
-                removeClass(this.resultList, 'dividing_line');
-                for (var i in items) {
-                    if (typeof (items[i][2]) == 'string' && items[i][2].length) {
-                        addClass(this.resultList, 'dividing_line');
+            if (this.options.dividingLine == "smart") {
+                removeClass(this.resultList, "dividing_line");
+                for (d in e) {
+                    if (typeof (e[d][2]) == "string" && e[d][2].length) {
+                        addClass(this.resultList, "dividing_line")
                     }
                 }
             }
-            var itemsToShow = (this.options.autocomplete && query) ? this.options.maxItemsShown(query.length) : items.length,
-                self = this;
-            for (var i = 0; i < items.length; ++i) {
-                var it = items[i];
-                if (!itemsToShow) break;
-                var formatted = self.options.formatResult(it);
-                if (query) {
-                    if ((formatted = self.options.highlight(formatted, query))) {
-                        --itemsToShow;
+            var h = (this.options.autocomplete && f) ? this.options.maxItemsShown(f.length) : e.length;
+            var j = this;
+            for (d = 0; d < e.length; ++d) {
+                var c = e[d];
+                if (!h) {
+                    break
+                }
+                var b = j.options.formatResult(c);
+                if (f) {
+                    if ((b = j.options.highlight(b, f))) {
+                        --h
                     }
                 }
-                if (!formatted) continue;
-                adding.push([it[0], formatted]);
+                if (!b) {
+                    continue
+                }
+                a.push([c[0], b])
             }
         }
-        var rev = this.needsReverse();
-        if (rev) adding = adding.reverse();
-        toggleClass(this.resultList, 'reverse', rev);
-        toggleClass(this.resultListShadow, 'reverse', rev);
-        this.select.content(adding);
+        if (g && a.length > 1) {
+            a = a.slice(1)
+        }
+        this.select.content(a)
     },
-    _showSelectList: function (text, items, query) {
-        this.currenDataItems = items;
-        this.currenDataText = text;
-        // RTL fix
+    _showSelectList: function (d, b, c) {
+        this.currenDataItems = b;
+        this.currenDataText = d;
         if (window.is_rtl) {
-            var l = getXY(this.container)[0];
-            if (l) geByClass('results_container', this.container)[0].style.left = l + 'px';
-        }
-        this.setSelectContent(text, items, query);
-        if (this.options.multiselect || !this._selectedItems.length) {
-            this.select.show();
-        } else {
-            this.select.show(this._selectedItems[0][0]);
-        }
-        return true;
-    },
-    receiveData: function (q, data) {
-        if (q != this.curTerm) return;
-        if (q != '' && data && data.length && this.hasFocus) {
-            this.receivedData = data;
-            this.showDataList(data, q);
-        } else {
-            this.select.hide();
-        }
-    },
-    filterData: function (items) {
-        var result = [],
-            self = this;
-        each(items, function (i) {
-            for (var j in self._selectedItems) {
-                if (this[0] == self._selectedItems[j][0])
-                    return;
+            var a = getXY(this.container)[0];
+            if (a) {
+                geByClass("results_container", this.container)[0].style.left = a + "px"
             }
-            result.push(this);
+        }
+        this.setSelectContent(d, b, c);
+        if (this.select.hasItems()) {
+            if (this.options.multiselect || !this._selectedItems.length) {
+                this.select.show()
+            } else {
+                this.select.show(this._selectedItems[0][0])
+            }
+        }
+        return true
+    },
+    receiveData: function (b, a) {
+        if (b != this.curTerm) {
+            return
+        }
+        if (b !== "" && a && a.length && this.hasFocus) {
+            this.receivedData = a;
+            this.showDataList(a, b)
+        } else {
+            this.select.hide()
+        }
+    },
+    filterData: function (c) {
+        var a = [];
+        var b = this;
+        each(c, function (e) {
+            for (var d in b._selectedItems) {
+                if (this[0] == b._selectedItems[d][0]) {
+                    return
+                }
+            }
+            a.push(this)
         });
-        return result;
+        return a
     },
     request: function (success, failure) {
-        if (!this.dataURL) return;
-        var term = trim(this.input.value.toLowerCase()),
-            self = this;
-        if (term.length == 0) return;
-        var sep = this.dataURL.indexOf('?') == -1 ? '?' : '&';
-        var url = this.dataURL + sep + 'str=' + encodeURIComponent(term);
+        if (!this.dataURL) {
+            return
+        }
+        var term = trim(this.input.value.toLowerCase());
+        var self = this;
+        if (term.length == 0) {
+            return
+        }
+        var sep = this.dataURL.indexOf("?") == -1 ? "?" : "&";
+        var url = this.dataURL + sep + "str=" + encodeURIComponent(term);
         var done = function (data) {
             if (self.options.progressBar) {
-                hide(self.options.progressBar);
+                hide(self.options.progressBar)
             }
             try {
-                data = eval('(' + data + ')');
+                data = eval("(" + data + ")")
             } catch (e) {}
             if (data.length) {
                 self.cache.setData(term, data);
-                if (isFunction(success)) success(term, data);
+                if (isFunction(success)) {
+                    success(term, data)
+                }
             } else {
                 self.cache.setData(term, []);
-                if (isFunction(failure)) failure(term);
+                if (isFunction(failure)) {
+                    failure(term)
+                }
             }
-        }
+        };
         if (vk.al) {
-            ajax.plainpost(url, {}, done);
+            ajax.plainpost(url, {}, done)
         } else {
             var aj = new Ajax(function (obj, data) {
-                done(data);
+                done(data)
             });
-            aj.post(url);
-        }
-        if (this.options.progressBar) {
-            show(this.options.progressBar);
+            aj.post(url)
+        } if (this.options.progressBar) {
+            show(this.options.progressBar)
         }
     },
-    doSort: function (data) {
-        var i, j, tmp;
-        if (!data.length || data.length < 2) return;
-        for (i = 0; i < data.length - 1; i++) {
-            for (j = i + 1; j < data.length; j++) {
-                if (data[i][1] > data[j][1]) {
-                    tmp = data[i];
-                    data[i] = data[j];
-                    data[j] = tmp;
+    doSort: function (d) {
+        var c, a, b;
+        if (!d.length || d.length < 2) {
+            return
+        }
+        for (c = 0; c < d.length - 1; c++) {
+            for (a = c + 1; a < d.length; a++) {
+                if (d[c][1] > d[a][1]) {
+                    b = d[c];
+                    d[c] = d[a];
+                    d[a] = b
                 }
             }
         }
     },
-    disable: function (value) {
-        if (value && !this.disabled) {
+    disable: function (b) {
+        if (b && !this.disabled) {
             this.disabled = true;
-            addClass(this.container, 'disabled');
-            var s = getSize(this.container);
-            if (this.options.disabledText) this.input.value = this.options.disabledText;
-            this.container.appendChild(
-                ce('div', {
-                    className: 'hide_mask'
-                }, {
-                    position: 'absolute',
-                    background: '#000',
-                    opacity: 0,
-                    width: s[0] + 'px',
-                    height: s[1] + 'px',
-                    marginTop: -s[1] + 'px'
-                })
-            );
+            addClass(this.container, "disabled");
+            var a = getSize(this.container);
+            if (this.options.disabledText) {
+                this.input.value = ""
+            }
+            this.container.appendChild(ce("div", {
+                className: "hide_mask"
+            }, {
+                position: "absolute",
+                background: "#000",
+                opacity: 0,
+                width: a[0] + "px",
+                height: a[1] + "px",
+                marginTop: -a[1] + "px"
+            }));
             this.input.blur();
-            this.input.style.color = '';
-            this.select.hide();
-            //this.updateInput(); // Is it correct?
-        } else if (!value && this.disabled) {
-            this.disabled = false;
-            if (this.options.autocomplete) this.input.value = '';
-            removeClass(this.container, 'disabled');
-            this.container.removeChild(geByClass('hide_mask', this.container)[0]);
-            //this.updateInput(); // Is it correct?
+            this.input.style.color = "";
+            this.select.hide()
+        } else {
+            if (!b && this.disabled) {
+                this.disabled = false;
+                if (this.options.autocomplete) {
+                    this.input.value = ""
+                }
+                removeClass(this.container, "disabled");
+                this.container.removeChild(geByClass("hide_mask", this.container)[0])
+            }
         }
+        this.updatePlaceholder()
     },
     _clear: function () {
         this.showImage();
         if (this.options.multiselect) {
             this.selectedTokenId = 0;
-            this.selectedItemsContainer.innerHTML = '';
-            this.defaultList = false;
+            this.selectedItemsContainer.innerHTML = "";
+            this.defaultList = false
         }
         if (!this.options.multiselect && !this.options.autocomplete) {
             if (this._selectedItems[0] != this.options.defaultItems[0]) {
-                this._selectItem(this.options.defaultItems[0], false);
+                this._selectItem(this.options.defaultItems[0], false)
             }
         } else {
-            removeClass(this.input, 'selected');
-            this.resultField.value = '';
-            this._selectedItems.splice(0, this._selectedItems.length);
+            removeClass(this.input, "selected");
+            this.resultField.value = "";
+            this._selectedItems.splice(0, this._selectedItems.length)
         }
-        return false;
+        return false
     },
-    setURL: function (url) {
-        if (typeof (url) == 'string') {
-            this.dataURL = url;
+    setURL: function (a) {
+        if (typeof (a) == "string") {
+            this.dataURL = a;
             if (!this.cache) {
-                this.cache = new Cache(this.options);
+                this.cache = new Cache(this.options)
             } else {
-                this.cache.flush();
+                this.cache.flush()
+            } if (this.indexer) {
+                delete this.indexer
             }
-            if (this.indexer) delete this.indexer;
-            this.dataItems = [];
+            this.dataItems = []
         }
     },
-    setData: function (dataArr) {
-        if (!isArray(dataArr)) return;
+    setData: function (b) {
+        if (!isArray(b)) {
+            return
+        }
         if (!this.options.autocomplete) {
             this.select.clear();
-            this.options.defaultItems = dataArr;
+            this.options.defaultItems = b;
             if (!this.options.multiselect) {
                 if (!this._selectedItems.length && this.options.defaultItems.length) {
-                    this._selectItem(this.options.defaultItems[0], false);
-                } else if (this._selectedItems.length) {
-                    var exists = false;
-                    for (var i in this.options.defaultItems) {
-                        var item = this.options.defaultItems[i][0] || this.options.defaultItems[i];
-                        if (item == this._selectedItems[0][0] || item == this._selectedItems[0][0]) {
-                            exists = true;
-                            break
+                    this._selectItem(this.options.defaultItems[0], false)
+                } else {
+                    if (this._selectedItems.length) {
+                        var d = false;
+                        for (var a in this.options.defaultItems) {
+                            var c = this.options.defaultItems[a][0] || this.options.defaultItems[a];
+                            if (c == this._selectedItems[0][0] || c == this._selectedItems[0][0]) {
+                                d = true;
+                                break
+                            }
                         }
-                    }
-                    if (!exists) {
-                        this._selectItem(this.options.defaultItems[0], false);
-                    } else {
-                        this._selectItem(this._selectedItems[0][0], false);
+                        if (!d) {
+                            this._selectItem(this.options.defaultItems[0], false)
+                        } else {
+                            this._selectItem(this._selectedItems[0][0], false)
+                        }
                     }
                 }
             }
         } else {
-            this.dataItems = dataArr;
-            this.dataURL = null;
-        }
-        if (!this.indexer) {
-            this.indexer = new Indexer(dataArr);
+            this.dataItems = b;
+            this.dataURL = null
+        } if (!this.indexer) {
+            this.indexer = new Indexer(b)
         } else {
-            this.indexer.setData(dataArr);
+            this.indexer.setData(b)
+        } if (this.cache) {
+            delete this.cache
         }
-        if (this.cache) delete this.cache;
     },
     focus: function () {
         if (!this.readOnly) {
-            this.input.focus();
+            this.input.focus()
         }
     },
-    selectItem: function (item, fireEvent) {
-        this._selectItem(item, fireEvent);
+    selectItem: function (b, a) {
+        this._selectItem(b, a)
     },
-    setOptions: function (new_options) {
-        new_options = this.prepareOptionsText(new_options);
-        extend(this.options, new_options);
-        if ('maxItems' in new_options && this.options.maxItems >= 0) {
-            for (var i = this._selectedItems.length - 1; i >= this.options.maxItems; i--) {
-                this.removeTagData(this._selectedItems[i][0]);
+    setOptions: function (c) {
+        c = this.prepareOptionsText(c);
+        extend(this.options, c);
+        if ("maxItems" in c && this.options.maxItems >= 0) {
+            for (var b = this._selectedItems.length - 1; b >= this.options.maxItems; b--) {
+                this.removeTagData(this._selectedItems[b][0])
             }
         }
-        if ('defaultItems' in new_options) {
+        if ("defaultItems" in c) {
             this.select.clear();
             if (this.select.isVisible(this.container)) {
-                this.showDefaultList();
+                this.showDefaultList()
             }
         }
-        if ('enableCustom' in new_options) {
+        if ("enableCustom" in c) {
             if (this.options.enableCustom && !this.options.autocomplete) {
-                this.options.autocomplete = new_options.autocomplete = true;
+                this.options.autocomplete = c.autocomplete = true
             }
         }
-        if ('width' in new_options) {
-            this.container.style.width = this.options.width + 'px';
-            this.resultList.style.width = this.resultListShadow.style.width = this.options.width + 'px';
-            this.selectorWidth = this.options.width - this.scrollbarWidth;
+        if ("width" in c) {
+            this.container.style.width = this.options.width + "px";
+            this.resultList.style.width = this.resultListShadow.style.width = this.options.width + "px";
+            this.selectorWidth = this.options.width - this.scrollbarWidth
         }
-        if ('dropdown' in new_options) {
-            var dd = geByClass('selector_dropdown', this.container)[0];
-            if (!this.options.dropdown && dd) {
+        if ("dropdown" in c) {
+            var a = geByClass("selector_dropdown", this.container)[0];
+            if (!this.options.dropdown && a) {
                 this.destroyDropdown();
-                dd.parentNode.removeChild(dd);
-            } else if (!dd && this.options.dropdown) {
-                dd = this.container.firstChild.rows[0].insertCell(1);
-                dd.id = 'dropdown' + this.guid;
-                dd.className = 'selector_dropdown';
-                dd.innerHTML = '&nbsp;';
-                this.dropdownButton = dd;
-                this.initDropdown();
-                this.initDropdownEvents();
+                a.parentNode.removeChild(a)
+            } else {
+                if (!a && this.options.dropdown) {
+                    a = this.container.firstChild.rows[0].insertCell(1);
+                    a.id = "dropdown" + this.guid;
+                    a.className = "selector_dropdown";
+                    a.innerHTML = "&nbsp;";
+                    this.dropdownButton = a;
+                    this.initDropdown();
+                    this.initDropdownEvents()
+                }
             }
         }
-        if (('width' in new_options) || ('autocomplete' in new_options) || ('dropdown' in new_options)) {
-            this.updateInput();
-        }
-        if ('autocomplete' in new_options) {
+        if ("autocomplete" in c) {
             if (this.options.autocomplete) {
-                removeClass(this.container, 'dropdown_container');
+                removeClass(this.container, "dropdown_container");
                 this.input.readOnly = false;
-                this.readOnly = '';
+                this.readOnly = ""
             } else {
-                addClass(this.container, 'dropdown_container');
+                addClass(this.container, "dropdown_container");
                 this.input.readOnly = true;
                 this.options.enableCustom = false;
-                this.readOnly = 'readonly="true"';
+                this.readOnly = 'readonly="true"'
             }
         }
+        if (("width" in c) || ("autocomplete" in c) || ("dropdown" in c) || ("placeholder" in c) || ("disabledText" in c)) {
+            this.updateInput()
+        }
     },
-    val: function (value, fireEvent) {
-        if (value !== undefined) this._selectItem(value, (fireEvent === undefined) ? false : fireEvent);
-        return this.resultField.value;
+    val: function (b, a) {
+        if (b !== undefined) {
+            this._selectItem(b, (a === undefined) ? false : a)
+        }
+        return this.resultField.value
     },
     val_full: function () {
         if (this.options.multiselect) {
-            return this._selectedItems;
+            return this._selectedItems
         } else {
             if (this._selectedItems.length) {
-                return this._selectedItems[0];
+                return this._selectedItems[0]
             } else {
-                return [this.resultField.value, this.input.value];
+                return [this.resultField.value, this.input.value]
             }
         }
     },
-    customVal: function (value, fireEvent) {
-        if (value !== undefined) {
-            this.customField.value = value;
-            this.selectItem([this.options.valueForCustom, value], (fireEvent === undefined) ? false : fireEvent);
+    customVal: function (b, a) {
+        if (b !== undefined) {
+            this.customField.value = b;
+            this.selectItem([this.options.valueForCustom, b], (a === undefined) ? false : a)
         }
-        return this.customField.value;
+        return this.customField.value
     },
     selectedItems: function () {
-        return this._selectedItems;
+        return this._selectedItems
     },
     clear: function () {
         this._clear();
-        this.updateInput();
+        this.updateInput()
     }
 });
-//
-// Select class
-//
-createChildClass('Select', UiControl, {
-    // Static class fields
+createChildClass("Select", UiControl, {
     common: {
         _sel: window.Select && Select._sel || [],
-        reg: function (obj) {
-            this._sel.push(obj);
-            return this._sel.length;
+        reg: function (a) {
+            this._sel.push(a);
+            return this._sel.length
         },
-        destroy: function (uid) {
-            this._sel[uid - 1] = false;
+        destroy: function (a) {
+            this._sel[a - 1] = false
         },
-        itemMouseMove: function (uid, i, el) {
-            this._sel[uid - 1].onMouseMove(i, el);
+        itemMouseMove: function (b, a, c) {
+            this._sel[b - 1].onMouseMove(a, c)
         },
-        itemMouseDown: function (uid, i, el) {
-            this._sel[uid - 1].onMouseDown(i, el);
+        itemMouseDown: function (b, a, c) {
+            this._sel[b - 1].onMouseDown(a, c)
         }
     },
-    // Standart fields
     CSS: {
-        FIRST: 'first',
-        LAST: 'last',
-        ACTIVE: 'active',
-        SCROLLABLE: 'result_list_scrollable'
+        FIRST: "first",
+        LAST: "last",
+        ACTIVE: "active",
+        SCROLLABLE: "result_list_scrollable"
     },
-    controlName: 'SelectList',
-    // Standart methods
-    initOptions: function (container, shadow, options) {
-        this.options = options || {};
+    controlName: "SelectList",
+    initOptions: function (a, c, b) {
+        this.options = b || {}
     },
-    init: function (container, shadow, options) {
-        this.container = container;
-        this.shadow = shadow;
+    init: function (a, c, b) {
+        this.container = a;
+        this.shadow = c;
         this.active = -1;
         this.data = [];
         this.uid = this.common.reg(this);
-        this.maxHeight = this.options.height ? this.options.height : 250;
+        this.maxHeight = this.options.height ? this.options.height : 250
     },
     initDOM: function () {
-        this.list = ce('ul');
-        this.container.appendChild(this.list);
+        this.list = ce("ul");
+        this.container.appendChild(this.list)
     },
-    show: function (selectedItem) {
-        var wasVisible = isVisible(this.container);
-        if (!wasVisible) {
-            this.performShow();
+    show: function (e) {
+        var d = isVisible(this.container);
+        if (!d) {
+            this.performShow()
         }
-        var childNode;
-        if (selectedItem) {
-            for (var i = 0; i < this.list.childNodes.length; i++) {
-                childNode = this.list.childNodes[i];
-                if (childNode.getAttribute('val') == selectedItem) {
-                    this.highlight(i, childNode);
-                    break;
+        var c;
+        var b;
+        if (e) {
+            for (b = 0; b < this.list.childNodes.length; b++) {
+                c = this.list.childNodes[b];
+                if (c.getAttribute("val") == e) {
+                    this.highlight(b, c);
+                    break
                 }
             }
-        } else if (this.options.selectFirst) {
-            var reversed = this.container && hasClass(this.container, 'reverse'),
-                ind;
-            for (var i = 0; i < this.list.childNodes.length; i++) {
-                ind = reversed ? this.list.childNodes.length - 1 - i : i;
-                childNode = this.list.childNodes[ind];
-                if (!childNode.getAttribute('dis')) {
-                    this.highlight(ind, childNode);
-                    break;
+        } else {
+            if (this.options.selectFirst) {
+                var f = false;
+                var a;
+                for (b = 0; b < this.list.childNodes.length; b++) {
+                    a = f ? this.list.childNodes.length - 1 - b : b;
+                    c = this.list.childNodes[a];
+                    if (!c.getAttribute("dis")) {
+                        this.highlight(a, c);
+                        break
+                    }
                 }
             }
+        } if (!d && isFunction(this.options.onShow)) {
+            this.options.onShow()
         }
-        if (!wasVisible && isFunction(this.options.onShow)) this.options.onShow();
     },
     hide: function () {
-        if (!isVisible(this.container)) return;
+        if (!isVisible(this.container)) {
+            return
+        }
         hide(this.container);
         hide(this.shadow);
-        if (isFunction(this.options.onHide)) this.options.onHide();
-        this.highlight(-1);
-        if (isFunction(this.options.onItemActive)) this.options.onItemActive();
-    },
-    // Extended methods
-    handleKeyEvent: function (e) {
-        if (!isVisible(this.container)) {
-            return true;
+        if (isFunction(this.options.onHide)) {
+            this.options.onHide()
         }
-        switch (e.keyCode) {
+        this.highlight(-1);
+        if (isFunction(this.options.onItemActive)) {
+            this.options.onItemActive()
+        }
+    },
+    handleKeyEvent: function (a) {
+        if (!isVisible(this.container)) {
+            return true
+        }
+        switch (a.keyCode) {
             case KEY.UP:
-                this.movePosition(-1)
-                return cancelEvent(e);
+                this.movePosition(-1);
+                return cancelEvent(a);
                 break;
             case KEY.DOWN:
                 this.movePosition(1);
-                return cancelEvent(e);
+                return cancelEvent(a);
                 break;
             case KEY.TAB:
                 this.hide();
                 break;
             case KEY.RETURN:
                 if (isFunction(this.options.onItemSelect) && this.active > -1) {
-                    this.options.onItemSelect(this.selectedItem(), undefined, true);
+                    this.options.onItemSelect(this.selectedItem(), undefined, true)
                 }
-                cancelEvent(e);
+                cancelEvent(a);
                 return false;
                 break;
             case KEY.ESC:
@@ -1388,171 +1516,181 @@ createChildClass('Select', UiControl, {
                 break;
             case KEY.PAGEUP:
             case KEY.PAGEDOWN:
-                // deprecated
                 return false;
-                break;
+                break
         }
-        return true;
+        return true
     },
     clear: function () {
         this.highlight(-1);
-        this.list.innerHTML = '';
-        this.updateContainer();
+        this.list.innerHTML = "";
+        this.updateContainer()
     },
     destroy: function () {
         this.clear();
-        Select.destroy(this.uid);
+        Select.destroy(this.uid)
     },
     selectedItem: function () {
         if (this.active >= 0) {
-            var el = this.list.childNodes[this.active];
-            var value = el.getAttribute('val') || el.innerHTML;
-            return value;
+            var a = this.list.childNodes[this.active];
+            var b = a.getAttribute("val") || a.innerHTML;
+            return b
         }
-        return undefined;
+        return undefined
     },
-    movePosition: function (step) {
-        var selected = intval(this.active) + intval(step);
-        if (selected < 0)
-            this.container.scrollTop = 0;
-        else if (selected + 1 > this.list.childNodes.length)
-            this.container.scrollTop = this.list.offsetTop + this.list.offsetHeight - this.container.offsetHeight;
+    movePosition: function (c) {
+        var b = intval(this.active) + intval(c);
+        if (b < 0) {
+            this.container.scrollTop = 0
+        } else {
+            if (b + 1 > this.list.childNodes.length) {
+                this.container.scrollTop = this.list.offsetTop + this.list.offsetHeight - this.container.offsetHeight
+            }
+        }
         while (1) {
-            if (selected + 1 > this.list.childNodes.length || selected < 0) {
-                if (this.options.cycle) break;
-                else return false;
+            if (b + 1 > this.list.childNodes.length || b < 0) {
+                if (this.options.cycle) {
+                    break
+                } else {
+                    return false
+                }
             }
-            var s = this.list.childNodes[selected];
-            if (s && !s.getAttribute('dis')) {
-                break;
+            var a = this.list.childNodes[b];
+            if (a && !a.getAttribute("dis")) {
+                break
             }
-            selected++;
+            b++
         }
-        this.highlight(selected, this.list.childNodes[selected]);
-        return true;
+        this.highlight(b, this.list.childNodes[b]);
+        return true
     },
-    highlight: function (i, el) {
+    highlight: function (a, b) {
         if (this.active != -1) {
-            removeClass(this.list.childNodes[this.active], this.CSS.ACTIVE);
+            removeClass(this.list.childNodes[this.active], this.CSS.ACTIVE)
         }
-        if (!el) {
+        if (!b) {
             this.active = -1;
-            return;
+            return
         }
-        this.active = i;
-        addClass(el, this.CSS.ACTIVE);
+        this.active = a;
+        addClass(b, this.CSS.ACTIVE);
         if (isFunction(this.options.onItemActive)) {
-            this.options.onItemActive(el.getAttribute('val') || el.innerHTML);
+            this.options.onItemActive(b.getAttribute("val") || b.innerHTML)
         }
-        if (el.offsetTop + el.offsetHeight + this.list.offsetTop > this.container.offsetHeight + this.container.scrollTop - 1) {
-            this.container.scrollTop = el.offsetTop + this.list.offsetTop + el.offsetHeight - this.container.offsetHeight + 1;
-        } else if (el.offsetTop + this.list.offsetTop < this.container.scrollTop) {
-            this.container.scrollTop = el.offsetTop + this.list.offsetTop;
+        if (b.offsetTop + b.offsetHeight + this.list.offsetTop > this.container.offsetHeight + this.container.scrollTop - 1) {
+            this.container.scrollTop = b.offsetTop + this.list.offsetTop + b.offsetHeight - this.container.offsetHeight + 1
+        } else {
+            if (b.offsetTop + this.list.offsetTop < this.container.scrollTop) {
+                this.container.scrollTop = b.offsetTop + this.list.offsetTop
+            }
         }
     },
-    onMouseMove: function (i, el) {
-        if (hasClass(el, 'active')) return false;
-        this.highlight(i, el);
-        return true;
+    onMouseMove: function (a, b) {
+        if (hasClass(b, "active")) {
+            return false
+        }
+        this.highlight(a, b);
+        return true
     },
-    onMouseDown: function (i, el) {
-        var val = el.getAttribute('val') || el.innerHTML;
+    onMouseDown: function (a, b) {
+        var c = b.getAttribute("val") || b.innerHTML;
         if (isFunction(this.options.onItemSelect)) {
-            this.options.onItemSelect(val, undefined, true);
+            this.options.onItemSelect(c, undefined, true)
         }
-        this.hide();
+        this.hide()
     },
     updateContainer: function () {
+        var b = this.container && hasClass(this.container, "reverse");
         if (this.maxHeight < this.list.offsetHeight) {
-            this.container.style.height = this.maxHeight + 'px';
-            show(this.shadow);
-            this.shadow.style.marginTop = (this.maxHeight + 1) + 'px'; // +1 - because of border-bottom
-            addClass(this.container, this.CSS.SCROLLABLE);
+            this.container.style.height = this.maxHeight + "px";
+            if (b) {
+                hide(this.shadow)
+            } else {
+                show(this.shadow);
+                this.shadow.style.marginTop = (this.maxHeight + 1) + "px"
+            }
+            addClass(this.container, this.CSS.SCROLLABLE)
         } else {
             removeClass(this.container, this.CSS.SCROLLABLE);
-            this.container.style.height = 'auto';
-            var shadow_height = intval(this.list.offsetHeight) + intval(this.list.offsetTop);
-            if (shadow_height) {
+            this.container.style.height = "auto";
+            var a = intval(this.list.offsetHeight) + intval(this.list.offsetTop);
+            if (a && !b) {
                 show(this.shadow);
-                this.shadow.style.marginTop = shadow_height + 'px';
+                this.shadow.style.marginTop = a + "px"
             } else {
-                hide(this.shadow);
+                hide(this.shadow)
             }
         }
     },
-    content: function (items) {
-        var html = [],
-            i, it, v, t, d, a, ind,
-            len = items.length;
-        for (i = 0; i < len; ++i) {
-            // value, text, disabled, attributes, index
-            it = items[i];
-            v = it[0];
-            t = it[1];
-            d = it[2];
-            ind = this.uid + ', ' + i;
-            v = (v === undefined) ? '' : v.toString();
-            t = ((t === undefined) ? '' : t.toString()) || v;
-            html.push(
-                '<li ', !d ? 'onmousemove="Select.itemMouseMove(' + ind + ', this)" onmousedown="Select.itemMouseDown(' + ind + ', this)"' : 'dis="1"',
-                ' val="',
-                v.replace(/&/g, '&amp;').replace(/"/g, '&quot;'),
-                '" class="', (d ? 'disabled ' : ''), ((i == len - 1) ? (this.CSS.LAST + ' ') : ''), (i ? '' : this.CSS.FIRST) + '">',
-                t,
-                '</li>'
-            );
+    content: function (j) {
+        var f = [];
+        var e, c, l, m, h, k, b;
+        var g = j.length;
+        for (e = 0; e < g; ++e) {
+            c = j[e];
+            l = c[0];
+            m = c[1];
+            h = c[2];
+            b = this.uid + ", " + e;
+            l = (l === undefined) ? "" : l.toString();
+            m = ((m === undefined) ? "" : m.toString()) || l;
+            f.push("<li ", !h ? 'onmousemove="Select.itemMouseMove(' + b + ', this)" onmousedown="Select.itemMouseDown(' + b + ', this)"' : 'dis="1"', ' val="', l.replace(/&/g, "&amp;").replace(/"/g, "&quot;"), '" class="', (h ? "disabled " : ""), ((e == g - 1) ? (this.CSS.LAST + " ") : ""), (e ? "" : this.CSS.FIRST) + '">', m, "</li>")
         }
-        this.list.innerHTML = html.join('');
+        this.list.innerHTML = f.join("");
         this.updateContainer();
-        return true;
+        return true
     },
-    removeItem: function (value) {
-        var undefined, l = this.list.childNodes,
-            len = l.length;
-        if (value === undefined) return;
-        for (var i = 0; i < len; ++i) {
-            var node = l[i];
-            if (node.getAttribute('val') != value && node.innerHTML != value) continue;
-            node.setAttribute('dis', '1');
-            hide(node);
-            break;
+    removeItem: function (e) {
+        var f;
+        var b = this.list.childNodes;
+        var a = b.length;
+        var c;
+        if (e === f) {
+            return
         }
-        for (var i = 0; i < len; ++i) {
-            if (isVisible(l[i])) {
-                addClass(l[i], this.CSS.FIRST);
-                break;
+        for (c = 0; c < a; ++c) {
+            var d = b[c];
+            if (d.getAttribute("val") != e && d.innerHTML != e) {
+                continue
+            }
+            d.setAttribute("dis", "1");
+            hide(d);
+            break
+        }
+        for (c = 0; c < a; ++c) {
+            if (isVisible(b[c])) {
+                addClass(b[c], this.CSS.FIRST);
+                break
             }
         }
-        for (var i = len; i > 0; --i) {
-            if (isVisible(l[i - 1])) {
-                addClass(l[i - 1], this.CSS.LAST);
-                break;
+        for (c = a; c > 0; --c) {
+            if (isVisible(b[c - 1])) {
+                addClass(b[c - 1], this.CSS.LAST);
+                break
             }
         }
-        this.updateContainer();
+        this.updateContainer()
     },
-    // AntanubiS - if list.offsetHeight is greater, than screen without scrollbar - bugs.
     performShow: function () {
-        this.list.style.position = 'absolute';
-        this.list.style.visibility = 'hidden';
-        show(this.container); // We see bug in MessageBox with Selector between theese lines.
+        this.list.style.position = "absolute";
+        this.list.style.visibility = "hidden";
+        show(this.container);
         show(this.shadow);
         this.updateContainer();
-        this.list.style.position = 'relative';
-        this.list.style.visibility = 'visible';
+        this.list.style.position = "relative";
+        this.list.style.visibility = "visible"
     },
-    // Shortcuts
     isVisible: function () {
-        return isVisible(this.container);
+        return isVisible(this.container)
     },
     hasItems: function () {
-        return this.list.childNodes.length > 0;
+        return this.list.childNodes.length > 0
     },
     toggle: function () {
         if (this.isVisible(this.container)) {
-            this.hide();
+            this.hide()
         } else {
-            this.show();
+            this.show()
         }
     }
 });
