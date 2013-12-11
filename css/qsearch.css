@@ -56,23 +56,31 @@ div.search_shadow2 {margin-top: 1px;opacity: 0.05;filter:progid:DXImageTransform
 #quick_search .s_item {height: 27px;cursor: pointer;opacity: 0.96;filter:progid:DXImageTransform.Microsoft.Alpha(opacity=96);}
 #quick_search .s_item .s_search_icon {float:right;height:11px;width:11px;overflow:hidden;margin-top:8px;background: url('/images/search_small.gif');background-position-y: 0px;}
 #quick_search .sub_item_over .s_search_icon {background-position: 0px 11px;}
-.p_item, .p_item_right, .p_item_over, .p_item_right_over{height: 39px;cursor: pointer;width: 227px;background-color:#fff;border:0px;border-top: 1px solid #CCD3DA;border-right: 1px solid #CCD3DA;}
-.p_item_right, .p_item_right_over{width: 228px;border-right: 0;}
-.p_item_over, .p_item_right_over{background-color: #587DA1;border-color: #2A5883;}
-.p_item_over .s_wide_title, .p_item_right_over .s_wide_title, #quick_search .p_item_over .s_wide_title div, #quick_search .p_item_right_over .s_wide_title div {color: #FFF;}
-.recent_fr {padding: 4px 6px;background-color: #E1E8ED;border-top: 1px solid #2B587A;width: 444px;filter: alpha(opacity=96);opacity: 0.96;}
-.recent_table {background-color: #FFF;width: 456px;filter: alpha(opacity=96);opacity: 0.96;padding: 0px;margin: 0px;}
-.recent_table tr, .recent_table td, .recent_table div{padding: 0px;margin: 0px;}
+#quick_search .p_item, .p_item_right, .p_item_over, .p_item_right_over{height: 39px;cursor: pointer;width: 227px;background-color:#fff;border:0px;border-top: 1px solid #CCD3DA;border-right: 1px solid #CCD3DA;}
+#quick_search .p_item_right, .p_item_right_over{width: 228px;border-right: 0;}
+#quick_search .p_item_over, .p_item_right_over{background-color: #587DA1;border-color: #2A5883;}
+#quick_search .p_item_over .s_wide_title,
+.p_item_right_over .s_wide_title,
+#quick_search .p_item_over .s_wide_title div,
+#quick_search .p_item_right_over .s_wide_title div {color: #FFF;}
+#quick_search .recent_fr {padding: 4px 6px;background-color: #E1E8ED;border-top: 1px solid #2B587A;width: 444px;filter: alpha(opacity=96);opacity: 0.96;}
+#quick_search .recent_table {background-color: #FFF;width: 456px;filter: alpha(opacity=96);opacity: 0.96;padding: 0px;margin: 0px;}
+#quick_search .recent_table tr, .recent_table td, .recent_table div{padding: 0px;margin: 0px;}
 #quick_search div.s_photo {width: 25px;height: 25px;overflow: hidden;float: left;margin: 1px 10px 0px 0px;line-height: 22px;}
 #quick_search div.s_photo img {width: 25px;vertical-align: middle;}
 #quick_search div.s_title {float: left;margin-top: 7px;cursor: pointer;height: 14px;width: 50%;overflow: hidden;}
 #quick_search div.s_wide_title{float: left;margin: 0px;cursor: pointer;height: 27px;width: 70%;overflow: hidden;}
 #quick_search .s_down_text {display: block;float: right;margin-top: 6px;cursor: pointer;outline: none;}
-.s_down_text:hover {text-decoration: underline;}
-#quick_search div.s_wide_title div, #quick_search .s_down_text {display: block;color: #999;font-size: 10px;text-decoration:none;}
-#quick_search div.s_title span, #quick_search div.s_wide_title span {background-color: #DAE2E8;text-decoration:none;}
-#search_sub_menu div.sub_item_over div.s_title span, #search_sub_menu div.sub_item_over div.s_wide_title span {background-color: #2A5883;text-decoration:none;}
-#search_sub_menu a.sub_item:hover, #search_sub_menu a.sub_item_over:hover, #search_sub_menu a.sub_item_next_over:hover {text-decoration: none;}
+#quick_search .s_down_text:hover {text-decoration: underline;}
+#quick_search div.s_wide_title div,
+#quick_search .s_down_text {display: block;color: #999;font-size: 10px;text-decoration:none;}
+#quick_search div.s_title span,
+#quick_search div.s_wide_title span {background-color: #DAE2E8;text-decoration:none;}
+#search_sub_menu div.sub_item_over div.s_title span,
+#search_sub_menu div.sub_item_over div.s_wide_title span {background-color: #2A5883;text-decoration:none;}
+#search_sub_menu a.sub_item:hover,
+#search_sub_menu a.sub_item_over:hover,
+#search_sub_menu a.sub_item_next_over:hover {text-decoration: none;}
 #search_sub_menu .sub_item_over div.s_title,
 #search_sub_menu .sub_item_over div.s_wide_title,
 #search_sub_menu .sub_item_over a.s_right_text,

@@ -99,8 +99,8 @@ function removeEvent(elem, types, handler) {
         }
     });
     if (isEmpty(events)) {
-        removeData(elem, 'events')
-        removeData(elem, 'handle')
+        removeData(elem, 'events');
+        removeData(elem, 'handle');
     }
 }
 
@@ -260,9 +260,11 @@ function normEvent(event) {
     if (!event.which && event.button) {
         event.which = (event.button & 1 ? 1 : (event.button & 2 ? 3 : (event.button & 4 ? 2 : 0)));
     }
-    if (!event.wheel && (event.wheelDelta || ((event.detail == 3 || event.detail == -3) && browser.mozilla))) {
-        event.wheel = event.wheelDelta && event.wheelDelta > 0 || event.detail && event.detail < 0 || false;
+
+    if ((event.type==="mousewheel" || event.type==="wheel" || event.type==="DOMMouseScroll") && (event.wheelDelta || event.detail)) {
+        event.wheelDelta = event.detail = ((event.wheelDelta) ? event.wheelDelta / 120 : event.detail / -3) > 0 ? 1 : -1;
     }
+
     return event;
 }
 
@@ -278,7 +280,6 @@ function press(e, code)
 {
     return !!((e.keyCode==KEY[code]));
 }
-
 
 function getTarget(e) {
     return e.srcElement || e.target;

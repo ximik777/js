@@ -15,7 +15,7 @@ var qArr = [
 var hints_url = '/hints.php';
 var search_page = '/index.php?mod=search&act=gsearch';
 var search_url = search_page + '&section={SECTION}&q={QUERY}&name=1';
-
+hintsCache = {};
 function initSearch(options) {
     var leftSide = (window.is_rtl) ? 'right' : 'left';
     var rightSide = (window.is_rtl) ? 'left' : 'right';
@@ -24,7 +24,7 @@ function initSearch(options) {
         elemID: 'gsearch',
         value: '',
         linkURL: 'javascript:',
-        searchWidth: 615,
+        searchWidth: 715,
         menuWidth: 150,
         menuShadow: true,
         animation: true,
@@ -85,8 +85,8 @@ function initSearch(options) {
     };
     var hintsAjax = false,
         inputVal = '',
-        getHintsTimer = 0,
-        hintsCache = {};
+        getHintsTimer = 0;
+
     var gotStartHints = function (text) {
         qsCurrItem = false;
         if (text.length && !opt.showSearchButton && !(window.is_rtl)) {
@@ -226,7 +226,8 @@ function initSearch(options) {
     };
     this.addItemContent = function (content, itemClass, over, num) {
         var subItem = ce('div', {className:'sub_item'});
-        addClass(subItem, itemClass ? itemClass : ''), subItem.innerHTML = content;
+        addClass(subItem, itemClass ? itemClass : '');
+        subItem.innerHTML = content;
         if (over) {
             addEvent(subItem, 'mouseover', function () {
                 if (currSubMenu) {
