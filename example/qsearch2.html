@@ -16,9 +16,20 @@
 </head>
 
 <body>
-<input type="text" id="test" name="test" value="" />
-<input type="text" id="test2" name="test2" value="" />
-<input type="text" id="test3" name="test3" value="" />
+<div class="clear">
+    <input type="text" id="test3" name="test3" value="" />
+    <input type="text" id="test" name="test" value="" />
+</div>
+
+<div class="clear">
+    <input type="text" id="test4" name="test4" value="" />
+    <input type="text" id="test2" name="test2" value="" />
+
+</div>
+
+
+
+
 
 
 
@@ -34,8 +45,16 @@
                 '</a>' +
                 '<a class="s_right_text" href="mailto:{email}">{email}</a>';
 
+
+    var agrm = '<a class="whole" href="{href}">' +
+                   '<div class="agrm_num">{agrm_num}</div>' +
+                   '<div class="s_title">{user_name}</div>' +
+                '</a>' +
+                '<a href="{href}" class="s_right_text">{user_phone}</a>';
+
+
     var qArr = [
-        ['по номеру договора','agrm','Здесь Вы можете ввести номер договора', html1],
+        ['по номеру договора','agrm','Здесь Вы можете ввести номер договора', agrm],
         ['по клиентам ф.и.о','clients_fio','Здесь Вы можете ввести имя клиента', html1],
         ['по ip адресу','ip','Здесь Вы можете ввести ip адрес клиента', html1],
         ['по ip адресу sw','ipsw','Здесь Вы можете ввести ip свича', html1],
@@ -48,9 +67,10 @@
     var sss = null;
     onDomReady(function(){
 
-        new qSearch(ge('test'), qArr);
-        new qSearch(ge('test2'), qArr);
-        new qSearch(ge('test3'), qArr);
+        new qSearch(ge('test'), qArr, {});
+        new qSearch(ge('test2'), qArr, {menuRight:false});
+        new qSearch(ge('test3'), qArr, {right:false});
+        new qSearch(ge('test4'), qArr, {right:false, menuRight:false});
 
 
     });

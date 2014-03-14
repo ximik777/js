@@ -622,8 +622,8 @@ function getPosition(e) {
     return [left, top];
 }
 
-function getMouseOffset(e) {
-    var docPos = getPosition(e.target);
+function getMouseOffset(e, target) {
+    var docPos = getPosition(target || e.target);
     return [e.pageX - docPos[0], e.pageY - docPos[1]];
 }
 

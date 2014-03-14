@@ -1,3 +1,12 @@
+if(!lang) var lang = {};
+
+/* qsearch */
+lang['search'] = 'Поиск';
+lang['popular-hints'] = 'Страницы, которые Вы недавно посещали:';
+lang['no-search-result'] = 'Поиск не дал результатов';
+lang['connectiong-error'] = 'Ошибка соединения с сервером';
+
+
 function langNumeric(count, vars, formatNum) {
     if (!vars || !window.langConfig) { return count; }
     var res;

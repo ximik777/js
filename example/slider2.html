@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Slider</title>
+    <meta charset="utf-8">
+    <link type="text/css" rel="stylesheet" href="../css/example.css" />
+    <link type="text/css" rel="stylesheet" href="../css/slider2.css" />
+    <script type="text/javascript" src="../js/core.js"></script>
+    <script type="text/javascript" src="../js/events.js"></script>
+    <script type="text/javascript" src="../js/dom.js"></script>
+    <script type="text/javascript" src="../js/cc.js"></script>
+    <script type="text/javascript" src="../js/slider2.js"></script>
+</head>
+
+<body>
+<div style="padding: 30px;">
+    <div id="test"></div>
+    <div id="test2"></div>
+    <div id="test3"></div>
+</div>
+
+
+<script type="text/javascript">
+    //var s = null, t=0;
+    onDomReady(function () {
+        new Slider(ge('test'),{});
+        new Slider(ge('test2'),{preload:true, width:250});
+        new Slider(ge('test3'),{cursorDown:false, hintAttached:true});
+        //new Slider2(ge('test2'),{showPoint:false, preload:true});
+    });
+</script>
+<div style="text-align: center">
+    <!--LiveInternet counter--><script type="text/javascript"><!--
+document.write("<a href='http://www.liveinternet.ru/click' "+
+        "target=_blank><img src='//counter.yadro.ru/hit?t29.1;r"+
+        escape(document.referrer)+((typeof(screen)=="undefined")?"":
+        ";s"+screen.width+"*"+screen.height+"*"+(screen.colorDepth?
+                screen.colorDepth:screen.pixelDepth))+";u"+escape(document.URL)+
+        ";"+Math.random()+
+        "' alt='' title='LiveInternet: показано количество просмотров и"+
+        " посетителей' "+
+        "border='0' width='88' height='120'><\/a>")
+//--></script><!--/LiveInternet-->
+</div>
+</body>
+
+</html>

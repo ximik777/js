@@ -7,7 +7,7 @@ createChildClass('qSearch', UiControl, {
         STANDART: 'qsearch_'
     },
     defaultOptions: {
-        placeholder: 'Поиск',
+        placeholder: getLang('search'),
         width: 615,
         right: true,
         animationDelay: 200,
@@ -20,13 +20,15 @@ createChildClass('qSearch', UiControl, {
         hints_url: '/hints1.php',
         hintsAct: 'a_hints',
         showPopularHints: true,
+        popularHintsTitle: getLang('popular-hints'),
         popularHintsAct: 'a_start_hints',
         popularHintsShift: 8,
+        popularHintsTemp: false,
+        popularHintsColumn:2,
         search_page: '/index.php',
-        delimeter: '?',
         hintsPauseGet: 500,
-        noResults: 'Поиск не дал результатов',
-        resultsFail: 'Ошибка соединения с сервером'
+        noResults: getLang('no-search-result'),
+        resultsFail: getLang('connectiong-error')
     },
     beforeInit: function () {
         this.common.pageContainer = document.body;
@@ -34,7 +36,7 @@ createChildClass('qSearch', UiControl, {
         this.cache = {};
         this.getHintsTimer = null;
     },
-    controlName: 'qSearch1',
+    controlName: 'qSearch',
     initOptions: function (input, data, options) {
         if (!input) return false;
         this.options = extend({}, this.defaultOptions, {}, options);
@@ -47,12 +49,28 @@ createChildClass('qSearch', UiControl, {
         if (this.options.showPopularHints) this.cache[this.options.popularHintsAct] = false;
         if (this.options.search_page == '') this.options.search_page = false;
         this.global_focus = false;
+
+
+        this.popularHintsTemplates = {
+            'piple':'<a style="color: rgb(0, 0, 0); display: block; padding: 6px 0px 0px 7px; text-decoration: none;" href="{href}">' +
+                        '<div class="s_photo"><img src="{photo}" /></div>' +
+                        '<div style="word-wrap: break-word; height: 13px;" class="s_wide_title">{name}</div>' +
+                    '</a>' +
+                    '<a href="/mail.php?act=write&to={user_id}" onclick="cancelEvent(event); return showWriteMessageBox(event, {user_id});" class="s_down_text">Написать сообщение</a>',
+
+            'groups':'<a style="color: rgb(0, 0, 0); display: block; padding: 6px 0px 0px 7px;" href="{href}">' +
+                        '<div class="s_photo"><img src="{photo}" /></div>' +
+                        '<div style="word-wrap: break-word;" class="s_wide_title">{name}' +
+                            '<div>{desc}</div>' +
+                        '</div>' +
+                     '</a>'
+        };
     },
     initDOM: function (input) {
         var self = this;
         this.container = ce('div', {
             id: 'qsearch_container' + this.guid,
-            className: 'qsearch_container',
+            className: 'qsearch_container '+(this.options.right ? 'qr' : 'ql'),
             innerHTML: '<input class="qsearch_input" type="text" autocomplete="off" value="' + this.options.placeholder + '" />' +
                 '<div class="search_ext_cont">' +
                 '<div class="search_cont ' + (this.options.menuRight ? 'sir' : 'sil') + '">' +
@@ -71,8 +89,6 @@ createChildClass('qSearch', UiControl, {
                 '</div>' +
                 '</div>' +
                 '</div>'
-        }, {
-            cssFloat: this.options.right ? 'right' : 'left'
         });
         input.parentNode.replaceChild(this.container, input);
         each({
@@ -111,7 +127,7 @@ createChildClass('qSearch', UiControl, {
                 width: this.options.width - 10
             });
         }
-        this.container.parentNode.insertBefore(ce('br', {clear: 'both'}),this.container.nextSibling);
+        //this.container.parentNode.insertBefore(ce('br', {clear: 'both'}),this.container.nextSibling);
         setStyle(this.container, {height:getSize(self.input)[1]});
 
         this.setItemsList();
@@ -164,6 +180,86 @@ createChildClass('qSearch', UiControl, {
         }
         this.selectItem(this.options.selected);
     },
+    buildPopularHints: function(obj){
+
+        var self = this,
+            items = [],
+            global = '',
+            count = 0,
+            col = self.options.popularHintsColumn || 1,
+            recent = '<div class="recent_fr">'+this.options.popularHintsTitle+'</div>' +
+            '<table class="recent_table"><tr>{qs_content}</tr></table>' +
+            '<div style="display: none" class="qs_over"></div>';
+
+        for(var i in obj)
+        {
+            count++;
+            var s = '<td width="'+(100 / col)+'"><div onclick="document.location.href=\'{href}\'" class="qs_item p_item'+(count == col ? '_right' : '')+'">';
+            s += self.popularHintsTemplates[obj[i]['type']];
+            for (var r in obj[i]) {
+                s = s.replace(new RegExp('{' + r + '}', "g"), obj[i][r]);
+            }
+            s += '</div></td>';
+            global += s;
+
+            if(count == col)
+            {
+                items.push(global);
+                count = 0;
+                global = '';
+            }
+        }
+
+        var html = ce('div', {
+            className:'st_sub_menu',
+            innerHTML: recent.replace('{qs_content}', items.join('</tr><tr>'))
+        });
+
+        this.showSubMenu(html, true);
+        //self.cache[self.options.popularHintsAct] = t;
+        this.res_items = true;
+
+
+
+        var p_item_over = geByClass1('qs_over', html, 'div');
+        var orecent = geByClass1('recent_fr', html, 'div');
+
+
+
+        each(geByClass('qs_item', html, 'div'), function(k,v){
+            addEvent(v, 'mouseover mouseout', function(e){
+
+                if(e.type == 'mouseover')
+                {
+                    var size = getSize(this, true);
+                    var rsize = getSize(e.data.recent);
+                    var xy = getXY(this);
+                    var cxy = getXY(e.data.self.container);
+
+                    e.data.main.innerHTML = this.parentNode.innerHTML;
+                    setStyle(e.data.main, {
+                        width:size[0] + (hasClass(this, 'p_item_right') ? 0 : 0),
+                        height:size[1],
+                        display:'block',
+                        position: 'absolute',
+                        top:xy[1] - cxy[1] - rsize[1] - 4
+                    });
+
+                    if(hasClass(this, 'p_item_right'))
+                    {
+                        setStyle(e.data.main, {left: 'inherit', right: -1});
+                    }
+                    else
+                    {
+                        setStyle(e.data.main, {right: 'inherit', left: -1});
+                    }
+                }
+
+
+            }, false, {main:p_item_over, self:self, recent:orecent});
+        });
+
+    },
     popularHintsShow: function () {
         var self = this;
         if (self.options.showPopularHints !== true) return false;
@@ -176,10 +272,12 @@ createChildClass('qSearch', UiControl, {
             'act': this.options.popularHintsAct
         }, {
             onSuccess: function (o, t) {
-                if (t) {
-                    self.showSubMenu(t, true);
-                    self.cache[self.options.popularHintsAct] = t;
-                    self.res_items = true;
+
+                if (!t.error && t.hints) {
+                    self.buildPopularHints(t.hints);
+                    //self.showSubMenu(t, true);
+                    //self.cache[self.options.popularHintsAct] = t;
+                    //self.res_items = true;
                 } else {
                     self.hideSubMenu();
                     self.res_items = false;
@@ -277,7 +375,18 @@ createChildClass('qSearch', UiControl, {
         if (!content) {
             this.hideSubMenu();
         }
-        this.subMenuContent.innerHTML = content;
+
+        if(Object.prototype.toString.call(content) == '[object HTMLDivElement]')
+        {
+            this.subMenuContent.innerHTML = '';
+            this.subMenuContent.appendChild(content);
+        }
+        else
+        {
+            this.subMenuContent.innerHTML = content;
+        }
+
+
         var st = {
             display: 'block',
             top: getSize(this.search_ext_cont)[1] - 1 + 'px',
@@ -386,7 +495,14 @@ createChildClass('qSearch', UiControl, {
             if (!url || url == '') url = false;
         } else {
             if (this.options.search_page && trim(this.search_input.value) !== '') {
-                url = this.options.search_page + this.options.delimeter + 'section=' + this.data_list[this.options.selected][1] + '&q=' + trim(this.search_input.value);
+
+                if (this.options.search_page.match(/\?/)) {
+                    var src = '&section=' + this.data_list[this.options.selected][1] + '&q=' + trim(this.search_input.value);
+                } else {
+                    var src = '?section=' + this.data_list[this.options.selected][1] + '&q=' + trim(this.search_input.value);
+                }
+
+                url = this.options.search_page + src;
             }
         }
         document.location.href = url;
