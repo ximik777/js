@@ -1,3 +1,6 @@
+if(!window.jt) jt = {};
+jt['upload'] = '1.0.0';
+
 if (!window.jsonpManager) {
   window.jsonpManager = window.__jsp = {
     c: 1,
@@ -327,7 +330,7 @@ initFlash: function(iUpload, obj) {
 
   if (!options.flash_lite) {
     if (!options.lang['button_browse']) {
-      options.lang['button_browse'] = 'Выбрать файл';
+      options.lang['button_browse'] = 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ';
     }
     obj.innerHTML = '<div id="uploader'+iUpload+'" class="button_blue" style="position: relative;"><div id="lite_upload' + iUpload + '" style="position: absolute; height: 100%; width: 100%; z-index: 10000; cursor: pointer;"></div><button class="upload_btn">' + options.lang['button_browse'] + '</button></div>';
   } else {
@@ -457,7 +460,7 @@ initFileApi: function(iUpload, obj, dropbox) {
     input = '<input class="file" type="file" size="28" onchange="Upload.onFileApiSend('+iUpload+', this.files);"' + (options.multiple ? ' multiple="true"' : '') + (options.accept ? ' accept="' + options.accept + '"' : '') + ' name="' + options['file_name'] + '" style="cursor: pointer;"/>';
   } else {
     if (!options.lang['button_browse']) {
-      options.lang['button_browse'] = 'Выбрать файл';
+      options.lang['button_browse'] = 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ';
     }
     input = '<div class="button_blue"><button class="upload_btn" onclick="this.parentNode.nextSibling.click()">' + options.lang['button_browse'] + '</button></div><input class="file" type="file" size="28" onchange="Upload.onFileApiSend('+iUpload+', this.files);"' + (options.multiple ? ' multiple="true"' : '') + (options.accept ? ' accept="' + options.accept + '"' : '') + ' name="' + options['file_name'] + '" style="visibility: hidden; position: absolute;"/>';
   }

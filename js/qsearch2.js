@@ -1,4 +1,7 @@
-// TODO rebuild popular hints 
+if(!window.jt) jt = {};
+jt['qsearch2'] = '1.0.0';
+
+// TODO rebuild popular hints
 createChildClass('qSearch', UiControl, {
     common: {
         pageContainer: null

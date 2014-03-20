@@ -5,29 +5,37 @@
     <title>Slider</title>
     <meta charset="utf-8">
     <link type="text/css" rel="stylesheet" href="../css/example.css" />
-    <link type="text/css" rel="stylesheet" href="../css/slider2.css" />
+    <link type="text/css" rel="stylesheet" href="../css/volume.css" />
     <script type="text/javascript" src="../js/core.js"></script>
     <script type="text/javascript" src="../js/events.js"></script>
     <script type="text/javascript" src="../js/dom.js"></script>
     <script type="text/javascript" src="../js/cc.js"></script>
-    <script type="text/javascript" src="../js/slider2.js"></script>
+    <script type="text/javascript" src="../js/volume.js"></script>
 </head>
 
 <body>
 <div style="padding: 30px;">
-    <div id="test"></div>
+    <div class="cf">
+        <div class="fl"><div id="test"></div></div>
+        <div class="fl" style="margin-left: 10px; margin-top: -3px"><input type="text" id="v1"></div>
+    </div>
     <div id="test2"></div>
     <div id="test3"></div>
+    <br /><br />
+
 </div>
 
 
 <script type="text/javascript">
-    //var s = null, t=0;
+    var v3 = null;
     onDomReady(function () {
-        new Slider(ge('test'),{});
-        new Slider(ge('test2'),{preload:true, width:250});
-        new Slider(ge('test3'),{cursorDown:false, hintAttached:true});
-        //new Slider2(ge('test2'),{showPoint:false, preload:true});
+        new Volume(ge('test'),{onMove:function(v){
+            ge('v1').value = v;
+        }});
+        new Volume(ge('test2'),{width:100, onChange:function(v){
+            alert(v);
+        }});
+        v3 = new Volume(ge('test3'),{width:200});
     });
 </script>
 <div style="text-align: center">

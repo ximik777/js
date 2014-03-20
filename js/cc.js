@@ -1,3 +1,6 @@
+if(!window.jt) jt = {};
+jt['cc'] = '1.0.0';
+
 if (!window.vk) vk = {};
 var UI_CONTROLS_DEBUG = false;
 

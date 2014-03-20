@@ -1,3 +1,6 @@
+if(!window.jt) jt = {};
+jt['ajax'] = '1.0.0';
+
 function Ajax(onDone, onFail, eval_res) {
     var _t = this;
     this.onDone = onDone;

@@ -1,3 +1,6 @@
+if(!window.jt) jt = {};
+jt['dropdownMenu'] = '1.0.0';
+
 createChildClass('DropdownMenu', UiControl, {
     // Static class fields
     common: {

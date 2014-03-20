@@ -1,4 +1,5 @@
-
+if(!window.jt) jt = {};
+jt['qsearch'] = '1.0.0';
 
 if(lang) var lang = {};
 lang['head-search'] = 'поиск';

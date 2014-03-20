@@ -1,3 +1,6 @@
+if(!window.jt) jt = {};
+jt['slider'] = '1.0.0';
+
 createChildClass('Slider', UiControl, {
     'defaultOptions': {
         width: '100%',

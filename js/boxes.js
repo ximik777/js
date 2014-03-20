@@ -1,3 +1,6 @@
+if(!window.jt) jt = {};
+jt['boxes'] = '1.0.0';
+
 var _message_box_guid = 0,
     _message_boxes = [],
     _message_box_shown = 0,

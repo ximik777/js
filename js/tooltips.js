@@ -1,3 +1,6 @@
+if(!window.jt) jt = {};
+jt['tooltips'] = '1.0.0';
+
 function showTooltip(el, opts) {
     if (!el) return;
     if (!el.temphide) {

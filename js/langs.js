@@ -1,5 +1,7 @@
-if(!lang) var lang = {};
+if(!window.jt) jt = {};
+jt['langs'] = '1.0.0';
 
+if(!lang) var lang = {};
 /* qsearch */
 lang['search'] = 'Поиск';
 lang['popular-hints'] = 'Страницы, которые Вы недавно посещали:';

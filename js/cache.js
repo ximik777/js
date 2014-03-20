@@ -1,3 +1,6 @@
+if(!window.jt) jt = {};
+jt['chache'] = '1.0.0';
+
 createChildClass('Cache', UiUtil, {
     defaultOptions: {
         cacheLength: 100

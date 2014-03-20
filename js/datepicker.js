@@ -1,3 +1,6 @@
+if(!window.jt) jt = {};
+jt['datepicker'] = '1.0.0';
+
 datepicker_date_format = "{day} {month} {year}";
 datepicker_month_format = "{month} {year}";
 global_day_label = "День:";

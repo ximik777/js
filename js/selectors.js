@@ -1,3 +1,6 @@
+if(!window.jt) jt = {};
+jt['selectors'] = '1.0.0';
+
 function Dropdown(a, c, b) {
     if (!b) {
         b = {}

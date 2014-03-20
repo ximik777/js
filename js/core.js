@@ -1,3 +1,6 @@
+if(!window.jt) jt = {};
+jt['core'] = '1.0.0';
+
 var base_domain = location.protocol + '//' + location.host,
     _ua = navigator.userAgent.toLowerCase(),
     lang = lang || {},
