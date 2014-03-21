@@ -2,3 +2,4 @@
 *.php
 *.htaccess
 cache/
+old_back/
