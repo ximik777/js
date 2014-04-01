@@ -196,3 +196,5 @@ function q2ajx(qa) {
         Ajax.Post(p);
     }
 })();
+
+try{loadManager.done('ajax');}catch(e){}

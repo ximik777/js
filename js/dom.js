@@ -879,3 +879,5 @@ function val(input, value, nofire) {
     return input.getValue ? input.getValue() :
         (((input.tagName == 'INPUT' || input.tagName == 'TEXTAREA') ? input.value : input.innerHTML) || '');
 }
+
+try{loadManager.done('dom');}catch(e){}

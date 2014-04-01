@@ -287,3 +287,5 @@ function press(e, code)
 function getTarget(e) {
     return e.srcElement || e.target;
 }
+
+try{loadManager.done('events');}catch(e){}

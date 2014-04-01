@@ -322,3 +322,5 @@ function debugLog(a)
 {
     console.log(a);
 }
+
+try{loadManager.done('core');}catch(e){}
