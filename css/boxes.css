@@ -19,8 +19,10 @@
 .btnList.fl_r li {
     margin:0 0 0 5px
 }
+
+
 .box_progress {
-    background:url(/images/upload.gif) 50% 50% no-repeat
+    background:url(/images/upload_jt.gif) 50% 50% no-repeat
 }
 .popup_transparent_bg {
     top:0;
@@ -30,7 +32,7 @@
     position:absolute;
     z-index:1000;
     background:transparent url('/images/layer_bg_lite.png') repeat scroll 0 0;
-    background:rgba(0,0,0,0.30)
+    background:rgba(0,0,0,0.30);
 }
 .box_frame {
     left:50%;
@@ -66,14 +68,14 @@
     overflow:auto
 }
 .box_title_wrap {
-    background-color:#4b769f;
-    border:1px solid #45688e;
-    aborder-bottom:1px solid #45688e;
+    background-color:#0f6e9a;
+    border:1px solid #096089;
     padding:0;
     color:#fff;
     font-size:13px;
     font-weight:bold
 }
+
 .box_controls_wrap {
     border:1px solid #AAA;
     border-top:0
@@ -97,8 +99,9 @@
     margin:6px 6px 0 0;
     cursor:pointer;
     padding:0;
-    background:#9cb8d4 url(/images/boxicon_vk.png) -23px -2px
+    background:#60b0cf url(/images/boxicon_vk_jt.png) -23px -2px
 }
+
 .box_full_page_link {
     background-position:-2px -2px;
     margin-right:0
@@ -179,9 +182,10 @@
 .box_title {
     padding:6px 10px 6px;
     font-size:14px;
-    border-top:1px solid #6088b3;
-    border-bottom:1px solid #466e94
+    border-top:1px solid #2480ae;
+    border-bottom:1px solid #0a668f
 }
+
 .box_no_controls .box_title_wrap,
 .box_no_controls .box_layout .box_controls_wrap {
     display:none
@@ -221,12 +225,46 @@ div.top_result_baloon a {
     color:#b1daff;
     font-weight:bold
 }
+
 .is_2x .box_progress {
-    background:url(/images/upload_2x.gif) 50% 50% no-repeat;
+    background:url(/images/upload_jt_2x.gif) 50% 50% no-repeat;
     background-size:32px 8px
 }
 .is_2x .box_x_button,
 .is_2x .box_full_page_link {
+    background-image:url(/images/boxicon_vk_jt_2x.png);
+    background-size:84px 21px
+}
+
+.vk .box_progress {
+    background:url(/images/upload.gif) 50% 50% no-repeat
+}
+
+.vk .box_title {
+    border-top:1px solid #6088b3;
+    border-bottom:1px solid #466e94
+}
+
+.vk .box_title_wrap {
+    background-color:#4b769f;
+    border:1px solid #45688e;
+}
+
+.vk .box_x_button,
+.vk .box_full_page_link {
+    background:#9cb8d4 url(/images/boxicon_vk.png) -23px -2px
+}
+.vk .box_full_page_link {
+    background-position:-2px -2px;
+}
+
+.is_2x.vk .box_progress {
+    background:url(/images/upload_2x.gif) 50% 50% no-repeat;
+    background-size:32px 8px
+}
+
+.is_2x.vk .box_x_button,
+.is_2x.vk .box_full_page_link {
     background-image:url(/images/boxicon_vk_2x.png);
     background-size:84px 21px
 }

@@ -188,8 +188,8 @@ a.button_link:hover,a.button_blue:hover,a.button_gray:hover {
 }
 .vk .button_blue button:active,
 .vk .button_blue button.active,
-.is_2x .vk .button_blue button:active,
-.is_2x .vk .button_blue button.active {
+.is_2x.vk .button_blue button:active,
+.is_2x.vk .button_blue button.active {
     background:#5e80a5;
     border-bottom-color:#51749c;
 }
@@ -223,8 +223,8 @@ a.button_link:hover,a.button_blue:hover,a.button_gray:hover {
 }
 .vk .button_gray button:active,
 .vk .button_gray button.active,
-.is_2x .vk .button_gray button:active,
-.is_2x .vk .button_gray button.active {
+.is_2x.vk .button_gray button:active,
+.is_2x.vk .button_gray button.active {
     background:#dcdcdc;
     border-top-color:#bebebe;
     border-bottom-color:#b6b6b6;

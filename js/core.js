@@ -323,4 +323,10 @@ function debugLog(a)
     console.log(a);
 }
 
+function toggleStyle(){
+    var t = document.body;
+    if(hasClass(t, 'vk')) removeClass(t, 'vk');
+    else addClass(t, 'vk');
+}
+
 try{loadManager.done('core');}catch(e){}

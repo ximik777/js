@@ -16,6 +16,11 @@
 <body>
 <div class="label"></div>
 <div class="labeled">
+    <input type="text" id="check0" name="check0" value="" />
+</div>
+<br class="cl" />
+<div class="label"></div>
+<div class="labeled">
     <input type="text" id="check1" name="check1" value="" />
 </div>
 <div class="labeleds" id="check1_change"></div>
@@ -32,9 +37,21 @@
 </div>
 <div class="labeleds" id="check3_change"></div>
 <br class="cl" />
+
+<div class="label"></div>
+<div class="labeled">
+    <a href="#" onclick="toggleStyle();return false">toggleStyle</a>
+</div>
+<br class="cl">
 <script type="text/javascript">
     var ch2, ch3;
     onDomReady(function () {
+        new Checkbox(ge('check0'), {
+            width: 200,
+            checked: 1,
+            label: 'Checkbox'
+        });
+
         new Checkbox(ge('check1'), {
             width: 200,
             checked: 0,

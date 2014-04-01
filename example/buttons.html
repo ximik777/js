@@ -11,7 +11,6 @@
 </head>
 
 <body>
-<div id="toggle" class="">
 <div class="button_blue">
     <button>Button Blue</button>
 </div>
@@ -67,8 +66,6 @@
     <div class="button_blue">
         <button onclick="toggleStyle()">toggleStyle</button>
     </div>
-
-</div>
 <script type="text/javascript">
     function buildButton(item) {
         createButton(item, function () {
@@ -77,11 +74,7 @@
         return false;
     }
 
-    function toggleStyle(){
-        var t = ge('toggle');
-        if(hasClass(t, 'vk')) removeClass(t, 'vk');
-        else addClass(t, 'vk');
-    }
+
 
     onDomReady(function () {
         lockButton(ge('look_button'));
