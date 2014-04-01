@@ -19,14 +19,20 @@ a.dd_link,
     z-index:1500
 }
 .dd_menu_header {
-    border:1px solid #3b6798;
+    border:1px solid #005f93;
     position:absolute;
     z-index:1500;
     cursor:pointer;
     _margin-left:1px
 }
+
+.vk .dd_menu_header {
+    border:1px solid #3b6798;
+}
+
+
 .dd_menu_header div {
-    border-color:#6d8fb3;
+    border-color:#3187b3;
     border-style:solid;
     border-width:1px;
     color:#fff;
@@ -36,9 +42,16 @@ a.dd_link,
     line-height:1.27em;
     *line-height:1.18em;
     *padding-right:16px;
-    background:#6d8fb3 url(/images/flydead.gif) no-repeat right -15px;
+    background:#3187b3 url(/images/flydead.gif) no-repeat right -15px;
     *background-position:-14px right
 }
+
+.vk .dd_menu_header div {
+    border-color:#6d8fb3;
+    background:#6d8fb3 url(/images/flydead.gif) no-repeat right -15px;
+}
+
+
 .dd_menu_header.leftArrow div {
     background:#6d8fb3 url(/images/flydead.gif) no-repeat 1px -15px;
     padding-right:5px;
@@ -66,12 +79,14 @@ x:-moz-any-link {
     _margin-left:0
 }
 .dd_menu_rows {
+    b-order:1px solid #5aa2b9;
     border:1px solid #96aabe;
     margin:0;
     background:#fff;
     position:relative;
     z-index:1499
 }
+
 .dd_menu_rows a {
     background:#fff;
     display:block;

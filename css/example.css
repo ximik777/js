@@ -101,6 +101,7 @@ input[type="checkbox"],input[type~="checkbox"] {
 }
 
 a {color: #2B587A;}
+a {color: #0f6e9a;}
 a:hover {text-decoration: none;}
 
 .files {margin-left: 30px;}
