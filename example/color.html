@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Color</title>
+    <meta charset="utf-8">
+    <link type="text/css" rel="stylesheet" href="../css/example.css" />
+    <link type="text/css" rel="stylesheet" href="../css/buttons.css" />
+    <script type="text/javascript" src="../js/core.js"></script>
+    <script type="text/javascript" src="../js/events.js"></script>
+    <script type="text/javascript" src="../js/dom.js"></script>
+    <script type="text/javascript">
+
+        function res(){
+
+            var hex_ovner = ge('hex_ovner');
+            var hex_parent = ge('hex_parent');
+            var hex_der = ge('hex_der');
+            var hex_result = ge('hex_result');
+            hex_ovner.style.backgroundColor = hex_ovner.value;
+            hex_parent.style.backgroundColor = hex_parent.value;
+            hex_der.style.backgroundColor = hex_der.value;
+
+
+            var rgb_ovner = HEXtoRGB(hex_ovner.value);
+            var rgb_parent = HEXtoRGB(hex_parent.value);
+            var rgb_der = HEXtoRGB(hex_der.value);
+
+            ge('rgb_ovner').innerHTML = rgb_ovner.join(', ');
+            ge('rgb_parent').innerHTML = rgb_parent.join(', ');
+            ge('rgb_der').innerHTML = rgb_der.join(', ');
+
+
+            var res = [];
+            res.push(rgb_der[0] - rgb_ovner[0]);
+            res.push(rgb_der[1] - rgb_ovner[1]);
+            res.push(rgb_der[2] - rgb_ovner[2]);
+
+            res[0] = rgb_parent[0] + res[0];
+            res[1] = rgb_parent[1] + res[1];
+            res[2] = rgb_parent[2] + res[2];
+
+            ge('rgb_result').innerHTML = res.join(', ');
+            hex_result.value = rgbToHex(res[0], res[1], res[2]);
+            hex_result.style.backgroundColor = rgbToHex(res[0], res[1], res[2]);
+
+
+        }
+
+        function HEXtoRGB(HEX, isObject)
+        {
+            if(!/^\#?[\da-f]{6}$/i.test(HEX))
+            {
+                return false;
+            }
+
+            var color = (HEX.charAt(0)=="#") ? HEX.substring(1):HEX;
+
+            this.R = parseInt(color.substring(0,2),16);
+            this.G = parseInt(color.substring(2,4),16);
+            this.B = parseInt(color.substring(4,6),16);
+
+            return isObject ? {R:this.R, G:this.G, B:this.B} : [this.R,this.G,this.B];
+        }
+
+        function componentToHex(c) {
+            var hex = c.toString(16);
+            return hex.length == 1 ? "0" + hex : hex;
+        }
+
+        function rgbToHex(r, g, b) {
+            return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+        }
+
+    </script>
+</head>
+
+<body>
+<div class="label">#HEX OVNER:</div><div class="labeled"><input type="text" id="hex_ovner" name="hex_ovner" value="#4b769f" /></div><div class="labeleds" id="rgb_ovner"></div><br class="cl"/>
+<div class="label">#HEX PARENT:</div><div class="labeled"><input type="text" id="hex_parent" name="hex_parent" value="#0f6e9a" /></div><div class="labeleds" id="rgb_parent"></div><br class="cl"/>
+<div class="label">#HEX DER:</div><div class="labeled"><input type="text" id="hex_der" name="hex_der" value="" /></div><div class="labeleds" id="rgb_der"></div><br class="cl"/>
+<div class="label">#HEX RESULT:</div><div class="labeled"><input readonly="1" type="text" id="hex_result" name="hex_result" value="" /></div><div class="labeleds" id="rgb_result"></div><br class="cl"/>
+
+<div class="label"></div><div class="labeled"><div class="button_blue"><button onclick="res()">Посчитать</button></div></div><br class="cl"/>
+
+
+
+<div style="text-align: center">
+    <!--LiveInternet counter--><script type="text/javascript"><!--
+document.write("<a href='http://www.liveinternet.ru/click' "+
+        "target=_blank><img src='//counter.yadro.ru/hit?t29.1;r"+
+        escape(document.referrer)+((typeof(screen)=="undefined")?"":
+        ";s"+screen.width+"*"+screen.height+"*"+(screen.colorDepth?
+                screen.colorDepth:screen.pixelDepth))+";u"+escape(document.URL)+
+        ";"+Math.random()+
+        "' alt='' title='LiveInternet: показано количество просмотров и"+
+        " посетителей' "+
+        "border='0' width='88' height='120'><\/a>")
+//--></script><!--/LiveInternet-->
+</div>
+</body>
+
+</html>
