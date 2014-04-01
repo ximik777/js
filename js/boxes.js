@@ -221,12 +221,12 @@ function MessageBox(options) {
     };
     if (boxCloseButton) {
         addEvent(boxCloseButton, 'mouseover', fadeToColor('#FFFFFF'));
-        addEvent(boxCloseButton, 'mouseout', fadeToColor('#9DB7D4'));
+        addEvent(boxCloseButton, 'mouseout', hasClass(document.body, 'vk') ? fadeToColor('#9DB7D4') : fadeToColor('#60B0CF'));
         addEvent(boxCloseButton, 'click', hideBox);
     }
     if (boxFullPageLink) {
         addEvent(boxFullPageLink, 'mouseover', fadeToColor('#FFFFFF'));
-        addEvent(boxFullPageLink, 'mouseout', fadeToColor('#9DB7D4'));
+        addEvent(boxFullPageLink, 'mouseout', hasClass(document.body, 'vk') ? fadeToColor('#9DB7D4') : fadeToColor('#60B0CF'));
     }
 
     function onLoadError(text) {
