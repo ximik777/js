@@ -7,6 +7,7 @@
     <link rel="shortcut icon" href="/site/favicon.png?3" type="image/png" />
     <link rel="icon" href="/site/favicon32.png?3" sizes="32x32" />
     <link type="text/css" rel="stylesheet" href="../css/example.css" />
+    <link type="text/css" rel="stylesheet" href="../css/volume.css" />
     <script type="text/javascript" src="../js/core.js"></script>
     <script type="text/javascript" src="../js/events.js"></script>
     <script type="text/javascript" src="../js/dom.js"></script>
@@ -32,6 +33,7 @@
         };
         onDomReady(function () {
             audio = new Audio({
+                setButton: 'playpause',
                 onReady: function(){
                     ge('status').innerHTML = 'Status: ready';
                 },
@@ -66,6 +68,7 @@
                     ge('status').innerHTML = 'Status: Ended';
                 }
             });
+
         });
     </script>
 </head>
@@ -84,9 +87,25 @@
     <a href="#" onclick="audio.pause(); return false;">Pause</a><br />
     <a href="#" onclick="audio.skipTo(0.9); return false;">skipTo 90%</a><br />
     <a href="#" onclick="audio.skipTo(0.3); return false;">skipTo 30%</a><br />
-
+    <div class="label"></div>
+    <div class="labeled">
+        <div id="playpause"></div>
+    </div>
+    <br class="cl">
+    <div class="label"></div>
+    <div class="labeled">
+        <div class="lastnext cf">
+            <div class="last"></div>
+            <div class="next"></div>
+        </div>
+    </div>
+    <br class="cl">
 </div>
-
+<div class="label"></div>
+<div class="labeled">
+    <a href="#" onclick="toggleStyle();return false">toggleStyle</a>
+</div>
+<br class="cl">
 
 
 <div style="text-align: center">

@@ -33,8 +33,12 @@
 <br class="cl">
 
 
+
 <script type="text/javascript">
-    var v3 = null;
+
+
+
+    var v3 = null, pp;
     onDomReady(function () {
         new Volume(ge('test'),{onMove:function(v){
             ge('v1').value = v;
@@ -43,6 +47,7 @@
             alert(v);
         }});
         v3 = new Volume(ge('test3'),{width:200});
+
     });
 </script>
 <div style="text-align: center">

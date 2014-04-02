@@ -42,6 +42,10 @@
             res[1] = rgb_parent[1] + res[1];
             res[2] = rgb_parent[2] + res[2];
 
+            res[0] = res[0]<0?0:res[0];
+            res[1] = res[1]<0?0:res[1];
+            res[2] = res[2]<0?0:res[2];
+
             ge('rgb_result').innerHTML = res.join(', ');
             hex_result.value = rgbToHex(res[0], res[1], res[2]);
             hex_result.style.backgroundColor = rgbToHex(res[0], res[1], res[2]);

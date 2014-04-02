@@ -80,7 +80,9 @@
 }
 
 .slider_hint_footer {
-    background: url(../images/slider_hint.png?1) 0 0 no-repeat;
+    background-image: url(../images/audio_icons_jt.png?1);
+    background-repeat: no-repeat;
+    background-position: -227px -59px;
     width: 7px;
     height: 4px;
     position: absolute;
@@ -89,17 +91,16 @@
 }
 
 .vk .slider_hint_footer {
-    background: url(../images/slider_hint_vk.png?1) 0 0 no-repeat;
+    background-image: url(../images/audio_icons.png?1);
 }
 
 .is_2x .slider_hint_footer {
-    background-image: url(../images/slider_hint_2x.png?1);
-    background-size: 7px 4px;
+    background-image: url(../images/audio_icons_jt_2x.png?1);
+    background-size: 257px 63px;
 }
 
 .is_2x.vk .slider_hint_footer {
-    background-image: url(../images/slider_hint_vk_2x.png?1);
-    background-size: 7px 4px;
+    background-image: url(../images/audio_icons_2x.png?1);
 }
 
 .slider.progress .slider_preload_line {
@@ -108,3 +109,94 @@
 .progress .slider_point {
     box-shadow: 0 1px 4px #FFFFFF;
 }
+
+.playpause {
+    width: 22px;
+    height: 23px;
+    font-size: 0;
+    background-image: url(../images/audio_icons_jt.png?1);
+    background-repeat: no-repeat;
+    background-position: 0 -25px;
+    cursor: pointer;
+}
+
+.playpause.play {
+    background-position: -72px -25px;
+}
+.playpause.pause {
+    background-position: 0 -25px;
+}
+
+.playpause.play.hover {
+    background-position: -96px -25px;
+}
+
+.playpause.pause.hover {
+    background-position: -24px -25px;
+}
+
+.playpause.play.active {
+    background-position: -120px -25px;
+}
+
+.playpause.pause.active {
+    background-position: -48px -25px;
+}
+
+.is_2x .playpause {
+    background-image: url(../images/audio_icons_jt_2x.png?1);
+    background-size: 257px 63px;
+}
+
+.is_2x.vk .playpause {
+    background-image: url(../images/audio_icons_2x.png?1);
+}
+
+.lastnext .last,
+.lastnext .next {
+    height: 11px;
+    width: 13px;
+    float: left;
+    margin: 0;
+    background-image: url(../images/audio_icons_jt.png?1);
+    background-repeat: no-repeat;
+    background-position: -3px -52px;
+    cursor: pointer;
+    opacity: 0.85;
+}
+
+.vk .lastnext .last,
+.vk .lastnext .next {
+    background-image: url(../images/audio_icons.png?1);
+}
+
+.lastnext .last:hover,
+.lastnext .next:hover {
+    opacity: 0.9;
+}
+
+.lastnext .last:active,
+.lastnext .next:active {
+    opacity: 1;
+}
+
+.lastnext .last {
+    background-position: -3px -52px;
+}
+
+.lastnext .next {
+    background-position: -18px -52px;
+    margin-left: 5px;
+}
+
+.is_2x .lastnext .last,
+.is_2x .lastnext .next {
+    background-image: url(../images/audio_icons_jt_2x.png?1);
+    background-size: 257px 63px;
+}
+
+.is_2x.vk .lastnext .last,
+.is_2x.vk .lastnext .next {
+    background-image: url(../images/audio_icons_2x.png?1);
+}
+

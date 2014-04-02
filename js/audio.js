@@ -8,7 +8,8 @@ createUiClass('Audio', {
         onPlayProgress: function(playPercent){},
         onTrackEnded: function(){},
         onPlayed: function(){},
-        onPaused: function(){}
+        onPaused: function(){},
+        setButton:false // or id
     },
     beforeInit: function(){
         this.guid = _ui.reg(this);
@@ -64,6 +65,7 @@ createUiClass('Audio', {
             return false;
         }
         this.options.onReady(this);
+        this.setButton();
     },
     loadError: function(){
         this.options.onError({'error':3, 'message':'Flash player load file error'});
@@ -89,6 +91,7 @@ createUiClass('Audio', {
             this.played = false;
             this.player.load(file);
             this.loadFile = file;
+            this.buttonToggle();
         } catch(e) {
             this.options.onError({'error':9, 'message':'Flash player load file error'});
         }
@@ -103,6 +106,7 @@ createUiClass('Audio', {
             this.player.pplay();
             this.played = true;
             this.options.onPlayed();
+            this.buttonToggle();
         } catch(e) {
             this.options.onError({'error':8, 'message':'Flash player play error'});
         }
@@ -112,6 +116,7 @@ createUiClass('Audio', {
             this.player.ppause();
             this.played = false;
             this.options.onPaused();
+            this.buttonToggle();
         } catch(e) {
             this.options.onError({'error':7, 'message':'Flash player pause error'});
         }
@@ -136,5 +141,42 @@ createUiClass('Audio', {
         } catch(e) {
             this.options.onError({'error':5, 'message':'Flash player set volume error'});
         }
+    },
+    buttonToggle: function(){
+        if(!this.options.setButton && !ge(this.options.setButton)) return false;
+        var button = ge(this.options.setButton);
+
+        if(this.played){
+            replaceClass(button, 'pause', 'play');
+        } else {
+            replaceClass(button, 'play', 'pause');
+        }
+    },
+    setButton: function(){
+        if(!this.options.setButton && !ge(this.options.setButton)) return false;
+        var button = ge(this.options.setButton), self = this;
+        addClass(button, 'playpause pause');
+        addEvent(button, 'mouseover mouseout mousedown mouseup click', function(e){
+
+            switch (e.type){
+                case 'mouseover':
+                    addClass(button, 'hover');
+                    break;
+                case 'mouseout':
+                    removeClass(button, 'hover');
+                    removeClass(button, 'active');
+                    break;
+                case 'mousedown':
+                    addClass(button, 'active');
+                    break;
+                case 'mouseup':
+                    removeClass(button, 'active');
+                    break;
+                case 'click':
+                    self.played ? self.pause() : self.play();
+                break;
+            }
+        });
+        return true;
     }
 });
