@@ -880,4 +880,31 @@ function val(input, value, nofire) {
         (((input.tagName == 'INPUT' || input.tagName == 'TEXTAREA') ? input.value : input.innerHTML) || '');
 }
 
+
+function onMousePast(ovner, onHide){
+    var past = {
+        obj:ge(ovner),
+        test: function(obj){
+            if(obj!==past.obj){
+                if(obj.parentNode) {
+                    past.test(obj.parentNode);
+                } else {
+                    if(isFunction(onHide)) onHide();
+                    past.hide();
+                }
+            }
+        },
+        detect: function(e){
+            past.test(e.target);
+        },
+        show: function(){
+            addEvent(document, 'keypress keydown mousedown', past.detect);
+        },
+        hide: function(){
+            removeEvent(document, 'keypress keydown mousedown', past.detect);
+        }
+    };
+    return past;
+}
+
 try{loadManager.done('dom');}catch(e){}
