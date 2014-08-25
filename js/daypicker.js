@@ -10,8 +10,8 @@ createUiClass('Daypicker', {
         startYear: 1800,
         stopYear: false,
         timestamp: true,
-        lang_month: ['', 'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
-        lang_month_of:['', 'Января', 'Февраля', 'Марта', 'Апреля', 'Мая', 'Июня', 'Июля', 'Августа', 'Сентября', 'Октября', 'Ноября', 'Декабря'],
+        lang_month: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+        lang_month_of:['Января', 'Февраля', 'Марта', 'Апреля', 'Мая', 'Июня', 'Июля', 'Августа', 'Сентября', 'Октября', 'Ноября', 'Декабря'],
         placeholders: ['Год:', 'Месяц:', 'День:'],
         onChange: function (day, month, year, timestamp) {}
     },
@@ -44,18 +44,18 @@ createUiClass('Daypicker', {
 
         this.container = ce("div", {
             id: "daypicker_container"+this.guid,
-            className: "daypicker_container clear_fix",
-            innerHTML: '<div class="fl_l">' +
+            className: "daypicker_container cf",
+            innerHTML: '<div class="fl">' +
                 '<input type="hidden" name="' + (el.name?el.name:'') + '" id="' + el.id + '" value="' + this.value + '"/>' +
-                '<div class="fl_l">' +
+                '<div class="fl">' +
                     '<input type="hidden" id="' + this.guid + '_day_input" value="' + this.options.day + '"/>' +
                 '</div>' +
-                '<div class="fl_l" style="padding:0 3px;">&nbsp;</div>' +
-                '<div class="fl_l">' +
+                '<div class="fl" style="padding:0 3px;">&nbsp;</div>' +
+                '<div class="fl">' +
                     '<input type="hidden" id="' + this.guid + '_month_input" value="' + this.options.month + '"/>' +
                 '</div>' +
-                '<div class="fl_l" style="padding:0 3px;">&nbsp;</div>' +
-                '<div class="fl_l">' +
+                '<div class="fl" style="padding:0 3px;">&nbsp;</div>' +
+                '<div class="fl">' +
                     '<input type="hidden" id="' + this.guid + '_year_input" value="' + this.options.year + '"/>' +
                 '</div>' +
             '</div>'
@@ -89,7 +89,7 @@ createUiClass('Daypicker', {
         var stop_year = this.options.stopYear ? this.options.stopYear : date.getFullYear();
 
         for (var y = stop_year; y >= opt.startYear; y--) year_list.push([y, y]);
-        for (var m = 0; m < 12; m++) month_list.push([m, opt.lang_month_of[m]]);
+        for (var m = 1; m < 12; m++) month_list.push([m, opt.lang_month_of[m -1]]);
 
         this.day = new Dropdown(ge(this.guid + "_day_input"), day_list(opt.month, opt.year), {
             width: 58,
