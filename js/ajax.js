@@ -76,12 +76,13 @@ function Ajax(onDone, onFail, eval_res) {
         var q = (typeof (d) != 'string') ? ajx2q(d) : d;
         try {
             tram.open('POST', u, !f);
+            tram.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            tram.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+            tram.send(q);
         } catch (e) {
             console.log('ajax post error: ' + e.message);
         }
-        tram.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        tram.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-        tram.send(q);
+
     };
 }
 

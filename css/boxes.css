@@ -99,7 +99,7 @@
     margin:6px 6px 0 0;
     cursor:pointer;
     padding:0;
-    background:#60b0cf url(/images/boxicon_vk_jt.png) -23px -2px
+    background:#60b0cf url(../images/boxicon_vk_jt.png) -23px -2px
 }
 
 .box_full_page_link {
@@ -232,7 +232,7 @@ div.top_result_baloon a {
 }
 .is_2x .box_x_button,
 .is_2x .box_full_page_link {
-    background-image:url(/images/boxicon_vk_jt_2x.png);
+    background-image:url(../images/boxicon_vk_jt_2x.png);
     background-size:84px 21px
 }
 

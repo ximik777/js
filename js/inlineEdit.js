@@ -1,3 +1,6 @@
+if(!window.jt) jt = {};
+jt['InlineEdit'] = '1.0.0';
+
 var curInlineEdit = false;
 if (!window.inlineOnEvent) {
     window.inlineOnEvent = function (e) {

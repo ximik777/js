@@ -1,11 +1,5 @@
 if(!window.jt) jt = {};
-jt['boxes'] = '1.0.0';
-
-var _message_box_guid = 0,
-    _message_boxes = [],
-    _message_box_shown = 0,
-    _doc_block_timeout,
-    _doc_blocked = false;
+jt['boxes2'] = '1.0.0';
 
 box_cancel = 'Cancel';
 box_close = 'Close';
@@ -16,345 +10,360 @@ box_save = 'Save';
 box_send = 'Send';
 box_yes = 'Yes';
 
-function MessageBox(options) {
-    var defaults = {
-        type: 'MESSAGE', // "MESSAGE" || "POPUP"
-        hideOnClick: true,
+createUiClass('MessageBox', {
+    defaultOptions: {
+        type: 'MESSAGE',        // "MESSAGE" || "POPUP"
+        hideOnOutClick: false,
         title: false,
         width: 410,
         height: 'auto',
         bodyStyle: '',
-        closeButton: false, // AntanubiS - 'X' close button in the caption.
-        fullPageLink: '', // If is set - 'box'-like button in the caption.
-        returnHidden: true, // AntanubiS - When hide - return previously hidden box.
+        closeButton: false,     // AntanubiS - 'X' close button in the caption.
+        fullPageLink: '',       // If is set - 'box'-like button in the caption.
+        returnHidden: true,     // AntanubiS - When hide - return previously hidden box.
         closeEsc: true,
-        onShow: false,
-        onHide: false,
-        onLoadError: false,
+        onShow: function(){},
+        onHide: function(){},
+        onLoadError: function(){},
         onLoad: false
-    };
-    options = extend(defaults, options);
-    var buttonsCount = 0,
-        boxContainer,
-        boxLayout,
-        boxTitle,
-        boxBody,
-        boxControls,
-        boxCloseButton,
-        boxFullPageLink,
-        guid = (++_message_box_guid),
-        isVisible = false,
-        hiddenBox;
-    var x_button = options.closeButton ? '<div class="box_x_button"></div>' : '';
-    var full_page_button = options.fullPageLink ? '<a onfocus="this.blur()" class="box_full_page_link" href="' + options.fullPageLink + '"></a>' : '';
-    boxContainer = ce('div', {
-        className: 'popup_box_container',
-        innerHTML: '<div class="box_layout"><div class="box_title_wrap">' + x_button + full_page_button + '<div class="box_title"></div></div><div class="box_body box_progress" style="' + options.bodyStyle + '"></div><div class="box_controls_wrap"><div class="box_controls"></div></div></div>'
-    }, {
-        display: 'none'
-    });
-    boxLayout = geByClass1('box_layout', boxContainer);
-    boxTitle = geByClass1('box_title', boxContainer);
-    boxBody = geByClass1('box_body', boxContainer);
-    boxControls = geByClass1('box_controls', boxContainer);
-    boxCloseButton = options.closeButton ? geByClass1('box_x_button', boxContainer) : false;
-    boxFullPageLink = options.fullPageLink ? geByClass1('box_full_page_link', boxContainer) : false;
-    if (options.closeEsc) {
-        addEvent(document, 'keydown', function (e) {
-            if (e.keyCode == 27) {
-                hideBox();
+    },
+    beforeInit: function(){
+        if(!window._message_boxes){
+            window._message_box_guid = 0;
+            window._message_boxes = [];
+            window._message_box_shown = 0;
+            window._doc_block_timeout = null;
+            window._doc_blocked = false;
+        }
+        this.guid = (++_message_box_guid);
+    },
+    bgLayer: function(){
+        if (!ge('popupTransparentBG')) {
+            window.transparentBG = ce('div', {
+                id: 'popupTransparentBG',
+                className: 'popup_transparent_bg'
+            }, {
+                display: 'none',
+                height: getSize(document)[1]
+            });
+            addEvent(window, 'resize', function () {
+                transparentBG.style.height = getSize(document)[1] + 'px';
+            });
+            onDomReady(function () {
+                bodyNode.appendChild(transparentBG);
+            });
+        }
+    },
+    initOptions: function(options){
+        this.options = extend({}, this.defaultOptions, options);
+        this.options.type = this.options.type == 'POPUP' ? 'POPUP' : 'MESSAGE';
+    },
+    init: function(options){
+        this.buttonsCount = 0;
+        this.boxContainer = null;
+        this.boxLayout = null;
+        this.boxTitle = null;
+        this.boxBody = null;
+        this.boxControls = null;
+        this.closeButton = null;
+        this.fullPageLink = null;
+        this.isVisible = false;
+        this.hiddenBox = null;
+        this.closeButton = null;
+        this.fullPageLink = null;
+        this.bgLayer();
+    },
+    fadeToColor: function(color){
+        return function () {
+            animate(this, {
+                backgroundColor: color
+            }, 200);
+        }
+    },
+    setCloseButton: function(){
+        if(!this.boxContainer || this.closeButton) return false;
+        var self = this;
+        this.closeButton = ce('div', {className:'box_x_button'});
+        if(this.fullPageLink){
+            this.boxTitle.parentNode.insertBefore(this.closeButton, this.fullPageLink);
+        } else {
+            this.boxTitle.parentNode.insertBefore(this.closeButton, this.boxTitle);
+        }
+        addEvent(this.closeButton, 'mouseover', this.fadeToColor('#FFFFFF'));
+        addEvent(this.closeButton, 'mouseout', hasClass(document.body, 'vk') ? this.fadeToColor('#9DB7D4') : this.fadeToColor('#60B0CF'));
+        addEvent(this.closeButton, 'click', self.hide);
+        return true;
+    },
+    setFullPageLink: function(){
+        if(!this.boxContainer || this.options.fullPageLink == '') return false;
+        if(this.fullPageLink){
+            this.fullPageLink.href = this.options.fullPageLink;
+            return true;
+        }
+        this.fullPageLink = ce('a', {className:'box_full_page_link', href:this.options.fullPageLink});
+        this.boxTitle.parentNode.insertBefore(this.fullPageLink, this.boxTitle);
+        addEvent(this.fullPageLink, 'mouseover', this.fadeToColor('#FFFFFF'));
+        addEvent(this.fullPageLink, 'mouseout', hasClass(document.body, 'vk') ? this.fadeToColor('#9DB7D4') : this.fadeToColor('#60B0CF'));
+        return true;
+    },
+    initDOM: function(options){
+        var opt = this.options;
+        this.boxContainer = ce('div', {
+            className: 'popup_box_container',
+            innerHTML: '' +
+                '<div class="box_layout">' +
+                    '<div class="box_title_wrap">' +
+                        '<div class="box_title"></div>' +
+                    '</div>' +
+                    '<div class="box_body box_progress" style="' + opt.bodyStyle + '"></div>' +
+                    '<div class="box_controls_wrap">' +
+                        '<div class="box_controls"></div>' +
+                    '</div>' +
+                '</div>'
+        }, {
+            display: 'none'
+        });
+
+        this.boxLayout = geByClass1('box_layout', this.boxContainer);
+        this.boxTitle = geByClass1('box_title', this.boxContainer);
+        this.boxBody = geByClass1('box_body', this.boxContainer);
+        this.boxControls = geByClass1('box_controls', this.boxContainer);
+
+        bodyNode.appendChild(this.boxContainer);
+
+        if(opt.type == 'MESSAGE'){
+            if(opt.closeButton){
+                this.setCloseButton();
             }
-        });
-    }
-    if (!_message_boxes.length) {
-        addEvent(document, 'block unblock', function (e) {
-            //  toggleFlash(e.type == 'unblock');
-        });
-    }
-    onDomReady(function () {
-        BGLayer();
-        bodyNode.appendChild(boxContainer);
-        refreshBox();
-        boxRefreshCoords(boxContainer, true);
-    });
-
-    function addButton(options) {
-        buttonsCount++;
-        options = options || {};
-        options = extend({
-            label: 'Button' + buttonsCount,
-            style: 'button_blue'
-        }, options);
-        if (options.style == 'button_no') options.style = 'button_gray';
-        if (options.style == 'button_yes') options.style = 'button_blue';
-        var buttonWrap = ce('div', {
-            className: options.style + ' ' + (options.left ? 'fl_l' : 'fl_r'),
-            innerHTML: '<button id="button' + guid + '_' + buttonsCount + '">' + options.label + '</button>'
-        });
-        boxControls.appendChild(buttonWrap);
-        createButton(buttonWrap.firstChild, options.onClick);
-        return buttonWrap.firstChild;
-    }
-
-    function addControlsText(text) {
-        var textWrap = ce('div', {
-            className: 'controls_wrap',
-            innerHTML: text
-        });
-        boxControls.appendChild(textWrap);
-        return textWrap;
-    }
-
-    function removeButtons() {
-        var buttons = [];
-        buttonsCount = 0;
-        each(boxControls.childNodes, function (i, x) {
+            if(opt.fullPageLink){
+                this.setFullPageLink();
+            }
+        }
+        this.refreshBox();
+    },
+    refreshBox: function(){
+        var self = this,
+            opt = this.options,
+            hide = function(){self.hide();},
+            closeEsc = function(e){if (e.keyCode == KEY.ESC) self.hide();};
+        this.boxTitle.innerHTML = opt.title;
+        this.boxContainer.style.width = typeof (opt.width) == 'string' ? opt.width : opt.width + 'px';
+        this.boxContainer.style.height = typeof (opt.height) == 'string' ? opt.height : opt.height + 'px';
+        removeClass(this.boxContainer, 'box_no_controls');
+        removeClass(this.boxContainer, 'message_box');
+        removeEvent(transparentBG, 'click', hide);
+        removeEvent(document, 'keydown', closeEsc);
+        if (opt.hideOnOutClick) {
+            addEvent(transparentBG, 'click', hide);
+        }
+        if (opt.closeEsc) {
+            addEvent(document, 'keydown', closeEsc);
+        }
+        addClass(this.boxContainer, opt.type == 'POPUP' ? 'box_no_controls' : 'message_box');
+    },
+    removeButtons: function(){
+        var buttons = [], self = this;
+        this.buttonsCount = 0;
+        each(this.boxControls.childNodes, function (i, x) {
             if (x) {
                 removeEvent(x);
                 buttons.push(x);
             }
         });
         each(buttons, function () {
-            boxControls.removeChild(this)
+            self.boxControls.removeChild(this);
         });
-    }
-    // Refresh box properties
-    function refreshBox() {
-        boxTitle.innerHTML = options.title;
-        boxContainer.style.width = typeof (options.width) == 'string' ? options.width : options.width + 'px';
-        boxContainer.style.height = typeof (options.height) == 'string' ? options.height : options.height + 'px';
-        removeClass(boxContainer, 'box_no_controls');
-        removeClass(boxContainer, 'message_box');
-        removeEvent(boxContainer, 'click');
-        if (options.hideOnClick && options.type == 'POPUP') {
-            addEvent(boxContainer, 'click', function () {
-                hideBox();
-            });
-        }
-        switch (options.type) {
-            case 'POPUP':
-                addClass(boxContainer, 'box_no_controls');
-                if (options.hideOnClick) {
-                    addEvent(transparentBG, 'click', function () {
-                        hideBox();
-                    });
-                }
-                break;
-            case 'MESSAGE':
-                if (options.hideOnOutClick) {
-                    addEvent(transparentBG, 'click', function () {
-                        hideBox();
-                    });
+        return this;
+    },
+    addButton: function(options){
+        this.buttonsCount++;
+        options = options || {};
+        options = extend({
+            label: 'Button' + this.buttonsCount,
+            style: 'button_blue'
+        }, options);
+        if (options.style == 'button_no') options.style = 'button_gray';
+        if (options.style == 'button_yes') options.style = 'button_blue';
+        var buttonWrap = ce('div', {
+            className: options.style + ' ' + (options.left ? 'fl_l' : 'fl_r'),
+            innerHTML: '<button id="button' + this.guid + '_' + this.buttonsCount + '">' + options.label + '</button>'
+        });
+        this.boxControls.appendChild(buttonWrap);
+        createButton(buttonWrap.firstChild, options.onClick);
+        return buttonWrap.firstChild;
+    },
+    addControlsText: function(text){
+        text = text || '';
+        var textWrap = ce('div', {
+            className: 'controls_wrap',
+            innerHTML: text
+        });
+        this.boxControls.appendChild(textWrap);
+        return textWrap;
+    },
+    content: function(html){
+        html = html || '';
+        this.boxBody.innerHTML = html;
+        removeClass(this.boxBody, 'box_progress');
+        this.refreshCoord();
+        return this;
+    },
+    loadContent: function (url, params, evaluate, loader_style, noloader) {
+        var st = loader_style ? loader_style : '';
+        if (!noloader) this.boxBody.innerHTML = '<div class="box_loader" style="' + st + '"></div>';
+        params = params || {};
+        var self = this;
+        Ajax.Send(url, params, {
+            onSuccess: function (ajaxObj, responseText) {
+                if (evaluate) {
+                    try {
+                        var result = eval('(' + responseText + ')');
+                        self.boxBody.innerHTML = result.html ? result.html : '';
+                        if (result.script) window.execScript ? window.execScript(result.script) : eval.call(window, result.script);
+                    } catch (e) {
+                        return self.onLoadError(responseText);
+                    }
                 } else {
-                    removeEvent(transparentBG, 'click');
+                    self.boxBody.innerHTML = responseText;
                 }
-                addClass(boxContainer, 'message_box');
-                break;
-        }
-    }
+                self.refreshCoord();
+                removeClass(self.boxBody, 'box_progress');
+                if (isFunction(self.options.onLoad)) self.options.onLoad(responseText);
+            },
 
-    function showBox() {
-        if (isVisible) return;
-        isVisible = true;
-        hiddenBox = 0;
+            onFail: function (ajaxObj, responseText) {
+                self.onLoadError('Request error occured.');
+            }
+        });
+        return this;
+    },
+    onLoadError: function(text){
+        this.boxBody.innerHTML = 'Error: ' + text;
+        this.removeButtons();
+        this.addButton({
+            label: getLang('box_close'),
+            onClick: this.hide
+        });
+        removeClass(this.boxBody, 'box_progress');
+        this.refreshCoord();
+        if (isFunction(this.options.onLoadError)) this.options.onLoadError(text);
+    },
+    show: function(){
+        if (this.isVisible) return;
+        this.isVisible = true;
+        this.hiddenBox = 0;
         if (_message_box_shown && _message_boxes[_message_box_shown].isVisible) {
             var box = _message_boxes[_message_box_shown];
-            if (options.returnHidden) {
-                hiddenBox = _message_box_shown;
+            if (this.options.returnHidden) {
+                this.hiddenBox = _message_box_shown;
                 box.hideContainer();
             } else {
                 box.hide();
             }
         }
-        boxBody.style.maxHeight = windowHeight() - 200 + 'px';
-        show(boxContainer);
-        boxRefreshCoords(boxContainer, true);
+        this.boxBody.style.maxHeight = windowHeight() - 200 +(this.options.type=='POPUP'?60:0) + 'px';
+        show(this.boxContainer);
+        this.refreshCoord();
         if (!_message_box_shown) {
             transparentBG.style.height = getSize(document)[1] + 'px';
             show(transparentBG);
             clearTimeout(_doc_block_timeout);
             if (!_doc_blocked) {
                 _doc_blocked = true;
-                triggerEvent(document, 'block');
             }
         }
-        _message_box_shown = guid;
-        if (options.onShow) options.onShow();
-    }
-
-    function hideBox(speed) {
-        if (!isVisible) return;
-        if (options.onHideAttempt && !options.onHideAttempt()) return;
-        isVisible = false;
-        var onHide = function () {
-            hide(boxContainer);
-            var showHidden = false;
-            if (options.returnHidden && hiddenBox) {
-                _message_boxes[hiddenBox].showContainer();
-                _message_box_shown = hiddenBox;
-                showHidden = true;
-            }
-            if (!showHidden) {
-                _message_box_shown = 0;
-                hide(transparentBG);
-                clearTimeout(_doc_block_timeout);
-                if (_doc_blocked) {
-                    _doc_block_timeout = setTimeout(function () {
-                        _doc_blocked = false;
-                        triggerEvent(document, 'unblock');
-                    }, 50);
-                }
-            }
-            if (options.onHide) options.onHide();
-        };
-        if (speed > 0)
-            fadeOut(boxContainer, speed, onHide);
-        else
-            onHide();
-    }
-    var fadeToColor = function (color) {
-        return function () {
-            animate(this, {
-                backgroundColor: color
-            }, 200);
+        _message_box_shown = this.guid;
+        if (this.options.onShow) this.options.onShow();
+        return this;
+    },
+    hide: function(){
+        if (!this.isVisible) return;
+        this.isVisible = false;
+        hide(this.boxContainer);
+        var showHidden = false;
+        if (this.options.returnHidden && this.hiddenBox) {
+            _message_boxes[this.hiddenBox].showContainer();
+            _message_box_shown = this.hiddenBox;
+            showHidden = true;
         }
-    };
-    if (boxCloseButton) {
-        addEvent(boxCloseButton, 'mouseover', fadeToColor('#FFFFFF'));
-        addEvent(boxCloseButton, 'mouseout', hasClass(document.body, 'vk') ? fadeToColor('#9DB7D4') : fadeToColor('#60B0CF'));
-        addEvent(boxCloseButton, 'click', hideBox);
-    }
-    if (boxFullPageLink) {
-        addEvent(boxFullPageLink, 'mouseover', fadeToColor('#FFFFFF'));
-        addEvent(boxFullPageLink, 'mouseout', hasClass(document.body, 'vk') ? fadeToColor('#9DB7D4') : fadeToColor('#60B0CF'));
-    }
-
-    function onLoadError(text) {
-        boxBody.innerHTML = 'Error: ' + text;
-        removeButtons();
-        addButton({
-            label: getLang('box_close'),
-            onClick: hideBox
-        });
-        removeClass(boxBody, 'box_progress');
-        boxRefreshCoords(boxContainer, true);
-        if (isFunction(options.onLoadError)) options.onLoadError(text);
-    }
-    var retBox = {
-        guid: guid,
-        show: function (speed) {
-            showBox(speed);
-            return this;
-        },
-        hide: function (speed) {
-            hideBox(speed);
-            return this;
-        },
-        isVisible: function () {
-            return isVisible;
-        },
-        content: function (html) {
-            boxBody.innerHTML = html;
-            removeClass(boxBody, 'box_progress');
-            boxRefreshCoords(boxContainer, true);
-            return this;
-        },
-        loadContent: function (url, params, evaluate, loader_style, noloader) {
-            var st = loader_style ? loader_style : '';
-            if (!noloader) boxBody.innerHTML = '<div class="box_loader" style="' + st + '"></div>';
-            params = params || {};
-            var self = this;
-            Ajax.Send(url, params, {
-                onSuccess: function (ajaxObj, responseText) {
-                    if (evaluate) {
-                        try {
-                            var result = eval('(' + responseText + ')');
-                            boxBody.innerHTML = result.html ? result.html : '';
-                            if (result.script) window.execScript ? window.execScript(result.script) : eval.call(window, result.script);
-                        } catch (e) {
-                            return onLoadError(responseText);
-                        }
-                    } else {
-                        boxBody.innerHTML = responseText;
-                    }
-                    boxRefreshCoords(boxContainer, true);
-                    removeClass(boxBody, 'box_progress');
-                    if (isFunction(options.onLoad)) options.onLoad(responseText);
-                },
-                onFail: function (ajaxObj, responseText) {
-                    onLoadError('Request error occured.');
-                }
-            });
-            return this;
-        },
-        addButton: function (options) {
-            return addButton(options);
-        },
-        addControlsText: function (text) {
-            return addControlsText(text);
-        },
-        removeButtons: function (options) {
-            removeButtons();
-            return this;
-        },
-        setOptions: function (newOptions) {
-            options = extend(options, newOptions);
-            if ("bodyStyle" in newOptions) {
-                var items = options.bodyStyle.split(';');
-                for (var i = 0; i < items.length; ++i) {
-                    var name_value = items[i].split(':');
-                    if (name_value.length > 1 && name_value[0].length) {
-                        boxBody.style[trim(name_value[0])] = trim(name_value[1]);
-                        if (boxBody.style.setProperty) {
-                            boxBody.style.setProperty(trim(name_value[0]), trim(name_value[1]), '');
-                        }
+        if (!showHidden) {
+            _message_box_shown = 0;
+            hide(transparentBG);
+            clearTimeout(_doc_block_timeout);
+            if (_doc_blocked) {
+                _doc_block_timeout = setTimeout(function () {
+                    _doc_blocked = false;
+                }, 50);
+            }
+        }
+        if (this.options.onHide) this.options.onHide();
+        return this;
+    },
+    setOptions: function(newOptions){
+        this.options = extend(this.options, newOptions);
+        var self = this;
+        if ("bodyStyle" in newOptions) {
+            var items = this.options.bodyStyle.split(';');
+            for (var i = 0; i < items.length; ++i) {
+                var name_value = items[i].split(':');
+                if (name_value.length > 1 && name_value[0].length) {
+                    self.boxBody.style[trim(name_value[0])] = trim(name_value[1]);
+                    if (self.boxBody.style.setProperty) {
+                        self.boxBody.style.setProperty(trim(name_value[0]), trim(name_value[1]), '');
                     }
                 }
             }
-            if (options.fullPageLink && boxFullPageLink) {
-                boxFullPageLink.href = options.fullPageLink;
-            }
-            refreshBox();
-            boxRefreshCoords(boxContainer, true);
-            return this;
-        },
-        refreshCoord: function () {
-            boxRefreshCoords(boxContainer, true);
-        },
-        fixIE6: refreshBox,
-        hideContainer: function () {
-            isVisible = false;
-            hide(boxContainer);
-        },
-        showContainer: function () {
-            isVisible = true;
-            show(boxContainer);
-        },
-        body: function () {
-            return boxBody;
         }
-    };
-    _message_boxes[guid] = retBox;
-    return retBox;
-}
-
+        if (this.options.closeButton) this.setCloseButton();
+        if (this.options.fullPageLink) this.setFullPageLink();
+        this.refreshBox();
+        this.refreshCoord();
+        return this;
+    },
+    hideContainer: function () {
+        this.isVisible = false;
+        hide(this.boxContainer);
+    },
+    showContainer: function () {
+        this.isVisible = true;
+        show(this.boxContainer);
+    },
+    refreshCoord: function () {
+        var wsize = windowSize(),
+            top = scrollGetY(),
+            containerSize = getSize(this.boxContainer);
+        this.boxContainer.style.top = Math.max(0, top + (wsize[1] - containerSize[1]) / 3) + 'px';
+        this.boxContainer.style.left = Math.max(0, (wsize[0] - containerSize[0]) / 2) + 'px';
+    },
+    afterInit: function(){
+        _message_boxes[this.guid] = this;
+    }
+});
 function getShownBox() {
-    var b = _message_boxes[_message_box_shown];
-    return (b && b.isVisible) ? b : false;
+    try{
+        var b = _message_boxes[_message_box_shown];
+        return (b && b.isVisible) ? b : false;
+    } catch(e) {
+        return false;
+    }
 }
 // Extends MessageBox
 function AlertBox(title, text, callback, options) {
     var aBox = new MessageBox({
         title: title
     });
+
     if (typeof options == 'object') aBox.setOptions(options);
     else options = {};
     aBox.removeButtons();
+
     if (options.boxType == 'CONFIRM') {
         aBox.addButton({
             label: options.no || getLang('box_no'),
             style: 'button_no',
-            onClick: aBox.hide
+            onClick: function(){
+                aBox.hide();
+            }
         });
         aBox.addButton({
             label: options.yes || getLang('box_yes'),
@@ -366,10 +375,10 @@ function AlertBox(title, text, callback, options) {
     } else {
         aBox.addButton({
             label: options.no || getLang('box_close'),
-            onClick: isFunction(callback) ? function () {
+            onClick: function(){
                 aBox.hide();
-                callback();
-            } : aBox.hide
+                if(isFunction(callback))callback();
+            }
         });
     }
     return aBox.content(text).show();
@@ -382,8 +391,8 @@ function ConfirmBox(title, text, callback, options) {
     }, options);
     return AlertBox(title, text, callback, options);
 }
-var winBoxes = {};
 
+var winBoxes = {};
 function showBox(name, url, query, lnk, reload, params, files) {
     if (typeof lnk == 'object') {
         reload = lnk.reload;
@@ -416,7 +425,7 @@ function showBox(name, url, query, lnk, reload, params, files) {
         winBoxes[name].removeButtons();
         winBoxes[name].addButton({
             label: getLang('box_close'),
-            onClick: winBoxes[name].hide
+            onClick: function(){winBoxes[name].hide();}
         });
         winBoxes[name].loadContent(url, query, false);
     }
