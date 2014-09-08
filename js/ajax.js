@@ -1,31 +1,31 @@
 if(!window.jt) jt = {};
-jt['ajax'] = '1.0.0';
+jt['ajax'] = '1.0.1';
+
+XHR = (function(){
+    var r = false;
+    try {
+        if (r = new XMLHttpRequest()) {
+            return function() { return new XMLHttpRequest(); };
+        }
+    } catch(e) {}
+    each(['Msxml2.XMLHTTP', 'Microsoft.XMLHTTP'], function() {
+        try {
+            var t = '' + this;
+            if (r = new ActiveXObject(t)) {
+                (function(n) {
+                    return function() { return new ActiveXObject(n); }
+                })(t);
+                return false;
+            }
+        } catch(e) {}
+    });
+})();
 
 function Ajax(onDone, onFail, eval_res) {
     var _t = this;
     this.onDone = onDone;
-    var s = '';
     this.onFail = onFail;
-    var tram = null;
-    try {
-        tram = new XMLHttpRequest();
-    } catch (e) {
-        tram = null;
-    }
-    if (!tram) {
-        try {
-            if (!tram) tram = new ActiveXObject("Msxml2.XMLHTTP");
-        } catch (e) {
-            tram = null;
-        }
-    }
-    if (!tram) {
-        try {
-            if (!tram) tram = new ActiveXObject("Microsoft.XMLHTTP");
-        } catch (e) {
-            tram = null;
-        }
-    }
+    var tram = XHR();
     var readystatechange = function (url, data) {
         if (tram.readyState == 4) {
             if (tram.status >= 200 && tram.status < 300) {
@@ -195,7 +195,50 @@ function q2ajx(qa) {
             onDone: done
         };
         Ajax.Post(p);
-    }
-})();
+    };
+    window.Ajax.callback_register = {};
+    window.Ajax.Jsonp = function(url, data, options){
+        var onSuccess,
+            onFail,
+            q = (typeof (data) != 'string') ? ajx2q(data) : data,
+            scriptOk = false,
+            callbackName = 'f'+String(Math.random()).slice(2);
+        if (!options) options = {};
+        if (isFunction(options)) {
+            onSuccess = options;
+        } else {
+            onSuccess = options.onSuccess;
+            onFail = options.onFail;
+        }
+        url += ~url.indexOf('?') ? '&' : '?';
+        url += 'callback=Ajax.callback_register.'+callbackName;
+        url += '&'+q;
 
+        window.Ajax.callback_register[callbackName] = function(response) {
+            scriptOk = true;
+            delete window.Ajax.callback_register[callbackName];
+            onSuccess(response);
+        };
+
+        function checkCallback() {
+            if (scriptOk) return;
+            delete window.Ajax.callback_register[callbackName];
+            onFail(url);
+        }
+
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.async = true;
+        script.setAttribute('encoding', 'UTF-8');
+        script.onreadystatechange = function() {
+            if (this.readyState == 'complete' || this.readyState == 'loaded'){
+                this.onreadystatechange = null;
+                setTimeout(checkCallback, 0);
+            }
+        };
+        script.onload = script.onerror = checkCallback;
+        script.src = url;
+        document.getElementsByTagName('head')[0].appendChild(script);
+    };
+})();
 try{loadManager.done('ajax');}catch(e){}

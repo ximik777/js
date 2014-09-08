@@ -7,20 +7,68 @@
 <script src="//vk.com/js/api/openapi.js" type="text/javascript"></script>
 
 <div id="login_button" onclick="VK.Auth.login(authInfo);"></div>
-
+<input type="file" id="test" />
+<input type="text" id="test2" value="123" />
+<button onclick="otp();">kk</button>
 <script language="javascript">
-    VK.init({
-        apiId: 4504637
-    });
-    function authInfo(response) {
-        if (response.session) {
-            alert('user: '+response.session.mid);
-        } else {
-            alert('not auth');
+//    VK.init({
+//        apiId: 4504637
+//    });
+//    function authInfo(response) {
+//        if (response.session) {
+//            alert('user: '+response.session.mid);
+//        } else {
+//            alert('not auth');
+//        }
+//    }
+//    VK.Auth.getLoginStatus(authInfo);
+//    VK.UI.button('login_button');
+
+
+    function createList(url, data){
+        var target = 'f'+String(Math.random()).slice(2);
+        var wrap = document.createElement('div');
+        var form = document.createElement('form');
+        var frame = document.createElement('iframe');
+        form.action = url;
+        form.target = target;
+        frame.name = target;
+        frame.src="#";
+        for(var i in data){
+            var input = document.createElement('input');
+            if(typeof data[i] == 'object'){
+                input.name = i;
+                input.type = 'file';
+                input.value = data[i].value;
+            }else{
+
+                input.name = i+'';
+                input.value = data[i];
+            }
+            form.appendChild(input);
         }
+        wrap.appendChild(form);
+        wrap.appendChild(frame);
+
+        document.body.appendChild(wrap);
+
+
     }
-    VK.Auth.getLoginStatus(authInfo);
-    VK.UI.button('login_button');
+
+    function otp(){
+        createList('/test', {
+            'ololo': document.getElementById('test2').value,
+            'file' : document.getElementById('test')
+        });
+    }
+
+
+
 </script>
+<!--<form action="/async-upload" target="iframe-name">-->
+    <!--<input type="file" name="async-file" />-->
+    <!--<input type="submit" value="загрузить" />-->
+<!--</form>-->
+<!--<iframe name="iframe-name" src="#"></iframe>-->
 </body>
 </html>

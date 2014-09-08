@@ -16,6 +16,7 @@ createUiClass('MessageBox', {
         hideOnOutClick: false,
         title: false,
         width: 410,
+        dark: false,
         height: 'auto',
         bodyStyle: '',
         closeButton: false,     // AntanubiS - 'X' close button in the caption.
@@ -90,7 +91,7 @@ createUiClass('MessageBox', {
             this.boxTitle.parentNode.insertBefore(this.closeButton, this.boxTitle);
         }
         addEvent(this.closeButton, 'mouseover', this.fadeToColor('#FFFFFF'));
-        addEvent(this.closeButton, 'mouseout', hasClass(document.body, 'vk') ? this.fadeToColor('#9DB7D4') : this.fadeToColor('#60B0CF'));
+        addEvent(this.closeButton, 'mouseout', this.fadeToColor('#60B0CF'));
         addEvent(this.closeButton, 'click', self.hide);
         return true;
     },
@@ -103,7 +104,7 @@ createUiClass('MessageBox', {
         this.fullPageLink = ce('a', {className:'box_full_page_link', href:this.options.fullPageLink});
         this.boxTitle.parentNode.insertBefore(this.fullPageLink, this.boxTitle);
         addEvent(this.fullPageLink, 'mouseover', this.fadeToColor('#FFFFFF'));
-        addEvent(this.fullPageLink, 'mouseout', hasClass(document.body, 'vk') ? this.fadeToColor('#9DB7D4') : this.fadeToColor('#60B0CF'));
+        addEvent(this.fullPageLink, 'mouseout', this.fadeToColor('#60B0CF'));
         return true;
     },
     initDOM: function(options){
@@ -112,12 +113,12 @@ createUiClass('MessageBox', {
             className: 'popup_box_container',
             innerHTML: '' +
                 '<div class="box_layout">' +
-                    '<div class="box_title_wrap">' +
+                    '<div class="box_title_wrap cf">' +
                         '<div class="box_title"></div>' +
                     '</div>' +
                     '<div class="box_body box_progress" style="' + opt.bodyStyle + '"></div>' +
                     '<div class="box_controls_wrap">' +
-                        '<div class="box_controls"></div>' +
+                        '<div class="box_controls cf"></div>' +
                     '</div>' +
                 '</div>'
         }, {
@@ -185,7 +186,7 @@ createUiClass('MessageBox', {
         if (options.style == 'button_no') options.style = 'button_gray';
         if (options.style == 'button_yes') options.style = 'button_blue';
         var buttonWrap = ce('div', {
-            className: options.style + ' ' + (options.left ? 'fl_l' : 'fl_r'),
+            className: options.style + ' ' + (options.left ? 'fl' : 'fr'),
             innerHTML: '<button id="button' + this.guid + '_' + this.buttonsCount + '">' + options.label + '</button>'
         });
         this.boxControls.appendChild(buttonWrap);
@@ -265,7 +266,8 @@ createUiClass('MessageBox', {
         show(this.boxContainer);
         this.refreshCoord();
         if (!_message_box_shown) {
-            transparentBG.style.height = getSize(document)[1] + 'px';
+            //transparentBG.style.height = getSize(document)[1] + 'px';
+            transparentBG.className = this.options.dark ? 'popup_transparent_bg_dark' : 'popup_transparent_bg';
             show(transparentBG);
             clearTimeout(_doc_block_timeout);
             if (!_doc_blocked) {

@@ -5,6 +5,7 @@
     <title>MessageBox</title>
     <link rel="shortcut icon" href="/site/favicon.png?3" type="image/png" />
     <link rel="icon" href="/site/favicon32.png?3" sizes="32x32" />
+    <link type="text/css" rel="stylesheet" href="../css/common.css" />
     <link type="text/css" rel="stylesheet" href="../css/buttons.css" />
     <link type="text/css" rel="stylesheet" href="../css/boxes.css" />
     <script type="text/javascript" src="../js/core.js"></script>
@@ -46,11 +47,6 @@
 <div class="button_gray">
     <button onclick="showDoneBox('test')">Show Done Box</button>
 </div>
-<br />
-<br />
-<div class="button_blue">
-    <button onclick="toggleStyle()">toggleStyle</button>
-</div>
 <script type="text/javascript">
     var mb1 = null,
         mb2 = null;
@@ -58,7 +54,8 @@
     function ExamplePopup(){
         if (!mb2) mb2 = new MessageBox({
             type: 'POPUP',
-            width: 420
+            width: 420,
+            dark:true
         });
         var box = mb2;
         box.content('1312312');

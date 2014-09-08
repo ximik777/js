@@ -47,7 +47,8 @@ var browser = {
     opera_mobile: /opera mini|opera mobi/i.test(_ua),
     opera_mini: /opera mini/i.test(_ua),
     mac: /mac/i.test(_ua),
-    webkit: /webkit/i.test(_ua)
+    webkit: /webkit/i.test(_ua),
+    search_bot: /(yandex|google|stackrambler|aport|slurp|msnbot|bingbot|twitterbot|ia_archiver|facebookexternalhit)/i.test(_ua)
 };
 
 function isFunction(obj) {
