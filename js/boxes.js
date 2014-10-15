@@ -462,3 +462,29 @@ function showDoneBox(msg, opts) {
     };
     _fadeOut();
 }
+
+function showBandDoneBox(msg, opts) {
+    opts = opts || {};
+    var resEl = ce('div', {
+        className: 'top_left_result_baloon_wrap',
+        innerHTML: '<div class="top_left_result_baloon" style="width:' + (opts.width || 230) + 'px">' + msg + '</div>'
+    });
+    if(!ge('top_left_result_baloon_wrap')){
+        bodyNode.appendChild(ce('div', {id:'top_left_result_baloon_wrap'}));
+    }
+    ge('top_left_result_baloon_wrap').appendChild(resEl);
+    animate(resEl.firstChild, {marginTop:0, opacity:1}, 300);
+    var _fadeOut = function () {
+        setTimeout(function () {
+            if (opts.permit && !opts.permit()) {
+                _fadeOut();
+                return;
+            }
+            animate(resEl, {marginTop:-10, opacity:0}, 200, function(){
+                re(resEl);
+                if (opts.callback && isFunction(opts.callback)) opts.callback();
+            });
+        }, (opts.out || 5000));
+    };
+    _fadeOut();
+}
