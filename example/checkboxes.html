@@ -40,13 +40,34 @@
 <div class="labeleds" id="check3_change"></div>
 <br class="cl" />
 
+
 <div class="label"></div>
 <div class="labeled">
-    <a href="#" onclick="toggleStyle();return false">toggleStyle</a>
+    <input type="text" id="check4" name="check4" value="" />
 </div>
-<br class="cl">
+<br class="cl" />
+<div class="label"></div>
+<div class="labeled">
+    <input type="text" id="check5" name="check5" value="" />
+</div>
+<div class="labeleds" id="check5_change"></div>
+<br class="cl" />
+<div class="label"></div>
+<div class="labeled">
+    <input type="text" id="check6" name="check6" value="" />
+</div>
+<div class="labeleds" id="check6_change"></div>
+<br class="cl" />
+<div class="label"></div>
+<div class="labeled">
+    <input type="text" id="check7" name="check7" value="" />
+</div>
+<div class="labeleds" id="check7_change"></div>
+<br class="cl" />
+
+
 <script type="text/javascript">
-    var ch2, ch3;
+    var ch2, ch3, ch6, ch7;
     onDomReady(function () {
         new Checkbox(ge('check0'), {
             width: 200,
@@ -80,6 +101,46 @@
             }
         });
         ch3.disable(true);
+
+
+
+
+        new Checkbox(ge('check4'), {
+            width: 200,
+            checked: 1,
+            label: 'Checkbox 4',
+            circle:true
+        });
+
+        new Checkbox(ge('check5'), {
+            width: 200,
+            checked: 0,
+            label: 'Checkbox 5',
+            circle:true,
+            onChange: function (v) {
+                alert(v ? 'true' : false);
+            }
+        });
+        ch6 = new Checkbox(ge('check6'), {
+            width: 200,
+            checked: 0,
+            label: 'Checkbox6',
+            circle:true,
+            onChange: function (v) {
+                alert(v ? 'true' : false);
+            }
+        });
+        ch6.disable(true);
+        ch7 = new Checkbox(ge('check7'), {
+            width: 200,
+            checked: 1,
+            label: 'Checkbox7',
+            circle:true,
+            onChange: function (v) {
+                alert(v ? 'true' : false);
+            }
+        });
+        ch7.disable(true);
     });
 </script>
 <div style="text-align: center">

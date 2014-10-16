@@ -10,7 +10,8 @@ createChildClass('Checkbox', UiControl, {
         checkedValue: 1,
         notCheckedValue: '',
         width: 300,
-        label: 'checkbox'
+        label: 'checkbox',
+        circle: false
     },
     beforeInit: function () {
         this.guid = _ui.reg(this);
@@ -31,7 +32,7 @@ createChildClass('Checkbox', UiControl, {
     initDOM: function (input, options) {
         this.container = ce('div', {
             id: 'container' + this.guid,
-            className: 'checkbox_container',
+            className: 'checkbox_container'+(this.options.circle?' checkbox_circle':''),
             innerHTML: '<table cellpadding=0 cellspacing=0><tr><td class="checkbox"><div class="checkbox_off"></div></td><td class="checkbox_label">' + this.options.label + '<input type="hidden" name="' + this.options.resultField + '" id="' + this.options.resultField + '" value="' + (this.options.checked ? this.options.checkedValue : this.options.notCheckedValue) + '"></td></tr></table>'
         }, {
             width: this.options.width + 'px'

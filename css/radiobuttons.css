@@ -3,6 +3,7 @@
     font-family: Tahoma;
     font-size: 11px
 }
+
 .radiobtn_container table {
     width:100%;
     z-index:0;
@@ -15,6 +16,18 @@
     width:20px;
     padding:1px 0 0
 }
+.radiobtn_container table td.radiobtn_label {
+    line-height:140%;
+    padding:0 0 0 3px;
+    text-align:left;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
 .radiobtn_container input {
     display:none
 }
@@ -32,33 +45,10 @@
 .radiobtn_container table td .radiobtn_off_over div {
     width:14px;
     height:56px;
-    background:transparent url(/images/radio_jt.png?1) 0 0 no-repeat;
+    background:transparent url(/images/radio.svg) 0 0 no-repeat;
     background-size:14px 56px;
-    behavior:url(/js/iepngfix.htc)
 }
 
-.vk .radiobtn_container table td .radiobtn_on div,
-.vk .radiobtn_container table td .radiobtn_off div,
-.vk .radiobtn_container table td .radiobtn_on_over div,
-.vk .radiobtn_container table td .radiobtn_off_over div {
-    background:transparent url(/images/radio.gif) 0 0 no-repeat;
-    background-size:14px 56px;
-    behavior:url(/js/iepngfix.htc);
-}
-
-.is_2x .radiobtn_container table td .radiobtn_on div,
-.is_2x .radiobtn_container table td .radiobtn_off div,
-.is_2x .radiobtn_container table td .radiobtn_on_over div,
-.is_2x .radiobtn_container table td .radiobtn_off_over div {
-    background-image:url(/images/radio_jt_2x.png?1);
-}
-
-.is_2x.vk .radiobtn_container table td .radiobtn_on div,
-.is_2x.vk .radiobtn_container table td .radiobtn_off div,
-.is_2x.vk .radiobtn_container table td .radiobtn_on_over div,
-.is_2x.vk .radiobtn_container table td .radiobtn_off_over div {
-    background-image:url(/images/radio_2x.gif);
-}
 .radiobtn_container table td .radiobtn_on div {
     margin-top:-14px
 }
