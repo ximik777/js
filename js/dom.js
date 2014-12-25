@@ -880,6 +880,26 @@ function val(input, value, nofire) {
         (((input.tagName == 'INPUT' || input.tagName == 'TEXTAREA') ? input.value : input.innerHTML) || '');
 }
 
+function domEL(el, p) {
+    p = p ? 'previousSibling' : 'nextSibling';
+    while (el && !el.tagName) el = el[p];
+    return el;
+}
+function domNS(el) {
+    return domEL((el || {}).nextSibling);
+}
+function domPS(el) {
+    return domEL((el || {}).previousSibling, 1);
+}
+function domFC(el) {
+    return domEL((el || {}).firstChild);
+}
+function domLC(el) {
+    return domEL((el || {}).lastChild, 1);
+}
+function domPN(el) {
+    return (el || {}).parentNode;
+}
 
 function onMousePast(ovner, onHide){
     var past = {

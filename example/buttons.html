@@ -13,73 +13,114 @@
 </head>
 
 <body>
-<div class="button_blue">
-    <button>Button Blue</button>
-</div>
-<div class="button_gray">
-    <button>Button Gray</button>
-</div>
-<br />
-<br />
-<div class="button_gray">
-    <button>Button Gray</button>
-</div>
-<div class="button_blue">
-    <button>Button Blue</button>
-</div>
-<br />
-<br />
-<div class="button_blue button_wide">
-    <button>Button Wide</button>
-</div>
-<br />
-<div class="button_gray">
-    <button id="look_button">Look Button</button>
-</div>
-<div class="button_blue">
-    <button id="look_button2">Look Button</button>
-</div>
-<br />
-<br />
-<div class="button_blue">
-    <button id="disable_button">Disable Button</button>
-</div>
-<div class="button_gray">
-    <button id="disable_button2">Disable Button</button>
-</div>
-<br />
-<br />
-<div class="button_big button_gray">
-    <button>Button Big</button>
-</div>
-<div class="button_gray">
-    <button>Button</button>
-</div>
-<br />
-<br />
-<div class="button_big button_blue">
-    <button>Button Big</button>
-</div>
-<div class="button_blue">
-    <button>Button</button>
-</div>
-<script type="text/javascript">
-    function buildButton(item) {
-        createButton(item, function () {
-            alert('Button');
-        });
-        return false;
-    }
 
+
+<table width="100%">
+    <tr>
+        <td width="150">Button Blue:</td>
+        <td>
+            <div class="button_blue"><button>Button</button></div>
+            <div class="button_gray"><button>Button</button></div>
+        </td>
+    </tr>
+    <tr>
+        <td>Button Big:</td>
+        <td>
+            <div class="button_blue button_big"><button>Button</button></div>
+            <div class="button_gray button_big"><button>Button</button></div>
+        </td>
+    </tr>
+    <tr>
+        <td>Button Wide:</td>
+        <td>
+            <div class="button_blue button_wide"><button>Button</button></div>
+            <div class="button_gray button_wide"><button>Button</button></div>
+        </td>
+    </tr>
+    <tr>
+        <td>Look Button:</td>
+        <td><div class="button_blue"><button id="look_button">Button</button></div>
+            <div class="button_gray"><button id="look_button2">Button</button></div>
+        </td>
+    </tr>
+    <tr>
+        <td>Disable Button:</td>
+        <td><div class="button_blue"><button id="disable_button">Button</button></div>
+            <div class="button_gray"><button id="disable_button2">Button</button></div>
+        </td>
+    </tr>
+    <tr>
+        <td>Flat Buttons</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Button Flat:</td>
+        <td>
+            <button class="flat_button button_small">Button Small</button>
+            <button class="flat_button secondary button_small" >Button Small</button>
+        </td>
+    </tr>
+    <tr>
+        <td>Button Middle:</td>
+        <td>
+            <button class="flat_button">Button Middle</button>
+            <button class="flat_button secondary">Button Middle</button>
+        </td>
+    </tr>
+    <tr>
+        <td>Button Big:</td>
+        <td>
+            <button class="flat_button button_big">Button Big</button>
+            <button class="flat_button secondary button_big">Button Big</button>
+        </td>
+    </tr>
+    <tr>
+        <td>Button BigWidth:</td>
+        <td>
+            <button class="flat_button button_big_width" >Flat Button</button>
+            <button class="flat_button secondary button_big_width" >Flat Button</button>
+        </td>
+    </tr>
+    <tr>
+        <td>Button Wide:</td>
+        <td>
+            <button class="flat_button button_wide">Flat Button</button>
+            <button class="flat_button secondary button_wide">Flat Button</button>
+        </td>
+    </tr>
+    <tr>
+        <td>Button Lock:</td>
+        <td>
+            <button class="flat_button" id="look_button3">Flat Button</button>
+            <button class="flat_button secondary" id="look_button4">Flat Button</button>
+        </td>
+    </tr>
+    <tr>
+        <td>Button Disable:</td>
+        <td>
+            <button class="flat_button" id="disable_button3">Flat Button</button>
+            <button class="flat_button secondary" id="disable_button4">Flat Button</button>
+        </td>
+    </tr>
+</table>
+
+
+
+
+<script type="text/javascript">
 
 
     onDomReady(function () {
         lockButton(ge('look_button'));
         lockButton(ge('look_button2'));
-        addEvent(ge('disable_button'), 'click', function(){alert(123)});
+        lockButton(ge('look_button3'));
+        lockButton(ge('look_button4'));
+
 
         disableButton(ge('disable_button'), true);
         disableButton(ge('disable_button2'), true);
+        disableButton(ge('disable_button3'), true);
+        disableButton(ge('disable_button4'), true);
     });
 </script>
 <div style="text-align: center">
