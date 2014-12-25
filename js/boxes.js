@@ -74,13 +74,6 @@ createUiClass('MessageBox', {
         this.fullPageLink = null;
         this.bgLayer();
     },
-    fadeToColor: function(color){
-        return function () {
-            animate(this, {
-                backgroundColor: color
-            }, 200);
-        }
-    },
     setCloseButton: function(){
         if(!this.boxContainer || this.closeButton) return false;
         var self = this;
@@ -90,9 +83,7 @@ createUiClass('MessageBox', {
         } else {
             this.boxTitle.parentNode.insertBefore(this.closeButton, this.boxTitle);
         }
-        addEvent(this.closeButton, 'mouseover', this.fadeToColor('#FFFFFF'));
-        addEvent(this.closeButton, 'mouseout', this.fadeToColor('#60B0CF'));
-        addEvent(this.closeButton, 'click', self.hide);
+        addEvent(this.closeButton, 'click', function(){self.hide()});
         return true;
     },
     setFullPageLink: function(){
@@ -103,8 +94,6 @@ createUiClass('MessageBox', {
         }
         this.fullPageLink = ce('a', {className:'box_full_page_link', href:this.options.fullPageLink});
         this.boxTitle.parentNode.insertBefore(this.fullPageLink, this.boxTitle);
-        addEvent(this.fullPageLink, 'mouseover', this.fadeToColor('#FFFFFF'));
-        addEvent(this.fullPageLink, 'mouseout', this.fadeToColor('#60B0CF'));
         return true;
     },
     initDOM: function(options){

@@ -23,6 +23,19 @@ var base_domain = location.protocol + '//' + location.host,
         }
     };
 
+if (typeof(console) == 'undefined') {
+    var console = {
+        log: function(message) {},
+        info: function(message) {},
+        warn: function(message) {},
+        error: function(message) {
+            alert(message);
+        },
+        time: function(){},
+        timeEnd: function(){}
+    }
+}
+
 var browser = {
     version: (_ua.match(/.+(?:me|ox|on|rv|it|era|ie)[\/: ]([\d.]+)/) || [0, '0'])[1],
     opera: /opera/i.test(_ua),
