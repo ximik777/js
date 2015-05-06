@@ -72,7 +72,26 @@ onDomReady(function () {
     if ('devicePixelRatio' in window && window.devicePixelRatio == 2) {
         addClass(bodyNode, 'is_2x');
     }
+    if(!supportsSvg()){
+        addClass(bodyNode, 'no_svg');
+    }
+    if(browser.chrome){
+        addClass(bodyNode, 'ch');
+    } else if (browser.mozilla){
+        addClass(bodyNode, 'ff');
+    } else if (browser.safari_mobile){
+        addClass(bodyNode, 'sfm');
+    } else if (browser.safari){
+        addClass(bodyNode, 'sf');
+    }
 });
+
+function supportsSvg() {
+    try{
+        return document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#Shape", "1.0");
+    } catch(e){}
+    return false;
+}
 
 function ge(el) {
     return (typeof el == 'string' || typeof el == 'number') ? document.getElementById(el) : el;
@@ -401,30 +420,27 @@ function fadeTo(el, speed, to, callback) {
         opacity: to
     }, speed, callback);
 }
-var Fx = fx = {
+var Fx = {
     Transitions: {
-        linear: function (t, b, c, d) {
-            return c * t / d + b;
-        },
-        sineInOut: function (t, b, c, d) {
-            return -c / 2 * (Math.cos(Math.PI * t / d) - 1) + b;
-        },
-        halfSine: function (t, b, c, d) {
-            return c * Math.sin(Math.PI * (t / d) / 2) + b;
-        },
-        easeOutBack: function (t, b, c, d) {
-            var s = 1.70158;
-            return c * ((t = t / d - 1) * t * ((s + 1) * t + s) + 1) + b;
-        }
+        linear: function(t, b, c, d) { return c*t/d + b; },
+        sineInOut: function(t, b, c, d) { return -c/2 * (Math.cos(Math.PI*t/d) - 1) + b; },
+        halfSine: function(t, b, c, d) { return c * (Math.sin(Math.PI * (t/d) / 2)) + b; },
+        easeOutBack: function(t, b, c, d) { var s = 1.70158; return c*((t=t/d-1)*t*((s+1)*t + s) + 1) + b; },
+        easeInCirc: function(t, b, c, d) { return -c * (Math.sqrt(1 - (t/=d)*t) - 1) + b; },
+        easeOutCirc: function(t, b, c, d) { return c * Math.sqrt(1 - (t=t/d-1)*t) + b; },
+        easeInQuint: function(t, b, c, d) { return c*(t/=d)*t*t*t*t + b; },
+        easeOutQuint: function(t, b, c, d) { return c*((t=t/d-1)*t*t*t*t + 1) + b; },
+        easeOutCubic: function(t, b, c, d) { return c*((t=t/d-1)*t*t + 1) + b;},
+        swiftOut: function(t, b, c, d) { return c * cubicBezier(0.4, 0, 0.22, 1, t/d, 4/d) + b; }
     },
     Attrs: [
-        ["height", "marginTop", "marginBottom", "paddingTop", "paddingBottom"],
-        ["width", "marginLeft", "marginRight", "paddingLeft", "paddingRight"],
-        ["opacity"]
+        [ 'height', 'marginTop', 'marginBottom', 'paddingTop', 'paddingBottom' ],
+        [ 'width', 'marginLeft', 'marginRight', 'paddingLeft', 'paddingRight' ],
+        [ 'opacity', 'left', 'top' ]
     ],
     Timers: [],
     TimerId: null
-};
+}, fx = Fx;
 Fx.Base = function (el, options, name) {
     this.el = ge(el);
     this.name = name;
@@ -651,6 +667,11 @@ function elfocus(el, from, to) {
 function scrollGetY() {
     return intval(window.pageYOffset) || document.documentElement.scrollTop;
 }
+
+function scrollGetX() {
+    return window.pageXOffset || document.documentElement.scrollLeft;
+}
+
 
 function getScroll() {
     var b = document.body,
@@ -926,5 +947,53 @@ function onMousePast(ovner, onHide){
     };
     return past;
 }
+
+function scrollToY(y, speed, anim) {
+    if (speed == undefined) speed = 400;
+
+    var isTouchDevice = ('ontouchstart' in document.documentElement);
+    if (isTouchDevice) {
+        speed = 0;
+    }
+
+    if (browser.msie6) {
+        if (data(bodyNode, 'tween')) data(bodyNode, 'tween').stop(false);
+    } else {
+        if (data(bodyNode, 'tween')) data(bodyNode, 'tween').stop(false);
+        if (data(htmlNode, 'tween')) data(htmlNode, 'tween').stop(false);
+    }
+    window.scrollAnimation = false;
+    if (speed) {
+        var updT = function() {
+            window.scrollAnimation = false;
+        };
+        window.scrollAnimation = true;
+        if (browser.msie6) {
+            animate(bodyNode, {scrollTop: y}, speed, updT);
+        } else {
+            animate(htmlNode, {scrollTop: y, transition: Fx.Transitions.easeInCirc}, speed, updT);
+            animate(bodyNode, {scrollTop: y, transition: Fx.Transitions.easeInCirc}, speed, updT);
+        }
+    } else {
+        if (anim && anim !== 2) {
+            var diff = scrollGetY() - y;
+            if (Math.abs(diff) > 6) {
+                scrollToY(y+(diff > 0 ? 6 : -6), 0, 2);
+            }
+            clearTimeout(window.scrlToTO);
+            window.scrlToTO = setTimeout(scrollToY.pbind(y, 100, 2), 0);
+            return;
+        }
+        window.scroll(scrollGetX(), y);
+        if (browser.msie6) {
+            bodyNode.scrollTop = y;
+        }
+    }
+}
+
+function scrollToTop(speed) {
+    return scrollToY(0, speed);
+}
+
 
 try{loadManager.done('dom');}catch(e){}

@@ -1,5 +1,5 @@
-if(!window.jt) jt = {};
-jt['buttons'] = '1.0.0';
+if (!window.jt) jt = {};
+jt['buttons'] = '1.2.2';
 
 function createButton(el, onClick) {
     el = ge(el);
@@ -18,7 +18,7 @@ function createButton(el, onClick) {
         return;
     }
     var hover = false;
-    addEvent(el, 'click mousedown mouseover mouseout', function (e) {
+    addEvent(el, 'click mousedown mouseover mouseout', function(e) {
         if (hasClass(p, 'locked')) return;
         switch (e.type) {
             case 'click':
@@ -46,7 +46,7 @@ function createButton(el, onClick) {
 function lockButton(el) {
     if (!(el = ge(el))) return;
     if (hasClass(el, 'flat_button')) {
-        lockFlatButton(el);
+        lockFlatButtonNew(el);
         return;
     }
     var btn = (el.tagName.toLowerCase() == 'button'),
@@ -75,7 +75,7 @@ function lockButton(el) {
 function unlockButton(el) {
     if (!(el = ge(el))) return;
     if (hasClass(el, 'flat_button')) {
-        unlockFlatButton(el);
+        unlockFlatButtonNew(el);
         return;
     }
     var lock = geByClass1('button_lock', el.parentNode, 'span'),
@@ -100,24 +100,27 @@ function buttonLocked(el) {
 function lockFlatButton(el) {
     if (!el || el.tagName.toLowerCase() != 'button' || isButtonLocked(el)) return;
     addClass(el, 'flat_btn_lock');
-    el.innerHTML = '<span class="flat_btn_h">'+el.innerHTML+'</span>';
+    el.innerHTML = '<span class="flat_btn_h">' + el.innerHTML + '</span>';
 }
+
 function unlockFlatButton(el) {
     if (!isButtonLocked(el)) return;
     el.innerHTML = el.firstChild.innerHTML;
     removeClass(el, 'flat_btn_lock');
 }
+
 function isButtonLocked(el) {
     if (!(el = ge(el))) return;
     return hasClass(el, 'flat_btn_lock');
 }
+
 
 function disableButton(el, disable) {
     if (!(el = ge(el)) || el.tagName.toLowerCase() !== 'button') return;
     if (hasClass(el, 'flat_button')) {
         return disableFlatButton(el, disable);
     }
-    toggleClass(el.parentNode, 'button_disabled', !! disable);
+    toggleClass(el.parentNode, 'button_disabled', !!disable);
     if (disable) {
         el.parentNode.insertBefore(ce('button', {
             innerHTML: el.innerHTML,
@@ -135,11 +138,36 @@ function disableFlatButton(el, disable) {
     if (!(el = ge(el)) || el.tagName.toLowerCase() !== 'button') return;
 
     if (disable) {
-        el.parentNode.insertBefore(ce('button', {innerHTML: el.innerHTML, className: el.className + ' button_disabled'}), el);
+        el.parentNode.insertBefore(ce('button', {
+            innerHTML: el.innerHTML,
+            className: el.className + ' button_disabled'
+        }), el);
         hide(el);
     } else {
         var disabledEl = domPS(el);
         if (disabledEl && hasClass(disabledEl, 'button_disabled')) re(disabledEl);
         show(el);
     }
+}
+
+function lockFlatButtonNew(el) {
+    if (!(el = ge(el)) || el.tagName.toLowerCase() !== 'button') return;
+    el.parentNode.insertBefore(ce('button', {
+        innerHTML: '<span class="flat_btn_h">' + el.innerHTML + '</span>',
+        className: el.className + ' flat_btn_lock'
+    }), el);
+    hide(el);
+}
+
+function unlockFlatButtonNew(el) {
+    if (!(el = ge(el)) || el.tagName.toLowerCase() !== 'button' || !isButtonLockedNew(el)) return;
+    var disabledEl = domPS(el);
+    if (disabledEl && hasClass(disabledEl, 'flat_btn_lock')) re(disabledEl);
+    show(el);
+}
+
+function isButtonLockedNew(el) {
+    if (!(el = ge(el)) || el.tagName.toLowerCase() !== 'button') return;
+    var disabledEl = domPS(el);
+    return (disabledEl && hasClass(disabledEl, 'flat_btn_lock'));
 }

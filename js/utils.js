@@ -119,3 +119,12 @@ function lastSibling(node){
     }
     return (tempObj.nodeType==1)?tempObj:false;
 }
+
+function getFullIP(str){
+    str = str || '0.0.0.0';
+    str = str.split('.', 4);
+    for(var i=0; i<=3; i++){
+        str[i] = str[i] && parseInt(str[i], 10)>=0 && parseInt(str[i], 10)<=255 ? str[i] : 0;
+    }
+    return str.join('.');
+}

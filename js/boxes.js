@@ -19,6 +19,7 @@ createUiClass('MessageBox', {
         dark: false,
         height: 'auto',
         bodyStyle: '',
+        flat_buttons: true,
         closeButton: false,     // AntanubiS - 'X' close button in the caption.
         fullPageLink: '',       // If is set - 'box'-like button in the caption.
         returnHidden: true,     // AntanubiS - When hide - return previously hidden box.
@@ -39,19 +40,32 @@ createUiClass('MessageBox', {
         this.guid = (++_message_box_guid);
     },
     bgLayer: function(){
-        if (!ge('popupTransparentBG')) {
-            window.transparentBG = ce('div', {
-                id: 'popupTransparentBG',
-                className: 'popup_transparent_bg'
+        if (!ge('box_layer_bg')) {
+            window.box_layer_bg = ce('div', {
+                id: 'box_layer_bg',
+                className: this.options.dark ? 'dark' : ''
             }, {
-                display: 'none',
                 height: getSize(document)[1]
             });
             addEvent(window, 'resize', function () {
-                transparentBG.style.height = getSize(document)[1] + 'px';
+                box_layer_bg.style.height = getSize(document)[1] + 'px';
             });
             onDomReady(function () {
-                bodyNode.appendChild(transparentBG);
+                bodyNode.appendChild(box_layer_bg);
+            });
+        }
+
+        if(!ge('layer_wrap')){
+            window.layer_wrap = ce('div', {
+                id: 'layer_wrap'
+            }, {
+                height: windowHeight()
+            });
+            addEvent(window, 'resize', function () {
+                layer_wrap.style.height = windowHeight() + 'px';
+            });
+            onDomReady(function () {
+                bodyNode.appendChild(layer_wrap);
             });
         }
     },
@@ -119,7 +133,11 @@ createUiClass('MessageBox', {
         this.boxBody = geByClass1('box_body', this.boxContainer);
         this.boxControls = geByClass1('box_controls', this.boxContainer);
 
-        bodyNode.appendChild(this.boxContainer);
+        if(!window.layer_wrap){
+            return;
+        }
+
+        window.layer_wrap.appendChild(this.boxContainer);
 
         if(opt.type == 'MESSAGE'){
             if(opt.closeButton){
@@ -141,10 +159,10 @@ createUiClass('MessageBox', {
         this.boxContainer.style.height = typeof (opt.height) == 'string' ? opt.height : opt.height + 'px';
         removeClass(this.boxContainer, 'box_no_controls');
         removeClass(this.boxContainer, 'message_box');
-        removeEvent(transparentBG, 'click', hide);
+        removeEvent(layer_wrap, 'click', hide);
         removeEvent(document, 'keydown', closeEsc);
         if (opt.hideOnOutClick) {
-            addEvent(transparentBG, 'click', hide);
+            addEvent(layer_wrap, 'click', hide);
         }
         if (opt.closeEsc) {
             addEvent(document, 'keydown', closeEsc);
@@ -170,17 +188,32 @@ createUiClass('MessageBox', {
         options = options || {};
         options = extend({
             label: 'Button' + this.buttonsCount,
-            style: 'button_blue'
+            style: this.options.flat_buttons ? 'flat_button' : 'button_blue'
         }, options);
-        if (options.style == 'button_no') options.style = 'button_gray';
-        if (options.style == 'button_yes') options.style = 'button_blue';
-        var buttonWrap = ce('div', {
-            className: options.style + ' ' + (options.left ? 'fl' : 'fr'),
-            innerHTML: '<button id="button' + this.guid + '_' + this.buttonsCount + '">' + options.label + '</button>'
-        });
-        this.boxControls.appendChild(buttonWrap);
-        createButton(buttonWrap.firstChild, options.onClick);
-        return buttonWrap.firstChild;
+
+
+        if(this.options.flat_buttons){
+            if (options.style == 'button_no') options.style = 'flat_button secondary';
+            if (options.style == 'button_yes') options.style = 'flat_button';
+            var button = ce('button', {
+                id:'button' + this.guid + '_' + this.buttonsCount,
+                innerHTML: options.label,
+                className: options.style + ' ' + (options.left ? 'fl' : 'fr')
+            });
+            this.boxControls.appendChild(button);
+            createButton(button, options.onClick);
+            return button;
+        } else {
+            if (options.style == 'button_no') options.style = 'button_gray';
+            if (options.style == 'button_yes') options.style = 'button_blue';
+            var buttonWrap = ce('div', {
+                className: options.style + ' ' + (options.left ? 'fl' : 'fr'),
+                innerHTML: '<button id="button' + this.guid + '_' + this.buttonsCount + '">' + options.label + '</button>'
+            });
+            this.boxControls.appendChild(buttonWrap);
+            createButton(buttonWrap.firstChild, options.onClick);
+            return buttonWrap.firstChild;
+        }
     },
     addControlsText: function(text){
         text = text || '';
@@ -251,18 +284,19 @@ createUiClass('MessageBox', {
                 box.hide();
             }
         }
-        this.boxBody.style.maxHeight = windowHeight() - 200 +(this.options.type=='POPUP'?60:0) + 'px';
-        show(this.boxContainer);
-        this.refreshCoord();
+
         if (!_message_box_shown) {
-            //transparentBG.style.height = getSize(document)[1] + 'px';
-            transparentBG.className = this.options.dark ? 'popup_transparent_bg_dark' : 'popup_transparent_bg';
-            show(transparentBG);
+            box_layer_bg.className = this.options.dark ? 'dark' : '';
+            bodyNode.style.overflow = 'hidden';
+            htmlNode.style.overflow = 'hidden';
+            addClass(bodyNode, 'layers_shown');
             clearTimeout(_doc_block_timeout);
             if (!_doc_blocked) {
                 _doc_blocked = true;
             }
         }
+        show(this.boxContainer);
+        this.refreshCoord();
         _message_box_shown = this.guid;
         if (this.options.onShow) this.options.onShow();
         return this;
@@ -279,7 +313,9 @@ createUiClass('MessageBox', {
         }
         if (!showHidden) {
             _message_box_shown = 0;
-            hide(transparentBG);
+            bodyNode.style.overflow = 'auto';
+            htmlNode.style.overflow = 'auto';
+            removeClass(bodyNode, 'layers_shown');
             clearTimeout(_doc_block_timeout);
             if (_doc_blocked) {
                 _doc_block_timeout = setTimeout(function () {
@@ -320,11 +356,11 @@ createUiClass('MessageBox', {
         show(this.boxContainer);
     },
     refreshCoord: function () {
-        var wsize = windowSize(),
-            top = scrollGetY(),
-            containerSize = getSize(this.boxContainer);
-        this.boxContainer.style.top = Math.max(0, top + (wsize[1] - containerSize[1]) / 3) + 'px';
-        this.boxContainer.style.left = Math.max(0, (wsize[0] - containerSize[0]) / 2) + 'px';
+        var w_height = windowHeight(),
+            containerSize = getSize(this.boxContainer)[1],
+            scroll = getScroll()[1];
+        this.boxContainer.style.marginTop = (w_height < containerSize ? 40 : (w_height - containerSize) / 3)+'px';
+        ge('layer_wrap').style.top = scroll + 'px';
     },
     afterInit: function(){
         _message_boxes[this.guid] = this;
@@ -452,7 +488,7 @@ function showDoneBox(msg, opts) {
     _fadeOut();
 }
 
-function showBandDoneBox(msg, opts) {
+function showBandBox(msg, opts) {
     opts = opts || {};
     var resEl = ce('div', {
         className: 'top_left_result_baloon_wrap',

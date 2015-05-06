@@ -2,37 +2,46 @@
     background:url(/images/upload_jt.gif) 50% 50% no-repeat
 }
 
-#popupTransparentBG {
+#layer_wrap {
     top:0;
     left:0;
     width:100%;
     height:100%;
     position:absolute;
-    z-index:1000;
+    z-index:1002;
+    overflow: auto;
+    display: none;
 }
-.popup_transparent_bg {
+
+#box_layer_bg {
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    position:absolute;
+    display: none;
+    z-index:1000;
     background:rgba(0,0,0,0.30);
     background:transparent url('/images/layer_bg_lite.png') repeat scroll 0 0;
-
 }
 
-.popup_transparent_bg_dark {
+#box_layer_bg.dark {
     background:rgba(0,0,0,0.70);
     background:transparent url('/images/layer_bg_black.png') repeat scroll 0 0;
 }
 
-.box_frame {
-    left:50%;
-    position:absolute
+body.layers_shown #box_layer_bg,
+body.layers_shown #layer_wrap {
+    display: block;
 }
 
 .popup_box_container {
-    position:absolute;
-    left:50%;
+    position:relative;
     z-index:1002;
     padding:0;
     font-family: Tahoma;
     font-size: 11px;
+    margin: 40px auto;
 }
 .message_box,
 .box_no_controls {
@@ -62,9 +71,11 @@
 
 .box_controls {
     padding:7px;
-    height:30px;
-    background-color:#f2f2f2;
-    border-top:1px solid #ccc
+    height:33px;
+    /*background-color:#f2f2f2;*/
+    /*border-top:1px solid #ccc;*/
+    background-color:#ffffff;
+    border-top:1px solid #ffffff;
 }
 .box_controls img {
     position:relative;
@@ -107,6 +118,10 @@
 .box_controls .button_blue,
 .box_controls .button_gray {
     margin:3px 5px
+}
+
+.box_controls .flat_button {
+    margin:3px 5px;
 }
 
 .box_title {

@@ -9,9 +9,11 @@ html, body {
     height:100%;
     width:100%;
 }
+
 html {
     overflow-y:scroll;
 }
+
 body {
     min-width:1000px;
     min-height: 100%;
@@ -38,6 +40,7 @@ a:hover {text-decoration:none;}
 }
 * html .cf { zoom: 1; } /* IE6 */
 *+html .cf { zoom: 1; } /* IE7 */
+
 .fl {float:left;}
 .fr {float:right;}
 .ib {
@@ -52,9 +55,9 @@ ul {list-style: none}
 
 
 .label, .labeled, .labeleds {float:left;margin-top:4px;}
-.label {width:130px; color:#6c6c6c; padding:4px 10px 0px 0px;text-align:right;}
+.label {width:130px; color:#6c6c6c; padding:4px 10px 0 0;text-align:right;}
 .labeled {min-width:221px; display: inline-block; }
-.labeleds {mix-width:150px; display: inline-block;padding:4px 10px 0px 0px; margin-left: 10px;}
+.labeleds {mix-width:150px; display: inline-block; padding:4px 10px 0 0; margin-left: 10px;}
 br.cl {clear: left;}
 
 .noselect {

@@ -84,9 +84,9 @@ createChildClass("Selector", UiControl, {
             var d = "";
             var a = parseLatin(e);
             if (a !== null) {
-                e = e + "|" + a
+                e = escapeRE(e) + "|" + escapeRE(a);
             }
-            var f = new RegExp("(?![^&;]+;)(?!<[^<>]*)((\\(*)(" + escapeRE(e) + "))(?![^<>]*>)(?![^&;]+;)", "gi");
+            var f = new RegExp("(?![^&;]+;)(?!<[^<>]*)((\\(*)(" + e + "))(?![^<>]*>)(?![^&;]+;)", "gi");
             for (var c in b) {
                 d += (c > 0 ? " " : "") + b[c].replace(f, "$2<em>$3</em>")
             }

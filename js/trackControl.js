@@ -25,12 +25,12 @@ createUiClass('trackControl', {
 
         this.container = ce('div', {
             innerHTML: '\
-            <div class="slider_bg_line"></div>\
-            <div class="slider_preload_line" style="width:0%"></div>\
-            <div class="slider_progress_line" style="width:0%">\
-                <div class="slider_point"></div>\
+            <div class="track_control_bg_line"></div>\
+            <div class="track_control_preload_line" style="width:0%"></div>\
+            <div class="track_control_progress_line" style="width:0%">\
+                <div class="track_control_point"></div>\
             </div>',
-            className: 'slider' + this.options.className,
+            className: 'track_control' + this.options.className,
             id:el.id
         }, {
             width:this.options.width+'px'
@@ -38,14 +38,14 @@ createUiClass('trackControl', {
 
         el.parentNode.replaceChild(this.container, el);
 
-        this.preload = geByClass1('slider_preload_line', this.container, 'div');
-        this.progress = geByClass1('slider_progress_line', this.container, 'div');
+        this.preload = geByClass1('track_control_preload_line', this.container, 'div');
+        this.progress = geByClass1('track_control_progress_line', this.container, 'div');
 
         this.hint = ce('div', {
-            className:'slider_hint',
+            className:'track_control_hint',
             innerHTML:'\
-                <div class="slider_hint_value"></div>\
-                <div class="slider_hint_footer"></div>'
+                <div class="track_control_hint_value"></div>\
+                <div class="track_control_hint_footer"></div>'
         }, {
             position: this.options.hintFixed ? 'fixed' : 'absolute',
             display: 'none',
@@ -53,8 +53,8 @@ createUiClass('trackControl', {
         });
         document.body.appendChild(this.hint);
 
-        this.hint_value = geByClass1('slider_hint_value', this.hint, 'div');
-        this.hint_footer = geByClass1('slider_hint_footer', this.hint, 'div');
+        this.hint_value = geByClass1('track_control_hint_value', this.hint, 'div');
+        this.hint_footer = geByClass1('track_control_hint_footer', this.hint, 'div');
 
     },
     initEvents: function(){
