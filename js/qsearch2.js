@@ -1,5 +1,9 @@
-if(!window.jt) jt = {};
-jt['qsearch2'] = '1.0.0';
+if(!lang) var lang = {};
+/* qsearch */
+lang['search'] = 'Поиск';
+lang['popular-hints'] = 'Страницы, которые Вы недавно посещали:';
+lang['no-search-result'] = 'Поиск не дал результатов';
+lang['connectiong-error'] = 'Ошибка соединения с сервером';
 
 // TODO rebuild popular hints
 createChildClass('qSearch', UiControl, {

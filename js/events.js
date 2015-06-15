@@ -1,6 +1,3 @@
-if(!window.jt) jt = {};
-jt['events'] = '1.0.0';
-
 var KEY = window.KEY = {
         LEFT: 37,
         UP: 38,

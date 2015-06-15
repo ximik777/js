@@ -1,6 +1,3 @@
-if(!window.jt) jt = {};
-jt['Timepicker'] = '1.0.0';
-
 createUiClass('Timepicker', {
     defaultOptions: {
         time: 0,

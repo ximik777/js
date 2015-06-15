@@ -1,6 +1,3 @@
-if(!window.jt) jt = {};
-jt['autosize'] = '1.0.0';
-
 createChildClass('Autosize', UiControl, {
     // Static class fields
     common: {

@@ -1,6 +1,3 @@
-if(!window.jt) jt = {};
-jt['radiobuttons'] = '1.0.0';
-
 createChildClass('Radiobutton', UiControl, {
     // Static class fields
     common: {

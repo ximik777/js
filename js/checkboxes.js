@@ -1,6 +1,3 @@
-if(!window.jt) jt = {};
-jt['checkbox'] = '1.0.0';
-
 createChildClass('Checkbox', UiControl, {
     // Standart fields
     CSS: {

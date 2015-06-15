@@ -1,6 +1,3 @@
-if(!window.jt) jt = {};
-jt['ajax'] = '1.0.1';
-
 XHR = (function(){
     var r = false;
     try {

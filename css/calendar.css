@@ -4,7 +4,8 @@
     width: 182px;
 }
 .cal_table {
-    width: 100%
+    width: 100%;
+    font-size: 11px;
 }
 .cal_table_head {
     text-align:center;

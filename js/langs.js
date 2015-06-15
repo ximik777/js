@@ -1,14 +1,3 @@
-if(!window.jt) jt = {};
-jt['langs'] = '1.0.0';
-
-if(!lang) var lang = {};
-/* qsearch */
-lang['search'] = 'Поиск';
-lang['popular-hints'] = 'Страницы, которые Вы недавно посещали:';
-lang['no-search-result'] = 'Поиск не дал результатов';
-lang['connectiong-error'] = 'Ошибка соединения с сервером';
-
-
 function langNumeric(count, vars, formatNum) {
     if (!vars || !window.langConfig) { return count; }
     var res;
@@ -56,9 +45,10 @@ function getLang() {
         if (!key) return '...';
         var val = (window.lang && window.lang[key]) || window[key];
         if (!val) {
-            var res = key.split('_');
-            res.shift();
-            return res.join(' ');
+            console.info('Lang key not found:', key);
+            var res = key.split('-');
+            //res.shift();
+            return '≠' + res.join(' ');
         }
         if (isFunction(val)) {
             return val.apply(null, args);
@@ -78,9 +68,10 @@ function getLangW(key) {
     }
     var val = (window.lang && window.lang[key]) || (window.langpack && window.langpack[key]) || window[key];
     if (!val) {
+        console.info('Lang key not found:', key);
         var res = key.split('-');
-        res.shift();
-        return document.write(res.join(' '));
+        //res.shift();
+        return document.write('≠' + res.join(' '));
     }
     return document.write(val);
 }

@@ -1,4 +1,4 @@
-createUiClass('Audio', {
+createUiClass('audioPlayer', {
     defaultOptions: {
         swfLocation: '/swf/audiojs_mp3.swf',
         swfQueryString: 'playerInstance=_ui._uids[$1]&datetime=$2',

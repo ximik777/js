@@ -45,8 +45,7 @@
 .radiobtn_container table td .radiobtn_off_over div {
     width:14px;
     height:56px;
-    background:transparent url(/images/radio.svg) 0 0 no-repeat;
-    background-size:14px 56px;
+    background:transparent url(/images/sprite.svg) 0 -112px no-repeat;
 }
 
 .radiobtn_container table td .radiobtn_on div {

@@ -1,6 +1,3 @@
-if(!window.jt) jt = {};
-jt['dom'] = '1.0.0';
-
 (function () {
     var isReady = false,
         readyBind = false,

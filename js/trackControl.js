@@ -1,6 +1,3 @@
-if(!window.jt) jt = {};
-jt['trackControl'] = '1.0.0';
-
 createUiClass('trackControl', {
     defaultOptions: {
         width:280,

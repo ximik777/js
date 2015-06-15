@@ -1,6 +1,3 @@
-if(!window.jt) jt = {};
-jt['Daypicker'] = '1.0.0';
-
 createUiClass('Daypicker', {
     defaultOptions: {
         date: 0,

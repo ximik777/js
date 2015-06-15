@@ -1,6 +1,3 @@
-if(!window.jt) jt = {};
-jt['cookies'] = '1.0.0';
-
 cookies = {
     cookies: null,
     set: function (name, value, days) {

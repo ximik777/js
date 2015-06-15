@@ -1,6 +1,3 @@
-if (!window.jt) jt = {};
-jt['buttons'] = '1.2.2';
-
 function createButton(el, onClick) {
     el = ge(el);
     if (!el || el.btnevents) return;

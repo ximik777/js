@@ -1,6 +1,3 @@
-if(!window.jt) jt = {};
-jt['Calendar'] = '1.0.0';
-
 createUiClass('Calendar', {
     defaultOptions: {
         date: 0,

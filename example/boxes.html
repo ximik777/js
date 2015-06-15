@@ -52,6 +52,8 @@
 <div class="button_gray">
     <button onclick="showBandBox('test')">Show Band Box</button>
 </div>
+<br />
+<br />
 <div class="button_gray">
     <button onclick="testLock()">testLock</button>
 </div>
@@ -217,17 +219,17 @@
             }
         });
 
-        var tttt = box.addButton({
+        var testButton = box.addButton({
             label: 'Test',
             onClick: function () {
-                lockButton(tttt);
-                console.log('123');
+                lockButton(testButton);
+                console.log('lock testButton');
                 setTimeout(function(){
-                    unlockButton(tttt);
+                    unlockButton(testButton);
                 }, 3000);
             }
         });
-        box.addControlsText('test');
+        //box.addControlsText('test');
         var html = 'Hello World<br />';
         box.content(html);
         box.show();

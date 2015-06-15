@@ -1,14 +1,14 @@
-if(!window.jt) jt = {};
-jt['boxes2'] = '1.0.0';
 
-box_cancel = 'Cancel';
-box_close = 'Close';
-box_loading = 'Loading...';
-box_no = 'No';
-box_restore = 'Restore';
-box_save = 'Save';
-box_send = 'Send';
-box_yes = 'Yes';
+if(!lang) var lang = {};
+
+lang['box_cancel'] = 'Cancel';
+lang['box_close'] = 'Close';
+lang['box_loading'] = 'Loading...';
+lang['box_no'] = 'No';
+lang['box_restore'] = 'Restore';
+lang['box_save'] = 'Save';
+lang['box_send'] = 'Send';
+lang['box_yes'] = 'Yes';
 
 createUiClass('MessageBox', {
     defaultOptions: {

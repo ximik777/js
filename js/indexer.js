@@ -1,6 +1,3 @@
-if(!window.jt) jt = {};
-jt['indexer'] = '1.0.0';
-
 createChildClass('Indexer', UiUtil, {
     defaultOptions: {
         chars: 2,
