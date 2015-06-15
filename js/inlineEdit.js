@@ -28,7 +28,7 @@ if (!window.inlineOnEvent) {
 global_save = 'Save';
 global_cancel = 'Cancel';
 
-createChildClass('InlineEdit', UiControl, {
+createChildClass('inlineEdit', UiControl, {
     common: {
         pageContainer: null
     },
