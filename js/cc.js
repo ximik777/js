@@ -134,3 +134,27 @@ extend(UiUtil.prototype, {
 function createUtilClass(className, functions) {
     return createChildClass(className, UiUtil, functions);
 }
+
+function JsClass(args) {
+    return this.__construct__(args);
+}
+extend(JsClass.prototype, {
+    defaultOptions: null,
+    __construct__: function (args) {
+        if (this.beforeInit) this.beforeInit.apply(this, args);
+        if (this.initOptions) this.initOptions.apply(this, args);
+        this.init.apply(this, args);
+        if (this.initEvents) this.initEvents.apply(this, args);
+        if (this.afterInit) this.afterInit.apply(this, args);
+        return this;
+    },
+    beforeInit: null,
+    initOptions: null,
+    init: null,
+    initEvents: null,
+    afterInit: null
+});
+
+function createClass(className, functions) {
+    return createChildClass(className, JsClass, functions);
+}
