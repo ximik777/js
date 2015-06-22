@@ -4,9 +4,12 @@
     text-decoration:none
 }
 .datepicker_container .datepicker_control {
-    background:url("/images/calendar_jt.png?2") no-repeat scroll right center #fff;
+    background:#fff url("/images/sprite.svg") 0 -291px no-repeat;
     border:1px solid #c0cad5;
     cursor:pointer;
+}
+.big .datepicker_control {
+    background-position: 0 -287px;
 }
 .datepicker_control.disabled,
 .datepicker_control.disabled input {
@@ -25,7 +28,4 @@
     z-index:200;
     padding-top: 6px;
     display: none;
-}
-.vk .datepicker_container .datepicker_control {
-    background:url("/images/calendar1.gif?1") no-repeat scroll right center #fff;
 }

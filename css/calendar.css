@@ -27,20 +27,20 @@
     text-align:center
 }
 .cal_table .month_arr .arr {
-    background:url("/images/back_fwd.gif") no-repeat scroll 0 0 rgba(0,0,0,0);
+    background:url("/images/sprite.svg") 0 -239px no-repeat;
     display:block;
     height:25px;
     width:25px
 }
-.is_2x .cal_table .month_arr .arr {
-    background-image:url("/images/back_fwd_2x.gif");
-    background-size:15px 67px
-}
+/*.is_2x .cal_table .month_arr .arr {*/
+    /*background-image:url("/images/back_fwd_2x.gif");*/
+    /*background-size:15px 67px*/
+/*}*/
 .cal_table .month_arr .arr.left {
-    background-position:3px -30px
+    background-position:0 -239px
 }
 .cal_table .month_arr .arr.right {
-    background-position:8px -50px
+    background-position:0 -264px
 }
 .cal_table a.month_arrow:hover {
     color:#dae2e8;

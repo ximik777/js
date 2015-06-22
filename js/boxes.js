@@ -1,15 +1,3 @@
-
-if(!lang) var lang = {};
-
-lang['box_cancel'] = 'Cancel';
-lang['box_close'] = 'Close';
-lang['box_loading'] = 'Loading...';
-lang['box_no'] = 'No';
-lang['box_restore'] = 'Restore';
-lang['box_save'] = 'Save';
-lang['box_send'] = 'Send';
-lang['box_yes'] = 'Yes';
-
 createUiClass('MessageBox', {
     defaultOptions: {
         type: 'MESSAGE',        // "MESSAGE" || "POPUP"
@@ -264,7 +252,7 @@ createUiClass('MessageBox', {
         this.boxBody.innerHTML = 'Error: ' + text;
         this.removeButtons();
         this.addButton({
-            label: getLang('box_close'),
+            label: getLang('close'),
             onClick: this.hide
         });
         removeClass(this.boxBody, 'box_progress');
@@ -386,14 +374,14 @@ function AlertBox(title, text, callback, options) {
 
     if (options.boxType == 'CONFIRM') {
         aBox.addButton({
-            label: options.no || getLang('box_no'),
+            label: options.no || getLang('global-no'),
             style: 'button_no',
             onClick: function(){
                 aBox.hide();
             }
         });
         aBox.addButton({
-            label: options.yes || getLang('box_yes'),
+            label: options.yes || getLang('global-yes'),
             onClick: function () {
                 if (isFunction(callback) && callback() === false) return;
                 aBox.hide();
@@ -401,7 +389,7 @@ function AlertBox(title, text, callback, options) {
         });
     } else {
         aBox.addButton({
-            label: options.no || getLang('box_close'),
+            label: options.no || getLang('global-close'),
             onClick: function(){
                 aBox.hide();
                 if(isFunction(callback))callback();
@@ -419,6 +407,18 @@ function ConfirmBox(title, text, callback, options) {
     return AlertBox(title, text, callback, options);
 }
 
+function Popup(text, options){
+    options = extend({
+        type: 'POPUP',
+        width: 420,
+        dark: true
+    }, options);
+
+    var box = new MessageBox(options);
+    box.content(text);
+    box.show();
+}
+
 var winBoxes = {};
 function showBox(name, url, query, lnk, reload, params, files) {
     if (typeof lnk == 'object') {
@@ -431,7 +431,7 @@ function showBox(name, url, query, lnk, reload, params, files) {
         return true;
     }
     params = extend({
-        title: getLang('box_loading')
+        title: getLang('global-loading')
     }, params);
     if (!winBoxes[name]) {
         winBoxes[name] = new MessageBox(params);
@@ -451,7 +451,7 @@ function showBox(name, url, query, lnk, reload, params, files) {
     if (reload) {
         winBoxes[name].removeButtons();
         winBoxes[name].addButton({
-            label: getLang('box_close'),
+            label: getLang('global-close'),
             onClick: function(){winBoxes[name].hide();}
         });
         winBoxes[name].loadContent(url, query, false);
@@ -460,56 +460,115 @@ function showBox(name, url, query, lnk, reload, params, files) {
     return false;
 }
 
-function showDoneBox(msg, opts) {
-    opts = opts || {};
-    var l = (opts.w || 200) + 20;
-    var style = opts.w ? opts.w : l;
-    var resEl = ce('div', {
-        className: 'top_result_baloon_wrap',
-        innerHTML: '<div class="top_result_baloon" style="width:' + style + 'px">' + msg + '</div>'
-    });
-    bodyNode.appendChild(resEl);
-    boxRefreshCoords(resEl, true);
-    var out = opts.out || 2000;
-    var _fadeOut = function () {
+
+
+var balloon_global_permit = false;
+function showBalloonBox(message, options){
+    options = extend({
+        width: 240,
+        onHide: undefined,
+        onConfirm: undefined,
+        center: false,
+        left: false,
+        timeout: 5000,
+        permit: undefined,
+        check_global_permit: true
+    }, options);
+
+    var balloon = ce('div', {
+        className: 'result_balloon_item_fly_area cf' + (options.center ? ' result_balloon_center' : ''),
+        innerHTML: '<div style="width: '+options.width+'px" class="result_balloon_item cf">' +
+        '<div class="result_balloon_item_message fl" style="width: ' + (options.onConfirm ? (options.width - 20)+'px' : 'auto') +'">'+ message +'</div>' +
+        '<div class="result_balloon_confirm_button fr"></div>' +
+        '</div>'
+    }), wrap, top = 0, _fadeOut = function(force){
+        force = !!(force);
         setTimeout(function () {
-            if (opts.permit && !opts.permit()) {
+            if ((isFunction(options.permit) && !options.permit()) || (options.check_global_permit && balloon_global_permit && !force)) {
                 _fadeOut();
                 return;
             }
-            fadeOut(resEl.firstChild, 500, function () {
-                re(resEl);
-                if (opts.callback) {
-                    opts.callback();
+            animate(balloon, options.center ? {top:top-10, opacity:0} : {marginTop:-10, opacity:0}, 200, function(){
+                re(balloon);
+                if(isFunction(options.onHide)) {
+                    options.onHide();
                 }
             });
-        }, out);
+        }, force ? 0 : options.timeout);
     };
-    _fadeOut();
+
+    if(options.center){
+        wrap = bodyNode;
+    } else {
+        var id = 'result_balloon_wrap_' + (options.left ? 'left' : 'right');
+        wrap = ge(id);
+        if(!wrap){
+            wrap = ce('div', {id:id});
+            addEvent(wrap, 'mouseover mouseout', function(e){
+                balloon_global_permit = e.type == 'mouseover';
+            });
+            bodyNode.appendChild(wrap);
+        }
+    }
+    wrap.appendChild(balloon);
+
+    if(options.center){
+        var ws = windowSize(), bs = getSize(balloon);
+        top = ws[1]/3-bs[1]/2;
+        setStyle(balloon, {left:ws[0]/2-bs[0]/2, top:top});
+    }
+
+    animate(balloon, options.center ? {top:top-5, opacity:1} : {marginTop:0, opacity:1}, 300);
+
+    if(isFunction(options.onConfirm)){
+        options.timeout = 0;
+        options.onHide = options.onConfirm;
+        var confirm_button = geByClass1('result_balloon_confirm_button', balloon);
+        confirm_button.style.display = 'block';
+        addEvent(confirm_button, 'click', function(){
+            _fadeOut(true);
+        });
+    } else {
+        _fadeOut();
+    }
 }
 
-function showBandBox(msg, opts) {
-    opts = opts || {};
-    var resEl = ce('div', {
-        className: 'top_left_result_baloon_wrap',
-        innerHTML: '<div class="top_left_result_baloon" style="width:' + (opts.width || 230) + 'px">' + msg + '</div>'
-    });
-    if(!ge('top_left_result_baloon_wrap')){
-        bodyNode.appendChild(ce('div', {id:'top_left_result_baloon_wrap'}));
-    }
-    ge('top_left_result_baloon_wrap').appendChild(resEl);
-    animate(resEl.firstChild, {marginTop:0, opacity:1}, 300);
-    var _fadeOut = function () {
-        setTimeout(function () {
-            if (opts.permit && !opts.permit()) {
-                _fadeOut();
-                return;
-            }
-            animate(resEl, {marginTop:-10, opacity:0}, 200, function(){
-                re(resEl);
-                if (opts.callback && isFunction(opts.callback)) opts.callback();
-            });
-        }, (opts.out || 5000));
-    };
-    _fadeOut();
+/* Migrate */
+function showDoneBox(message, options) {
+    options = extend({center: true}, options);
+
+    if(options.w) options.width = options.w;
+    if(options.out) options.timeout = options.out;
+    if(options.callback) options.onHide = options.callback;
+
+    showBalloonBox(message, options);
+}
+
+function showBandBox(message, options) {
+    options = extend({}, options);
+
+    if(options.w) options.width = options.w;
+    if(options.out) options.timeout = options.out;
+    if(options.callback) options.onHide = options.callback;
+
+    showBalloonBox(message, options);
+}
+
+MESSAGE_ERROR = 'error';
+MESSAGE_SUCCESS = 'success';
+MESSAGE_INFO = 'info';
+MESSAGE_NOTIFY = MESSAGE_INFO;
+MESSAGE_CONFIRM = 'confirm';
+
+
+function showMessage(text, message_type, options){
+    message_type = message_type || MESSAGE_ERROR;
+    options = extend({width: 240}, options);
+
+    var message = '<div class="balloon_message_box cf">' +
+        '<div class="message_icon message_type_' + message_type + ' fl"></div>' +
+        '<div class="message_text fl" style="width:'+(options.width - 50)+'px">' + text + '</div>' +
+        '</div>';
+
+    showBalloonBox(message, options);
 }

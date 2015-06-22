@@ -43,7 +43,7 @@ function getLang() {
         var args = Array.prototype.slice.call(arguments);
         var key = args.shift();
         if (!key) return '...';
-        var val = (window.lang && window.lang[key]) || window[key];
+        var val = (window.lang && window.lang[key]) || (window.langpack && window.langpack[key]) || window[key];
         if (!val) {
             console.info('Lang key not found:', key);
             var res = key.split('-');

@@ -44,15 +44,15 @@ createUiClass('Datepicker', {
 
         this.container = ce("div", {
             id: "datepicker_container"+this.guid,
-            className: "datepicker_container",
+            className: "datepicker_container ib",
             innerHTML: '' +
                 '<div class="datepicker_control">' +
-                '<input class="datepicker_text" type="text" onfocus="this.blur();" style="width:'+(opt.dp_width-25)+'px;" readonly="1">' +
+                '<input class="datepicker_text" type="text" onfocus="this.blur();" style="width:'+(opt.dp_width-25)+'px;margin-left:25px;" readonly="1">' +
                 '</div>' +
                 '<div class="cal_div">' +
                 '<input type="hidden" id="'+el.id+'" value="'+el.value+'" name="'+(el.name?el.name:'')+'" />' +
                 '</div>'
-        }, {width:opt.dp_width});
+        }, {});
         el.parentNode.replaceChild(this.container, el);
         this.id = el;
         this.dp_date_input = geByClass1('datepicker_text', this.container);
