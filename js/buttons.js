@@ -152,6 +152,8 @@ function lockFlatButtonNew(el) {
     el.parentNode.insertBefore(ce('button', {
         innerHTML: '<span class="flat_btn_h">' + el.innerHTML + '</span>',
         className: el.className + ' flat_btn_lock'
+    }, {
+        width: getSize(el)[0] + 'px'
     }), el);
     hide(el);
 }
