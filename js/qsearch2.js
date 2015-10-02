@@ -275,11 +275,14 @@ createChildClass('qSearch', UiControl, {
             self.res_items = true;
             return false;
         }
-        Ajax.Send(this.options.hints_url, {
-            'act': this.options.popularHintsAct
-        }, {
-            onSuccess: function (o, t) {
 
+        ajax.post(this.options.hints_url, {'act': this.options.popularHintsAct}, function(t, isFail){
+
+            if(isFail){
+                self.hideMenu();
+                self.showSubMenu('<div class="sub_item_hint fail">' + self.options.resultsFail + '</div>');
+                self.res_items = false;
+            } else {
                 if (!t.error && t.hints) {
                     self.buildPopularHints(t.hints);
                     //self.showSubMenu(t, true);
@@ -289,12 +292,8 @@ createChildClass('qSearch', UiControl, {
                     self.hideSubMenu();
                     self.res_items = false;
                 }
-            },
-            onFail: function (o, t) {
-                self.hideMenu();
-                self.showSubMenu('<div class="sub_item_hint fail">' + self.options.resultsFail + '</div>');
-                self.res_items = false;
             }
+
         });
     },
     selectItem: function (item_id) {
@@ -608,12 +607,17 @@ createChildClass('qSearch', UiControl, {
         }
         clearTimeout(self.getHintsTimer);
         self.getHintsTimer = setTimeout(function () {
-            Ajax.Send(self.options.hints_url, {
+
+            ajax.post(self.options.hints_url, {
                 'act': self.options.hintsAct,
                 'q': value,
                 'section': self.data_list[self.options.selected][1]
-            }, {
-                onSuccess: function (o, t) {
+            }, function(t,isFail){
+
+                if(isFail){
+                    self.showSubMenu('<div class="sub_item_hint fail">' + self.options.resultsFail + '</div>');
+                    self.res_items = false;
+                } else {
                     var html = '';
                     var temp = '<div ' +
                         'class="s_item clear{s_item_up}top sub_item" ' +
@@ -646,12 +650,10 @@ createChildClass('qSearch', UiControl, {
                     } catch (e) {
                         console.log(e);
                     }
-                },
-                onFail: function (o, t) {
-                    self.showSubMenu('<div class="sub_item_hint fail">' + self.options.resultsFail + '</div>');
-                    self.res_items = false;
                 }
+
             });
+
         }, value.length < 2 ? 100 : self.options.hintsPauseGet);
     },
     inputOnFocus: function (e) {

@@ -251,13 +251,16 @@ var tooltips = {
                 clearTimeout(el.ttimer);
                 el.ttimer = setTimeout(function () {
                     el.tt = 'show';
-                    ajax.post(opts.url, opts.params || {}, {
-                        onDone: function (html, js) {
+
+                    ajax.post(opts.url, opts.params || {}, function(html, isFail){
+
+                        if(isFail){
+                            return true;
+                        } else {
                             var old = el.tt,
                                 options = clone(opts);
                             extend(options, {
-                                content: html || ' ',
-                                js: js
+                                content: html || ' '
                             });
                             tooltips.create(el, options);
                             if (old == 'shownow') {
@@ -265,11 +268,11 @@ var tooltips = {
                                     showdt: 0
                                 }));
                             }
-                        },
-                        onFail: function () {
-                            return true;
                         }
+
                     });
+
+
                     tooltips.show(el, opts);
                 }, opts.ajaxdt || 0);
                 return;

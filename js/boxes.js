@@ -224,8 +224,12 @@ createUiClass('MessageBox', {
         if (!noloader) this.boxBody.innerHTML = '<div class="box_loader" style="' + st + '"></div>';
         params = params || {};
         var self = this;
-        Ajax.Send(url, params, {
-            onSuccess: function (ajaxObj, responseText) {
+
+        ajax.post(url, params, function(responseText, isFail){
+
+            if(isFail){
+                self.onLoadError('Request error occured.');
+            } else {
                 if (evaluate) {
                     try {
                         var result = eval('(' + responseText + ')');
@@ -240,11 +244,8 @@ createUiClass('MessageBox', {
                 self.refreshCoord();
                 removeClass(self.boxBody, 'box_progress');
                 if (isFunction(self.options.onLoad)) self.options.onLoad(responseText);
-            },
-
-            onFail: function (ajaxObj, responseText) {
-                self.onLoadError('Request error occured.');
             }
+
         });
         return this;
     },

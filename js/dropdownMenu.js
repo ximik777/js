@@ -104,7 +104,7 @@ createChildClass('DropdownMenu', UiControl, {
                     }
                     if (!self.visible) hide(header);
                     removeClass(header, 'dd_header_hover');
-                }
+                };
                 self.showTargetHover = function () {
                     if (self.parentMenu) {
                         self.parentMenu.childIsOver = true;

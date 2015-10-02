@@ -36,7 +36,7 @@ createChildClass("Selector", UiControl, {
         resultListWidth: 0,
         progressBar: false,
         imageId: undefined,
-        noImageSrc: "http://vk.com/images/question_s.gif",
+        noImageSrc: "/images/question_s.gif",
         hrefPrefix: "id",
         noBlur: false,
         zeroDefault: false,
@@ -49,7 +49,7 @@ createChildClass("Selector", UiControl, {
         zeroPlaceholder: false,
         introText: "Start typing",
         disabledText: "",
-        noResult: getLang("search_nothing_found"),
+        noResult: "Nothing found",
         cacheLength: 100,
         indexkeys: undefined,
         onShow: undefined,
@@ -755,10 +755,10 @@ createChildClass("Selector", UiControl, {
         }
         var f;
         if (e == -2000000000) {
-            f = [this.curTerm, this.curTerm, cur.lang.mail_enter_email_address, "/images/pics/contact_info.png", 0, ""]
+            f = [this.curTerm, this.curTerm, cur.lang.mail_enter_email_address, "/images/contact_info.png", 0, ""]
         } else {
             if (typeof (e) == "string" && e.indexOf("@") != -1) {
-                f = [e, e, cur.lang.mail_enter_email_address, "/images/pics/contact_info.png", 0, ""]
+                f = [e, e, cur.lang.mail_enter_email_address, "/images/contact_info.png", 0, ""]
             } else {
                 if (typeof (e) == "object") {
                     f = e
@@ -777,7 +777,9 @@ createChildClass("Selector", UiControl, {
                     }
                 }
             }
-        } if (typeof f != "object") {
+        }
+
+        if (typeof f != "object") {
             f = [e, e]
         }
         f[0] = f[0].toString();
@@ -1176,14 +1178,8 @@ createChildClass("Selector", UiControl, {
                 }
             }
         };
-        if (vk.al) {
-            ajax.plainpost(url, {}, done)
-        } else {
-            var aj = new Ajax(function (obj, data) {
-                done(data)
-            });
-            aj.post(url)
-        } if (this.options.progressBar) {
+        ajax.plainpost(url, {}, done);
+        if (this.options.progressBar) {
             show(this.options.progressBar)
         }
     },

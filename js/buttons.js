@@ -138,6 +138,8 @@ function disableFlatButton(el, disable) {
         el.parentNode.insertBefore(ce('button', {
             innerHTML: el.innerHTML,
             className: el.className + ' button_disabled'
+        }, {
+            width: getSize(el)[0] + 'px'
         }), el);
         hide(el);
     } else {

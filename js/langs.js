@@ -99,3 +99,19 @@ function parseLatin(text, back) {
     if (!back) return text;
     return (outtext == text) ? text : outtext;
 }
+
+function highlight(b, e){
+    b = b + ''; e = e + '';
+    if(e == '') return b;
+    b = e.indexOf(" ") == -1 ? b.split(" ") : [b];
+    var d = "";
+    var a = parseLatin(e);
+    if (a !== null) {
+        e = escapeRE(e) + "|" + escapeRE(a);
+    }
+    var f = new RegExp("(?![^&;]+;)(?!<[^<>]*)((\\(*)(" + e + "))(?![^<>]*>)(?![^&;]+;)", "gi");
+    for (var c in b) {
+        d += (c > 0 ? " " : "") + b[c].replace(f, "$2<em>$3</em>")
+    }
+    return d;
+}
