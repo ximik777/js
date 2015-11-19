@@ -19,12 +19,20 @@ var KEY = window.KEY = {
     eventCache = {},
     eventDebugMode = false;
 
+
 function addEvent(elem, types, handler, custom, context) {
     elem = ge(elem);
     if (!elem || elem.nodeType == 3 || elem.nodeType == 8) return;
     if (/mousewheel/.test(types)) {
         types = types + ' DOMMouseScroll';
     }
+    if (/outclick/.test(types) || /outpress/.test(types)) {
+        types = types.replace('outclick', 'mousedown');
+        types = types.replace('outpress', 'keypress keydown');
+        handler = eventOut.set(elem, handler);
+        elem = document;
+    }
+
     var realHandler = context ? function () {
         var newHandler = function (e) {
             var prevData = e.data;
@@ -61,6 +69,13 @@ function addEvent(elem, types, handler, custom, context) {
 function removeEvent(elem, types, handler) {
     elem = ge(elem);
     if (!elem) return;
+    if (/outclick/.test(types) || /outpress/.test(types)) {
+        types = types.replace('outclick', 'mousedown');
+        types = types.replace('outpress', 'keypress keydown');
+        handler = eventOut.get(handler);
+        eventOut.del(handler);
+        elem = document;
+    }
     var events = data(elem, 'events');
     if (!events) return;
     if (typeof (types) != 'string') {
@@ -72,6 +87,7 @@ function removeEvent(elem, types, handler) {
     if (/mousewheel/.test(types)) {
         types = types + ' DOMMouseScroll';
     }
+
     each(types.split(/\s+/), function (index, type) {
         if (!isArray(events[type])) return;
         var l = events[type].length;
@@ -278,11 +294,61 @@ function onCtrlEnter(event, handler) {
 
 function press(e, code)
 {
-    return !!((e.keyCode==KEY[code]));
+    return ((e.keyCode==KEY[code]));
 }
 
 function getTarget(e) {
     return e.srcElement || e.target;
 }
+
+var eventOut = {
+    'old': [],
+    'new': [],
+    'get': function(handle){
+        var i;
+        for(i=0; i<this.old.length; i++){
+            if(this.old[i] == handle){
+                break;
+            }
+        }
+        return this.new[i] ? this.new[i] : false;
+    },
+    'set': function(obj, handle){
+        var new_handle = this.prepare(obj, handle);
+        this.old.push(handle);
+        this.new.push(new_handle);
+        return new_handle;
+    },
+    'del': function(handle){
+        var i;
+        for(i=0; i<this.new.length; i++){
+            if(this.new[i] == handle){
+                break;
+            }
+        }
+
+        if(this.old[i])
+            delete this.old[i];
+        if(this.new[i])
+            delete this.new[i];
+    },
+    'prepare': function(obj, handle){
+        if (!isFunction(handle))
+            return;
+        return (function(e){
+            var isChildOf = function (obj, target) {
+                if (obj !== target) {
+                    if (target.parentNode) {
+                        isChildOf(obj, target.parentNode);
+                    } else {
+                        handle(e);
+                    }
+                }
+            };
+            isChildOf(obj, getTarget(e));
+        });
+    }
+};
+
 
 try{loadManager.done('events');}catch(e){}
