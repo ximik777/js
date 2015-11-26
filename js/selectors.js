@@ -1011,7 +1011,8 @@ createChildClass("Selector", UiControl, {
             }
         } else {
             this.defaultList = true;
-            var b = null;
+            //var b = null;
+            var b = this.options.autocomplete ? this.options.introText : null;
             this._showSelectList(b, (this.options.defaultItems.length || this.options.zeroDefault) ? this.options.defaultItems : this.dataItems)
         } if (c) {
             if (!this._selectedItems.length) {}
