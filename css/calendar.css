@@ -9,6 +9,7 @@
 }
 .cal_table_head {
     text-align:center;
+    width: 100%;
 }
 .cal_table .month {
     background-color:#1d759e;
