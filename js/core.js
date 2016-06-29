@@ -20,16 +20,20 @@ var base_domain = location.protocol + '//' + location.host,
         }
     };
 
-if (typeof(console) == 'undefined') {
-    var console = {
-        log: function(message) {},
-        info: function(message) {},
-        warn: function(message) {},
-        error: function(message) {
-            alert(message);
+if (window.console == undefined) {
+    window.console = {
+        log: function (message) {
         },
-        time: function(){},
-        timeEnd: function(){}
+        info: function (message) {
+        },
+        warn: function (message) {
+        },
+        error: function (message) {
+        },
+        time: function () {
+        },
+        timeEnd: function () {
+        }
     }
 }
 
@@ -97,7 +101,7 @@ function escapeRE(s) {
 }
 
 function unicodeEscape(str) {
-    return str.replace(/[\s\S]/g, function(character) {
+    return str.replace(/[\s\S]/g, function (character) {
         var escape = character.charCodeAt().toString(16),
             longhand = escape.length > 2;
         return '\\' + (longhand ? 'u' : 'x') + ('0000' + escape).slice(longhand ? -4 : -2);
@@ -171,7 +175,8 @@ function each(object, callback) {
         for (name in object)
             if (callback.call(object[name], name, object[name]) === false) break;
     } else {
-        for (var value = object[0]; i < length && callback.call(value, i, value) !== false; value = object[++i]) {}
+        for (var value = object[0]; i < length && callback.call(value, i, value) !== false; value = object[++i]) {
+        }
     }
     return object;
 }
@@ -337,15 +342,54 @@ function addCss(c) {
     }
 }
 
-function debugLog(a)
-{
+function debugLog(a) {
     console.log(a);
 }
 
-function toggleStyle(){
+function toggleStyle() {
     var t = document.body;
-    if(hasClass(t, 'vk')) removeClass(t, 'vk');
+    if (hasClass(t, 'vk')) removeClass(t, 'vk');
     else addClass(t, 'vk');
 }
 
-try{loadManager.done('core');}catch(e){}
+
+var ls = {
+    _init: function () {
+        return (window.localStorage !== undefined && window.JSON !== undefined);
+    },
+    set: function (k, v) {
+        this.remove(k);
+        try {
+            return (ls._init()) ? localStorage.setItem(k, JSON.stringify(v)) : false;
+        } catch (e) {
+            return false;
+        }
+    },
+    get: function (k) {
+        if (!ls._init()) {
+            return false;
+        }
+        try {
+            return JSON.parse(localStorage.getItem(k));
+        } catch (e) {
+            return false;
+        }
+    },
+    remove: function (k) {
+        try {
+            localStorage.removeItem(k);
+        } catch (e) {
+        }
+    },
+    flush: function () {
+        try {
+            localStorage.clear();
+        } catch (e) {
+        }
+    }
+};
+
+try {
+    loadManager.done('core');
+} catch (e) {
+}
