@@ -302,35 +302,35 @@ function getTarget(e) {
 }
 
 var eventOut = {
-    'old': [],
-    'new': [],
+    '_o': [],
+    '_n': [],
     'get': function(handle){
         var i;
-        for(i=0; i<this.old.length; i++){
-            if(this.old[i] == handle){
+        for(i=0; i<this._o.length; i++){
+            if(this._o[i] == handle){
                 break;
             }
         }
-        return this.new[i] ? this.new[i] : false;
+        return this._n[i] ? this._n[i] : false;
     },
     'set': function(obj, handle){
-        var new_handle = this.prepare(obj, handle);
-        this.old.push(handle);
-        this.new.push(new_handle);
-        return new_handle;
+        var _n_handle = this.prepare(obj, handle);
+        this._o.push(handle);
+        this._n.push(_n_handle);
+        return _n_handle;
     },
     'del': function(handle){
         var i;
-        for(i=0; i<this.new.length; i++){
-            if(this.new[i] == handle){
+        for(i=0; i<this._n.length; i++){
+            if(this._n[i] == handle){
                 break;
             }
         }
 
-        if(this.old[i])
-            delete this.old[i];
-        if(this.new[i])
-            delete this.new[i];
+        if(this._o[i])
+            delete this._o[i];
+        if(this._n[i])
+            delete this._n[i];
     },
     'prepare': function(obj, handle){
         if (!isFunction(handle))
