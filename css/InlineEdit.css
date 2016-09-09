@@ -5,23 +5,24 @@
 }
 
 .inlInput {
-    -webkit-border-radius:0;
-    -moz-border-radius:0;
-    -khtml-border-radius:0;
-    border-radius:0;
-    -webkit-appearance:none;
-    background:#FFF;
-    color:#000;
-    border:1px solid #C0CAD5;
-    margin:0;
-    padding:3px;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    -khtml-border-radius: 0;
+    border-radius: 0;
+    -webkit-appearance: none;
+    background: #FFF;
+    color: #000;
+    border: 1px solid #C0CAD5;
+    margin: 0;
+    padding: 3px;
 }
 
 .inlContainer {
-    position:absolute;
-    display:none;
-    z-index:10
+    position: absolute;
+    display: none;
+    z-index: 10
 }
+
 .inlFrame00,
 .inlFrame01,
 .inlFrame02,
@@ -30,43 +31,52 @@
 .inlFrame20,
 .inlFrame21,
 .inlFrame22 {
-    background:#c5ced7;
-    opacity:.75;
-    filter:alpha(opacity=75);
-    width:5px
+    background: #c5ced7;
+    opacity: .75;
+    filter: alpha(opacity=75);
+    width: 5px
 }
+
 .inlFrame01,
 .inlFrame21 {
-    width:auto
+    width: auto
 }
+
 .inlFrame01 div,
 .inlFrame21 div {
-    height:5px
+    height: 5px
 }
+
 .inlContainer table {
-    border:0;
-    border-collapse:collapse
+    border: 0;
+    border-collapse: collapse
 }
+
 .inlContainer td {
-    border:0;
-    padding:0
+    border: 0;
+    padding: 0
 }
+
 .inlMainTable td.inlContent {
-    background:#f2f2f2;
-    border:1px solid #aaa;
-    padding:7px
+    background: #f2f2f2;
+    border: 1px solid #aaa;
+    padding: 7px
 }
+
 .inlButtonOk,
 .inlButtonCancel {
-    width:50%
+    width: 50%
 }
+
 .inlContentTable .button_blue,
 .inlContentTable .button_gray {
-    margin:7px 0 0 0
+    margin: 7px 0 0 0
 }
+
 .inlContentTable .button_gray {
-    margin-left:7px
+    margin-left: 7px
 }
+
 .inlInput {
-    margin:0
+    margin: 0
 }
