@@ -135,6 +135,7 @@ input, textarea {
     background: #FFF;
     color: #000;
     border: 1px solid #C0CAD5;
+    border-radius: 1px;
     padding: 3px;
     margin: 0;
     width: 160px;
