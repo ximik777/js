@@ -4,14 +4,17 @@
     border: 0;
     outline: none;
 }
+
 html,
 body {
     height: 100%;
     width: 100%;
 }
+
 html {
     overflow-y: scroll;
 }
+
 body {
     min-width: 1000px;
     min-height: 100%;
@@ -32,9 +35,11 @@ button {
     font-family: Tahoma, Geneva, sans-serif;
     font-size: 11px;
 }
+
 a, span.href {
     color: #0c587b;
 }
+
 a:hover, span.href:hover {
     text-decoration: none;
 }
@@ -44,7 +49,10 @@ span.href {
     cursor: pointer;
 }
 
-br.cl {clear: left;}
+br.cl {
+    clear: left;
+}
+
 .cf:after {
     clear: both;
     content: " ";
@@ -54,20 +62,23 @@ br.cl {clear: left;}
     visibility: hidden;
     *zoom: 1;
 }
+
 * html .cf { /* IE6 */
     zoom: 1;
 }
 
-*+html .cf { /* IE7 */
+* + html .cf { /* IE7 */
     zoom: 1;
 }
 
 .fl {
     float: left;
 }
+
 .fr {
     float: right;
 }
+
 .ib {
     display: -moz-inline-stack;
     display: inline-block;
@@ -75,23 +86,50 @@ br.cl {clear: left;}
     *zoom: 1;
     *display: inline;
 }
+
 ul {
     list-style: none
 }
+
 .ac {
     text-align: center
 }
+
 .ar {
     text-align: right
 }
 
-.tr {margin-top: 4px !important;}
-.cp {cursor: pointer}
+.tr {
+    margin-top: 4px !important;
+}
 
-.label, .labeled, .labeleds {float:left;margin-top:4px;}
-.label {width:115px; color:#6c6c6c; padding:4px 10px 0 0;text-align:right;}
-.labeled {min-width:221px; display: inline-block; }
-.labeleds {max-width:150px; display: inline-block;padding:4px 10px 0 0; margin-left: 10px;}
+.cp {
+    cursor: pointer
+}
+
+.label, .labeled, .labeleds {
+    float: left;
+    margin-top: 4px;
+}
+
+.label {
+    width: 115px;
+    color: #6c6c6c;
+    padding: 4px 10px 0 0;
+    text-align: right;
+}
+
+.labeled {
+    min-width: 221px;
+    display: inline-block;
+}
+
+.labeleds {
+    max-width: 150px;
+    display: inline-block;
+    padding: 4px 10px 0 0;
+    margin-left: 10px;
+}
 
 input, textarea {
     background: #FFF;
@@ -102,14 +140,15 @@ input, textarea {
     width: 160px;
 
 }
+
 ::-webkit-input-placeholder {
     color: #777;
 }
+
 input:-moz-placeholder,
 textarea:-moz-placeholder {
     color: #777;
 }
-
 
 input.disabled {
     background: #F5F5F5;
@@ -122,6 +161,7 @@ input.disabled {
     padding: 8px 10px 0 0;
     width: 195px;
 }
+
 .big input, input.big {
     width: 210px;
     padding: 7px 10px 8px;

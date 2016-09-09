@@ -11,7 +11,8 @@ var ajax = {
                 };
                 return;
             }
-        } catch (e) {}
+        } catch (e) {
+        }
         each(['Msxml2.XMLHTTP', 'Microsoft.XMLHTTP'], function () {
             try {
                 var t = '' + this;
@@ -34,9 +35,9 @@ var ajax = {
         if (!ajax._req) ajax._init();
         return ajax._req();
     },
-    _post: function(url, query, callback, urlonly){
+    _post: function (url, query, callback, urlonly) {
         var r = ajax._getreq();
-        r.onreadystatechange = function() {
+        r.onreadystatechange = function () {
             if (r.readyState == 4) {
                 var is_fail = !(r.status >= 200 && r.status < 300);
                 if (callback) callback(r.responseText, is_fail, r);
@@ -44,7 +45,7 @@ var ajax = {
         };
         try {
             r.open('POST', url, true);
-        } catch(e) {
+        } catch (e) {
             return false;
         }
         if (!urlonly) {
@@ -54,9 +55,9 @@ var ajax = {
         r.send(query);
         return r;
     },
-    _get: function(url, callback){
+    _get: function (url, callback) {
         var r = ajax._getreq();
-        r.onreadystatechange = function() {
+        r.onreadystatechange = function () {
             if (r.readyState == 4) {
                 var is_fail = !(r.status >= 200 && r.status < 300);
                 if (callback) callback(r.responseText, is_fail, r);
@@ -64,46 +65,50 @@ var ajax = {
         };
         try {
             r.open('GET', url, true);
-        } catch(e) {
+        } catch (e) {
             return false;
         }
         r.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         r.send('');
         return r;
     },
-    plainpost: function(url, query, callback, urlonly) {
+    plainpost: function (url, query, callback, urlonly) {
         var q = (typeof(query) != 'string') ? ajx2q(query) : query;
         return ajax._post(url, query, callback, urlonly);
     },
-    post: function(url, query, callback){
+    post: function (url, query, callback) {
         var urlonly = false, q = query,
-            done = function(res, fail, req){
+            done = function (res, fail, req) {
 
                 var json = parseJSON(res);
-                if(json){
+
+                if (!json || fail) {
+                    res = {"error": true, "message": "global-error", "traceback": res};
+                    fail = true;
+                } else {
                     res = json;
                 }
 
-                if(callback) callback(res, fail, req);
+                if (callback) callback(res, fail, req);
             };
 
-        if(typeof (query) != 'string'){
+        if (typeof (query) != 'string') {
             urlonly = ajax.checkDataFile(query);
             q = urlonly ? ajax.createFormData(query) : ajx2q(query);
         }
 
         return ajax._post(url, q, done, urlonly);
     },
-    get: function(url, query, callback){
+    get: function (url, query, callback) {
         var q = (typeof (query) != 'string') ? ajx2q(query) : query;
-        if(q){
+        if (q) {
             url += ~url.indexOf('?') ? '&' : '?';
             url += q;
         }
 
         return ajax._get(url, callback);
     },
-    parseRes: function(r) {
+    parseRes: function (r) {
         var res = r.replace(/^[\s\n]+/g, '');
         if (res.substr(0, 10) == "<noscript>") {
             try {
@@ -119,20 +124,20 @@ var ajax = {
     isInput: function (obj) {
         return Object.prototype.toString.call(obj) === '[object HTMLInputElement]';
     },
-    checkDataFile: function (obj){
-        if(!isObject(obj) || !ajax.isFormDataSupport) return false;
-        for(var i in obj){
-            if(ajax.isInput(obj[i]) && 'files' in obj[i] && obj[i].files.length > 0){
+    checkDataFile: function (obj) {
+        if (!isObject(obj) || !ajax.isFormDataSupport) return false;
+        for (var i in obj) {
+            if (ajax.isInput(obj[i]) && 'files' in obj[i] && obj[i].files.length > 0) {
                 return true;
             }
         }
         return false;
     },
-    createFormData: function(obj){
+    createFormData: function (obj) {
         var formData = new FormData();
 
-        for(var i in obj){
-            if(ajax.isInput(obj[i]) && 'files' in obj[i] && obj[i].files.length > 0){
+        for (var i in obj) {
+            if (ajax.isInput(obj[i]) && 'files' in obj[i] && obj[i].files.length > 0) {
                 formData.append(i, obj[i].files[0]);
             } else {
                 formData.append(i, obj[i]);
@@ -205,12 +210,12 @@ function q2ajx(qa) {
 }
 
 JsonpCallbackRegister = {};
-function Jsonp(url, data, options){
+function Jsonp(url, data, options) {
     var onSuccess,
         onFail,
         q = (typeof (data) != 'string') ? ajx2q(data) : data,
         scriptOk = false,
-        callbackName = 'f'+String(Math.random()).slice(2);
+        callbackName = 'f' + String(Math.random()).slice(2);
     if (!options) options = {};
     if (isFunction(options)) {
         onSuccess = options;
@@ -219,10 +224,10 @@ function Jsonp(url, data, options){
         onFail = options.onFail;
     }
     url += ~url.indexOf('?') ? '&' : '?';
-    url += 'callback=JsonpCallbackRegister.'+callbackName;
-    url += '&'+q;
+    url += 'callback=JsonpCallbackRegister.' + callbackName;
+    url += '&' + q;
 
-    JsonpCallbackRegister[callbackName] = function(response) {
+    JsonpCallbackRegister[callbackName] = function (response) {
         scriptOk = true;
         delete JsonpCallbackRegister[callbackName];
         onSuccess(response);
@@ -238,8 +243,8 @@ function Jsonp(url, data, options){
     script.type = 'text/javascript';
     script.async = true;
     script.setAttribute('encoding', 'UTF-8');
-    script.onreadystatechange = function() {
-        if (this.readyState == 'complete' || this.readyState == 'loaded'){
+    script.onreadystatechange = function () {
+        if (this.readyState == 'complete' || this.readyState == 'loaded') {
             this.onreadystatechange = null;
             setTimeout(checkCallback, 0);
         }
