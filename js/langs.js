@@ -59,7 +59,6 @@ function getLang() {
         if (!key) return '...';
         var val = (window.lang && window.lang[key]) || (window.langpack && window.langpack[key]) || window[key];
         if (!val) {
-            console.info('Lang key not found:', key);
             var res = key.split('-');
             //res.shift();
             return '≠' + res.join(' ');
@@ -76,13 +75,12 @@ function getLang() {
     }
 }
 
-function getLangW(key) {
+function writeLang(key) {
     if (!key) {
         return document.write('...');
     }
     var val = (window.lang && window.lang[key]) || (window.langpack && window.langpack[key]) || window[key];
     if (!val) {
-        console.info('Lang key not found:', key);
         var res = key.split('-');
         //res.shift();
         return document.write('≠' + res.join(' '));

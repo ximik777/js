@@ -1,10 +1,3 @@
-if(!lang) var lang = {};
-/* qsearch */
-lang['search'] = 'Поиск';
-lang['popular-hints'] = 'Страницы, которые Вы недавно посещали:';
-lang['no-search-result'] = 'Поиск не дал результатов';
-lang['connectiong-error'] = 'Ошибка соединения с сервером';
-
 // TODO rebuild popular hints
 createChildClass('qSearch', UiControl, {
     common: {
@@ -14,7 +7,7 @@ createChildClass('qSearch', UiControl, {
         STANDART: 'qsearch_'
     },
     defaultOptions: {
-        placeholder: getLang('search'),
+        placeholder: getLang('global-search'),
         width: 615,
         right: true,
         animationDelay: 200,
@@ -27,15 +20,15 @@ createChildClass('qSearch', UiControl, {
         hints_url: '/hints1.php',
         hintsAct: 'a_hints',
         showPopularHints: true,
-        popularHintsTitle: getLang('popular-hints'),
+        popularHintsTitle: getLang('qsearch-popular-hints'),
         popularHintsAct: 'a_start_hints',
         popularHintsShift: 8,
         popularHintsTemp: false,
         popularHintsColumn:2,
         search_page: '/index.php',
         hintsPauseGet: 500,
-        noResults: getLang('no-search-result'),
-        resultsFail: getLang('connectiong-error')
+        noResults: getLang('qsearch-no-search-result'),
+        resultsFail: getLang('qsearch-connection-error')
     },
     beforeInit: function () {
         this.common.pageContainer = document.body;

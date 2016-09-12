@@ -24,9 +24,7 @@ createChildClass('Indexer', UiUtil, {
     createIndex: function () {
         if (!this.storage.data.length) return;
         this.storage.index = {};
-        debug('createIndex start, ' + this.storage.data.length + ' items');
         each(this.storage.data, this.indexItem.bind(this));
-        debug('createIndex ended');
     },
     indexItem: function (k, v) {
         var i, j, current_words = '',
@@ -49,16 +47,12 @@ createChildClass('Indexer', UiUtil, {
         }
     },
     search: function (pattern) {
-        debug('search start, index width: ' + this.options.chars + ', data size: ' + this.storage.data.length);
         pattern = trim(pattern.toLowerCase().replace(this.options.delimeter, ' '));
-        debug('pattern: ' + pattern + ', length: ' + pattern.length);
         var self = this;
         if (!pattern) {
-            debug('empty pattern, return whole list');
             return self.storage.data;
         }
         if (pattern.length <= this.options.chars && pattern.indexOf(' ') == -1) {
-            debug('found whole pattern indexed');
             var retArr = [];
             each((this.storage.index[pattern] || []), function () {
                 retArr.push(self.storage.data[this]);
@@ -67,8 +61,7 @@ createChildClass('Indexer', UiUtil, {
         }
         pattern = pattern.split(' ');
         var min_size = 0,
-            min_pattern = '',
-            self = this;
+            min_pattern = '';
         each(pattern, function () {
             var items = self.storage.index[this.substr(0, self.options.chars)];
             if (!min_pattern || !items || items.length < min_size) {
@@ -78,9 +71,7 @@ createChildClass('Indexer', UiUtil, {
             return !min_size;
         });
         var ret_arr = [];
-        debug('index returned: ' + min_size + ' items');
         if (!min_size) return ret_arr;
-        debug('starting manual filter');
         each(self.storage.index[min_pattern.substr(0, self.options.chars)], function (k, v) {
             var item = self.storage.data[v];
             var i, fail = false,
@@ -99,7 +90,6 @@ createChildClass('Indexer', UiUtil, {
             if (fail) return;
             ret_arr.push(item);
         });
-        debug('manual filter ended, found ' + ret_arr.length + ' items');
         return ret_arr;
     },
     flush: function () {

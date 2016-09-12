@@ -15,7 +15,7 @@ function createButton(el, onClick) {
         return;
     }
     var hover = false;
-    addEvent(el, 'click mousedown mouseover mouseout', function(e) {
+    addEvent(el, 'click mousedown mouseover mouseout', function (e) {
         if (hasClass(p, 'locked')) return;
         switch (e.type) {
             case 'click':

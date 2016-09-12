@@ -25,8 +25,7 @@ var curInlineEdit = false;
 //     };
 //     addEvent(document, 'mousedown keydown', inlineOnEvent);
 // }
-global_save = 'Save';
-global_cancel = 'Cancel';
+
 
 createChildClass('inlineEdit', UiControl, {
     common: {
@@ -39,8 +38,8 @@ createChildClass('inlineEdit', UiControl, {
         left: 0,
         width: 240,
         flex: false,
-        confirmLabel: getLang('global_save'),
-        cancelLabel: getLang('global_cancel'),
+        confirmLabel: getLang('global-save'),
+        cancelLabel: getLang('global-cancel'),
         onBeforeShow: null,
         onShow: null,
         onHide: null,

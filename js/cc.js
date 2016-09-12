@@ -1,12 +1,6 @@
-var UI_CONTROLS_DEBUG = false;
-
-function debug(e) {
-    if (!UI_CONTROLS_DEBUG) return;
-    debugLog(e);
-}
-
 function inherit(child, parent) {
-    var F = function () {};
+    var F = function () {
+    };
     F.prototype = parent.prototype;
     child.prototype = new F();
     child.prototype.constructor = child;
@@ -24,7 +18,7 @@ function createChildClass(className, parent, proto) {
     } else {
         window.eval(code);
     }
-    childClass = eval('(' + className + ')');
+    var childClass = eval('(' + className + ')');
     inherit(childClass, parent);
     if (('common' in proto)) {
         extend(childClass, proto['common']);
