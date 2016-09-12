@@ -1,7 +1,21 @@
+if (!lang) var lang = {};
 
+lang['global-yes'] = 'Да';
+lang['global-no'] = 'Нет';
+lang['global-search'] = 'Поиск';
+lang['global-save'] = 'Сохранить';
+lang['global-close'] = 'Закрыть';
+lang['global-loading'] = 'Загрузка';
+
+lang['qsearch-popular-hints'] = 'Страницы, которые Вы недавно посещали:';
+lang['qsearch-no-search-result'] = 'Поиск не дал результатов';
+lang['qsearch-connectiong-error'] = 'Ошибка соединения с сервером';
+
+lang['text_exceeds_symbol_limit'] = ['', 'Допустимый объем превышен на %s знак.', 'Допустимый объем превышен на %s знака.', 'Допустимый объем превышен на %s знаков.'];
+lang['text_N_symbols_remain'] = ['', 'Остался %s знак.', 'Осталось %s знака.', 'Осталось %s знаков.'];
 
 function langNumeric(count, vars, formatNum) {
-    if (!vars || !window.langConfig) {
+    if (!vars) {
         return count;
     }
     var res;
@@ -10,9 +24,9 @@ function langNumeric(count, vars, formatNum) {
     } else {
         res = vars[1];
         if (count != Math.floor(count)) {
-            res = vars[langConfig.numRules['float']];
+            res = vars[2];
         } else {
-            each(langConfig.numRules['int'], function (i, v) {
+            each([[100, [11, 12, 13, 14], 3], [10, [1], 1], [10, [2, 3, 4], 2], ["*", 0, 3]], function (i, v) {
                 if (v[0] == '*') {
                     res = vars[v[2]];
                     return false;
@@ -40,8 +54,7 @@ function langNumeric(count, vars, formatNum) {
 function langSex(sex, vars) {
     if (!isArray(vars)) return vars;
     var res = vars[1];
-    if (!window.langConfig) return res;
-    each(langConfig.sexRules, function (i, v) {
+    each([[1, 2], ["*", 1]], function (i, v) {
         if (v[0] == '*') {
             res = vars[v[1]];
             return false;
