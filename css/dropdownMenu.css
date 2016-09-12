@@ -1,6 +1,5 @@
 a.dd_menu_target,
 .dd_menu {
-    font-family: Tahoma;
     font-size: 11px
 }
 
@@ -10,7 +9,7 @@ a.dd_menu_target:hover {
 
 a.dd_link,
 .pageBody a.dd_link {
-    background: url(/images/flydead.gif) no-repeat right 1px;
+    background: url(../images/flydead.gif) no-repeat right 1px;
     padding-right: 17px;
     font-weight: normal;
     text-decoration: none
@@ -44,17 +43,17 @@ a.dd_link,
     line-height: 1.27em;
     *line-height: 1.18em;
     *padding-right: 16px;
-    background: #3187b3 url(/images/flydead.gif) no-repeat right -15px;
+    background: #3187b3 url(../images/flydead.gif) no-repeat right -15px;
     *background-position: -14px right
 }
 
 .vk .dd_menu_header div {
     border-color: #6d8fb3;
-    background: #6d8fb3 url(/images/flydead.gif) no-repeat right -15px;
+    background: #6d8fb3 url(../images/flydead.gif) no-repeat right -15px;
 }
 
 .dd_menu_header.leftArrow div {
-    background: #6d8fb3 url(/images/flydead.gif) no-repeat 1px -15px;
+    background: #6d8fb3 url(../images/flydead.gif) no-repeat 1px -15px;
     padding-right: 5px;
     padding-left: 16px;
     *background-position: 14px left
@@ -67,7 +66,7 @@ a.dd_link,
 }
 
 .dd_header_hover div {
-    background: #dae1e8 url(/images/flydead.gif) no-repeat right 3px;
+    background: #dae1e8 url(../images/flydead.gif) no-repeat right 3px;
     *background-position: 4px right;
     color: #2b587a;
     border-color: #dae1e8
@@ -178,7 +177,7 @@ x:-moz-any-link {
 .is_2x .dd_menu_header div,
 .is_2x .dd_menu_header.leftArrow div,
 .is_2x .dd_header_hover div {
-    background-image: url(/images/flydead_2x.gif);
+    background-image: url(../images/flydead_2x.gif);
     background-size: 14px 90px
 }
 

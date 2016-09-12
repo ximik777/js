@@ -1,6 +1,5 @@
 .radiobtn_container {
     cursor: pointer;
-    font-family: Tahoma;
     font-size: 11px
 }
 
@@ -50,7 +49,7 @@
 .radiobtn_container table td .radiobtn_off_over div {
     width: 14px;
     height: 56px;
-    background: transparent url(/images/sprite.svg) 0 -112px no-repeat;
+    background: transparent url(../images/sprite.svg) 0 -112px no-repeat;
 }
 
 .radiobtn_container table td .radiobtn_on div {

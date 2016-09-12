@@ -53,7 +53,7 @@
 }
 
 .slider_hint.visible {
-    margin-top: 0px;
+    margin-top: 0;
     opacity: 1;
 }
 

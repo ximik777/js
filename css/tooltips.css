@@ -72,7 +72,7 @@
     margin-right: 0;
     margin-left: 64px;
     display: block;
-    background: url(/images/tooltip_arrow_up.gif) no-repeat
+    background: url(../images/tooltip_arrow_up.gif) no-repeat
 }
 
 .wall_tt .toup1 .bottom_pointer,
@@ -83,7 +83,7 @@
     margin-right: 0;
     margin-left: 64px;
     display: block;
-    background: url(/images/tooltip_arrow_white.png) no-repeat
+    background: url(../images/tooltip_arrow_white.png) no-repeat
 }
 
 .settings_comments_disabled_tt .toup1 .bottom_pointer {
@@ -125,7 +125,7 @@
 
 .wall_tt.bottom table.toup1 .bottom_pointer,
 .board_tt.bottom table.toup1 .bottom_pointer {
-    background: url(/images/tooltip_arrow_down.gif) no-repeat
+    background: url(../images/tooltip_arrow_down.gif) no-repeat
 }
 
 .wall_tt .wall_module .like_wrap,
@@ -337,13 +337,13 @@ div.own_reply_tt .content {
     margin-right: 0;
     margin-left: 15px;
     display: block;
-    background: url(/images/like_tooltip_arrow.gif) no-repeat
+    background: url(../images/like_tooltip_arrow.gif) no-repeat
 }
 
 .share_tt table.toup1 .bottom_pointer {
     display: block;
     margin: 0 15px;
-    background: url(/images/like_tooltip_arrow.gif) no-repeat left -8px
+    background: url(../images/like_tooltip_arrow.gif) no-repeat left -8px
 }
 
 .share_tt .content {
@@ -362,7 +362,7 @@ div.own_reply_tt .content {
 
 .invite_tt table.toup .top_pointer {
     display: block;
-    background: url(/images/tooltip_arrow_up.gif) no-repeat
+    background: url(../images/tooltip_arrow_up.gif) no-repeat
 }
 
 #top_invite_hint {
@@ -374,7 +374,7 @@ div.own_reply_tt .content {
 }
 
 #invite_hint_img {
-    background: url(/images/relatives.gif?2) no-repeat left top;
+    background: url(../images/relatives.gif?2) no-repeat left top;
     width: 59px;
     height: 30px;
     margin: 2px 0 0 0
@@ -386,7 +386,7 @@ div.own_reply_tt .content {
     top: 13px;
     width: 18px;
     height: 18px;
-    background: url(/images/hide_left.gif) no-repeat center center;
+    background: url(../images/hide_left.gif) no-repeat center center;
     filter: alpha(opacity=50);
     opacity: .5;
     cursor: pointer
@@ -497,7 +497,7 @@ div.own_reply_tt .content {
     margin-left: 63px;
     margin-right: 63px;
     display: block;
-    background: url(/images/tooltip_arrow_up.gif) no-repeat
+    background: url(../images/tooltip_arrow_up.gif) no-repeat
 }
 
 .like_tt,
@@ -505,7 +505,7 @@ div.own_reply_tt .content {
 .mention_tt {
     color: #FFF;
     cursor: pointer;
-    background: url('/images/mv_bg.png');
+    background: url('../images/mv_bg.png');
     background: rgba(0, 0, 0, 0.7);
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
@@ -522,7 +522,7 @@ div.own_reply_tt .content {
     margin-right: 0;
     margin-left: 64px;
     display: block;
-    background: url(/images/like_icons_bl.png) -2px -47px no-repeat;
+    background: url(../images/like_icons_bl.png) -2px -47px no-repeat;
     width: 13px;
     height: 7px;
     position: absolute;
@@ -537,7 +537,7 @@ div.own_reply_tt .content {
     margin-left: 64px;
     display: block;
     bottom: -2px;
-    background: url(/images/like_icons_bl.png) -2px -58px no-repeat;
+    background: url(../images/like_icons_bl.png) -2px -58px no-repeat;
     width: 13px;
     height: 7px;
     position: absolute;
@@ -601,7 +601,7 @@ div.own_reply_tt .content {
     margin-top: 3px;
     width: 11px;
     height: 11px;
-    background: url(/images/like_icons_bl.png) -3px -32px no-repeat;
+    background: url(../images/like_icons_bl.png) -3px -32px no-repeat;
     cursor: pointer
 }
 
@@ -630,14 +630,14 @@ div.own_reply_tt .content {
 }
 
 .like_tt .bottom .checkbox div {
-    background: url(/images/like_icons_bl.png) -2px 0 no-repeat;
+    background: url(../images/like_icons_bl.png) -2px 0 no-repeat;
     width: 14px;
     height: 12px;
     margin-top: 1px
 }
 
 .like_tt .bottom .on div {
-    background: url(/images/like_icons_bl.png) -2px -15px no-repeat;
+    background: url(../images/like_icons_bl.png) -2px -15px no-repeat;
     width: 15px;
     height: 12px;
     margin-top: 2px
@@ -660,7 +660,7 @@ div.own_reply_tt .content {
 }
 
 .ttb_cont {
-    background: url('/images/ttb_bg.png');
+    background: url('../images/ttb_bg.png');
     background: rgba(0, 0, 0, 0.7);
     border-radius: 3px;
     padding: 4px 7px 4px;
@@ -670,7 +670,7 @@ div.own_reply_tt .content {
 }
 
 .rich .ttb_cont {
-    background: url('/images/ttb_bg.png');
+    background: url('../images/ttb_bg.png');
     background: rgba(0, 0, 0, 0.7);
     -webkit-border-radius: 5px;
     -khtml-border-radius: 5px;
@@ -702,7 +702,7 @@ div.own_reply_tt .content {
     bottom: auto;
     opacity: .7;
     filter: alpha(opacity=70);
-    background: url('/images/blacktip.gif') 0 -5px
+    background: url('../images/blacktip.gif') 0 -5px
 }
 
 .ttb .toleft .bottom_pointer,
@@ -715,11 +715,11 @@ div.own_reply_tt .content {
     display: block;
     bottom: auto;
     opacity: .7;
-    background: url('/images/blacktip.gif') 0 0
+    background: url('../images/blacktip.gif') 0 0
 }
 
 .ttb.rich .bottom_pointer {
-    background: url(/images/like_icons_bl.png) -2px -47px no-repeat;
+    background: url(../images/like_icons_bl.png) -2px -47px no-repeat;
     width: 13px;
     height: 7px;
     opacity: 1;
@@ -728,7 +728,7 @@ div.own_reply_tt .content {
 
 .is_2x .ttb .toup .top_pointer,
 .is_2x .ttb .toup1 .bottom_pointer {
-    background-image: url('/images/blacktip_2x.gif');
+    background-image: url('../images/blacktip_2x.gif');
     background-size: 9px 10px
 }
 
@@ -864,7 +864,7 @@ button.mention_tt_half_btn {
 }
 
 .pedit_side_tt_pointer {
-    background: url(/images/ddtooltip.png) 0 0 no-repeat;
+    background: url(../images/ddtooltip.png) 0 0 no-repeat;
     width: 8px;
     height: 11px;
     position: absolute;
@@ -875,7 +875,7 @@ button.mention_tt_half_btn {
 }
 
 .is_2x .pedit_side_tt_pointer {
-    background-image: url(/images/ddtooltip_2x.png);
+    background-image: url(../images/ddtooltip_2x.png);
     background-size: 16px 11px
 }
 
@@ -888,19 +888,19 @@ button.mention_tt_half_btn {
 .is_2x .like_tt .bottom .on div,
 .is_2x .ttb.rich .bottom_pointer,
 .is_2x .emoji_pointer {
-    background-image: url(/images/like_icons_bl_2x.png);
+    background-image: url(../images/like_icons_bl_2x.png);
     background-size: 17px 65px
 }
 
 .settings_about_tt table.toup1 .bottom_pointer,
 .settings_https_tt table.toup1 .bottom_pointer {
-    background: url("/images/tooltip_arrow_white.gif") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+    background: url("../images/tooltip_arrow_white.gif") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
     display: block;
     margin-left: 64px;
     margin-right: 0
 }
 
 .is_2x #invite_hint_close {
-    background-image: url(/images/hide_left_2x.gif);
+    background-image: url(../images/hide_left_2x.gif);
     background-size: 14px 14px;
 }

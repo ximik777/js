@@ -176,7 +176,7 @@
 .disabled.selector_container td.selector_dropdown,
 .big.disabled.selector_container td.selector_dropdown,
 .is_2x .big.disabled.selector_container td.selector_dropdown {
-    background: url("/images/sprite.svg") transparent no-repeat;
+    background: url(../images/sprite.svg) transparent no-repeat;
 }
 
 .selector_container td.selector .token span.x,
@@ -460,6 +460,5 @@
 }
 
 .result_list ul li {
-    font-family: Tahoma;
     font-size: 11px;
 }

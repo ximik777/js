@@ -1,5 +1,5 @@
 .box_progress {
-    background: #ffffff url(/images/upload_jt.gif) 50% 50% no-repeat
+    background: #ffffff url(../images/upload_jt.gif) 50% 50% no-repeat
 }
 
 #layer_wrap {
@@ -21,7 +21,7 @@
     position: absolute;
     display: none;
     z-index: 1000;
-    background: transparent url('/images/layer_bg_black.png') repeat scroll 0 0;
+    background: transparent url(../images/layer_bg_black.png) repeat scroll 0 0;
     background: rgba(0, 0, 0, 0.70);
 }
 
@@ -37,7 +37,6 @@ body.layers_shown #layer_wrap {
     position: relative;
     z-index: 1002;
     padding: 0;
-    font-family: Tahoma;
     font-size: 11px;
     margin: 40px auto;
 }
@@ -49,12 +48,9 @@ body.layers_shown #layer_wrap {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
 }
 
-
-
-
 .box_loader {
     height: 50px;
-    background: url('/images/progress7.gif') center no-repeat
+    background: url(../images/progress7.gif) center no-repeat
 }
 
 .box_body {
@@ -103,7 +99,7 @@ body.layers_shown #layer_wrap {
     margin: 10px 10px 0 0;
     cursor: pointer;
     padding: 0;
-    background: url(/images/sprite.svg) -23px -170px;
+    background: url(../images/sprite.svg) -23px -170px;
     opacity: 0.5;
     filter: alpha(opacity=50);
     -webkit-transition: opacity 300ms ease-out;
@@ -152,7 +148,7 @@ body.layers_shown #layer_wrap {
 }
 
 .is_2x .box_progress {
-    background: #ffffff url(/images/upload_jt_2x.gif) 50% 50% no-repeat;
+    background: #ffffff url(../images/upload_jt_2x.gif) 50% 50% no-repeat;
     background-size: 32px 8px;
 }
 
@@ -218,7 +214,7 @@ body.layers_shown #layer_wrap {
     width: 12px;
     height: 12px;
     font-size: 0;
-    background: url("/images/sprite.svg?1") -6px -320px no-repeat;
+    background: url(../images/sprite.svg) -6px -320px no-repeat;
     margin-top: 1px;
     cursor: pointer;
     opacity: 0.8;
@@ -252,7 +248,7 @@ body.layers_shown #layer_wrap {
 .balloon_message_box .message_icon {
     width: 16px;
     height: 16px;
-    background: url("/images/sprite.svg") -4px -468px no-repeat;
+    background: url(../images/sprite.svg) -4px -468px no-repeat;
 }
 
 .balloon_message_box .message_text {

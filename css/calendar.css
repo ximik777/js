@@ -33,7 +33,7 @@
 }
 
 .cal_table .month_arr .arr {
-    background: url("/images/sprite.svg") 0 -239px no-repeat;
+    background: url(../images/sprite.svg) 0 -239px no-repeat;
     display: block;
     height: 25px;
     width: 25px

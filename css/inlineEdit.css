@@ -4,7 +4,6 @@
     font-size: 11px;
 }
 .inlInput {
-
     -webkit-appearance: none;
     background: #FFF;
     color: #000;
@@ -50,7 +49,6 @@
     width: 100%;
 }
 
-
 .inlDelimiter {
     width: 7px;
     display: table;
@@ -60,12 +58,10 @@
     width: 50%;
 }
 
-
 .inlButtonOk .flat_button,
 .inlButtonCancel .flat_button {
     margin-top: 7px;
 }
-
 
 .inlInput {
     margin: 0;

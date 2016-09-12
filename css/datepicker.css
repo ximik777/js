@@ -5,7 +5,7 @@
 }
 
 .datepicker_container .datepicker_control {
-    background: #fff url("/images/sprite.svg") 0 -291px no-repeat;
+    background: #fff url(../images/sprite.svg) 0 -291px no-repeat;
     border: 1px solid #c0cad5;
     cursor: pointer;
 }

@@ -1,6 +1,5 @@
 .checkbox_container {
     cursor: pointer;
-    font-family: Tahoma;
     font-size: 11px;
 }
 
@@ -42,7 +41,7 @@
     height: 14px;
     width: 15px;
     overflow: hidden;
-    background: transparent url(/images/sprite.svg) 0 0 no-repeat;
+    background: transparent url(../images/sprite.svg) 0 0 no-repeat;
 }
 
 .checkbox_container.checkbox_circle table td .checkbox_on,
