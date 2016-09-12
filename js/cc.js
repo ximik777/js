@@ -1,4 +1,3 @@
-if (!window.vk) vk = {};
 var UI_CONTROLS_DEBUG = false;
 
 function debug(e) {

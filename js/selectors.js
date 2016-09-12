@@ -379,16 +379,14 @@ createChildClass("Selector", UiControl, {
         })
     },
     destroyDropdown: function () {
-        if (vk.al) {
-            cleanElems(this.dropdownButton)
-        }
+        cleanElems(this.dropdownButton)
         removeEvent(this.container, "mouseover");
         removeEvent(this.container, "mouseout");
         this.scrollbarWidth = 0;
         this.selectorWidth = this.options.width
     },
     destroy: function () {
-        if (!vk.al || this.destroyed) {
+        if (this.destroyed) {
             return
         }
         this.destroyDropdown();
@@ -913,9 +911,7 @@ createChildClass("Selector", UiControl, {
             return false
         }
         var d = b.firstChild.nextSibling;
-        if (vk.al) {
-            cleanElems(b, d)
-        }
+        cleanElems(b, d)
         b.parentNode.removeChild(b);
         var a, c = [];
         for (i in this._selectedItems) {

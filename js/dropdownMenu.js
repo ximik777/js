@@ -345,7 +345,7 @@ createChildClass('DropdownMenu', UiControl, {
         return this.value;
     },
     destroy: function () {
-        if (!vk.al || this.destroyed) return;
+        if (this.destroyed) return;
         removeEvent(this.options.target, 'mouseover', this.showTargetHover);
         cleanElems(this.container, this.header);
         for (var el = this.rows.firstChild; el; el = el.nextSibling) {

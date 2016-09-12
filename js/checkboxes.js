@@ -47,7 +47,7 @@ createChildClass('Checkbox', UiControl, {
         this.setState(this.options.checked, false, true);
     },
     destroy: function () {
-        if (!vk.al || this.destroyed) return;
+        if (this.destroyed) return;
         removeEvent(this.container, 'click mouseover mouseout', this.handleMouseEvent);
         this.destroyed = true;
     },

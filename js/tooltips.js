@@ -62,7 +62,7 @@ var tooltips = {
                 xy = opts.forcexy ? opts.forcexy : getXY(el, fix),
                 elsize = opts.forcesize ? opts.forcesize : getSize(el),
                 toup = opts.toup,
-                asrtl = vk.rtl && !opts.asrtl || opts.asrtl && !vk.rtl;
+                asrtl = window.rtl && !opts.asrtl || opts.asrtl && !window.rtl;
             if (!elsize[0] && !elsize[1]) {
                 hide(el.tt.container);
                 return;
@@ -182,7 +182,7 @@ var tooltips = {
             var fix = tt.isFixed || false,
                 xy = getXY(el, fix),
                 elsize = getSize(el),
-                asrtl = vk.rtl && !opts.asrtl || opts.asrtl && !vk.rtl;
+                asrtl = window.rtl && !opts.asrtl || opts.asrtl && !window.rtl;
             if (!elsize[0] && !elsize[1]) continue;
             var ttsize = getSize(container);
             var needLeft = (opts.black && lastWindowWidth && lastWindowWidth - (xy[0] + ttsize[0]) < 1);

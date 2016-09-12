@@ -75,7 +75,7 @@ createChildClass('Radiobutton', UiControl, {
         this.setState(this.options.checked, false, true);
     },
     destroy: function () {
-        if (!vk.al || this.destroyed) return;
+        if (this.destroyed) return;
         for (var i = 0; i < this.common._radio_buttons[this.inputName].length; ++i) {
             if (this.common._radio_buttons[this.inputName][i] === this) {
                 this.common._radio_buttons[this.inputName].splice(i, 1);

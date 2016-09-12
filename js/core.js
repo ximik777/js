@@ -1,7 +1,7 @@
 var base_domain = location.protocol + '//' + location.host,
     _ua = navigator.userAgent.toLowerCase(),
     lang = lang || {},
-    vk = {},
+    rtl = false,
     parseJSON = (window.JSON && JSON.parse) ? function (obj) {
         try {
             return JSON.parse(obj);
@@ -85,7 +85,7 @@ function isObject(obj) {
     return Object.prototype.toString.call(obj) === '[object Object]';
 }
 
-function vkImage() {
+function createImage() {
     return window.Image ? (new Image()) : ce('img');
 } // IE8 workaround
 function trim(text) {
@@ -346,13 +346,6 @@ function debugLog(a) {
     console.log(a);
 }
 
-function toggleStyle() {
-    var t = document.body;
-    if (hasClass(t, 'vk')) removeClass(t, 'vk');
-    else addClass(t, 'vk');
-}
-
-
 var ls = {
     _init: function () {
         return (window.localStorage !== undefined && window.JSON !== undefined);
@@ -388,8 +381,3 @@ var ls = {
         }
     }
 };
-
-try {
-    loadManager.done('core');
-} catch (e) {
-}
