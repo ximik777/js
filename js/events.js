@@ -349,6 +349,3 @@ var eventOut = {
         });
     }
 };
-
-
-try{loadManager.done('events');}catch(e){}

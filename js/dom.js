@@ -1007,6 +1007,3 @@ function scrollToY(y, speed, anim) {
 function scrollToTop(speed) {
     return scrollToY(0, speed);
 }
-
-
-try{loadManager.done('dom');}catch(e){}
