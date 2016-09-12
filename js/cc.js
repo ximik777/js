@@ -7,6 +7,7 @@ function inherit(child, parent) {
     child.superclass = parent.prototype;
 }
 
+
 function createChildClass(className, parent, proto) {
     var code = 'function ' + className + ' (a, b, c, d) {\
     if (this == window || this.setInterval) return new ' + className + '(a, b, c, d);\
