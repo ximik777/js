@@ -67,6 +67,10 @@ function langSex(sex, vars) {
     return res;
 }
 
+function langKeyNotFound(key) {
+    console.log(key);
+}
+
 function getLang() {
     try {
         var args = Array.prototype.slice.call(arguments);
@@ -74,9 +78,7 @@ function getLang() {
         if (!key) return '...';
         var val = (window.lang && window.lang[key]) || (window.langpack && window.langpack[key]) || window[key];
         if (!val) {
-            if(typeof langNotFound == 'function'){
-                langNotFound(key);
-            }
+            langKeyNotFound(key);
             return key.split('-').join(' ');
         }
         if (isFunction(val)) {
