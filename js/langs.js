@@ -74,9 +74,12 @@ function getLang() {
         if (!key) return '...';
         var val = (window.lang && window.lang[key]) || (window.langpack && window.langpack[key]) || window[key];
         if (!val) {
+
+            if(isFunction(langNotFound)){
+                langNotFound(key);
+            }
             var res = key.split('-');
-            //res.shift();
-            return '≠' + res.join(' ');
+            return res.join(' ');
         }
         if (isFunction(val)) {
             return val.apply(null, args);
