@@ -121,6 +121,7 @@
             width: 420,
             fullPageLink: 'http://mail.ru/',
             closeButton: true,
+            hideOnOutClick: true,
             dark: true
         });
         var box = mb1;
@@ -192,9 +193,11 @@
         html += 'Hello World<br />';
         html += 'Hello World<br />';
         html += 'Hello World<br />';
-        setTimeout(function () {
-            box.content(html);
-        }, 1500);
+//        setTimeout(function () {
+//            box.content(html);
+//        }, 1500);
+
+
         box.show();
         return false;
     }

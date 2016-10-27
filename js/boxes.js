@@ -159,7 +159,11 @@ createUiClass('MessageBox', {
         removeEvent(layer_wrap, 'click', hide);
         removeEvent(document, 'keydown', closeEsc);
         if (opt.hideOnOutClick) {
-            addEvent(layer_wrap, 'click', hide);
+            addEvent(layer_wrap, 'click', function(e){
+                if(getTarget(e).id == 'layer_wrap'){
+                    hide();
+                }
+            });
         }
         if (opt.closeEsc) {
             addEvent(document, 'keydown', closeEsc);

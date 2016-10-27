@@ -35,7 +35,7 @@ body.layers_shown #layer_wrap {
 
 .popup_box_container {
     position: relative;
-    z-index: 1002;
+    z-index: 1010;
     padding: 0;
     font-size: 11px;
     margin: 40px auto;
